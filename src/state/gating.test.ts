@@ -9,7 +9,7 @@ import {
   viewHint,
   type ExerciseState,
 } from './effortGate';
-import { exitUnlocked, moduleUnlocked, tier5Unlocked } from './gating';
+import { currentModule, exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './gating';
 import { emptyProgress, updateExerciseState, type Progress } from './progress';
 
 function makeExercise(id: string, isExit = false): Exercise {
@@ -28,6 +28,7 @@ function makeModule(id: string): Module {
   return {
     id,
     title: id,
+    anchor: '',
     concept: { intro: '', examples: [] },
     exercises: [makeExercise('e1'), makeExercise('e2')],
     exitExercise: makeExercise('exit', true),
@@ -43,9 +44,9 @@ const m2 = makeModule('m2');
 const m12 = makeModule('m12');
 const curriculum: Curriculum = {
   tiers: [
-    { id: 't0', title: 'Tier 0 — Setup', modules: [m0] },
-    { id: 't1', title: 'Tier 1 — Basics', modules: [m1, m2] },
-    { id: 't4', title: 'Tier 4 — Capstone', modules: [m12] },
+    { id: 't0', title: 'Tier 0 — Setup', era: 'Debut, 2013', modules: [m0] },
+    { id: 't1', title: 'Tier 1 — Basics', era: 'School trilogy era', modules: [m1, m2] },
+    { id: 't4', title: 'Tier 4 — Capstone', era: 'Proof era', modules: [m12] },
   ],
 };
 
@@ -149,5 +150,42 @@ describe('tier5Unlocked — Tier 5 (Advanced) unlocks on capstone pass', () => {
 
   it('unlocks when the capstone passes', () => {
     expect(tier5Unlocked(curriculum, passModule(emptyProgress(), 'm12'))).toBe(true);
+  });
+});
+
+describe('moduleStateOf — the three Home-map states', () => {
+  it('is available for the first module and locked for the rest', () => {
+    const p = emptyProgress();
+    expect(moduleStateOf(curriculum, 'm0', p)).toBe('available');
+    expect(moduleStateOf(curriculum, 'm1', p)).toBe('locked');
+    expect(moduleStateOf(curriculum, 'm12', p)).toBe('locked');
+  });
+
+  it('turns passed, and opens the next module only', () => {
+    const p = passModule(emptyProgress(), 'm0');
+    expect(moduleStateOf(curriculum, 'm0', p)).toBe('passed');
+    expect(moduleStateOf(curriculum, 'm1', p)).toBe('available');
+    expect(moduleStateOf(curriculum, 'm2', p)).toBe('locked');
+  });
+
+  it('an unknown module id is locked', () => {
+    expect(moduleStateOf(curriculum, 'nope', emptyProgress())).toBe('locked');
+  });
+});
+
+describe('currentModule — the checkpoint she is on', () => {
+  it('starts at the first module', () => {
+    expect(currentModule(curriculum, emptyProgress())?.id).toBe('m0');
+  });
+
+  it('advances to the first unlocked module that is not passed', () => {
+    const p = passModule(passModule(emptyProgress(), 'm0'), 'm1');
+    expect(currentModule(curriculum, p)?.id).toBe('m2');
+  });
+
+  it('is undefined once every module has passed', () => {
+    let p = emptyProgress();
+    for (const id of ['m0', 'm1', 'm2', 'm12']) p = passModule(p, id);
+    expect(currentModule(curriculum, p)).toBeUndefined();
   });
 });
