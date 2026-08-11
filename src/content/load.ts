@@ -40,6 +40,7 @@ type RawCurriculum = {
 function toExercise(rawExercise: RawExercise): Exercise {
   return {
     id: rawExercise.id,
+    ...(rawExercise.title ? { title: rawExercise.title } : {}),
     prompt: rawExercise.prompt,
     expectedOutput: rawExercise.expectedOutput,
     ...(rawExercise.inputsToType ? { inputsToType: rawExercise.inputsToType } : {}),
