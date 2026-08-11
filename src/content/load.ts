@@ -89,3 +89,20 @@ export function findModule(curriculum: Curriculum, moduleId: string): Module | u
   }
   return undefined;
 }
+
+/** All modules in curriculum order — tiers are ordered, modules within each
+ *  tier are ordered, so this flat sequence IS the unlock chain order. */
+export function flatModules(curriculum: Curriculum): Module[] {
+  return curriculum.tiers.flatMap((tier) => tier.modules);
+}
+
+export function findTierOf(curriculum: Curriculum, moduleId: string): Tier | undefined {
+  return curriculum.tiers.find((tier) => tier.modules.some((module) => module.id === moduleId));
+}
+
+/** Two-digit module number by curriculum position ("00", "01", …) — matches
+ *  the handoff numbering, where m0 is 00. */
+export function moduleNumberOf(curriculum: Curriculum, moduleId: string): string {
+  const index = flatModules(curriculum).findIndex((module) => module.id === moduleId);
+  return String(Math.max(0, index)).padStart(2, '0');
+}

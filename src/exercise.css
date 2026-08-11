@@ -151,41 +151,10 @@
   padding-top: 6px;
 }
 
-/* Model solution — Python syntax highlighting on the dark code ground.
-   Token colors come from the tonal ramps only. */
+/* Model solution — the shared .py-code block (src/code.css) carries the dark
+   ground and token colors; only the placement lives here. */
 .ex-solution {
   margin: 14px 0 0;
-  padding: 16px;
-  background: var(--color-neutral-900);
-  color: var(--color-bg);
-  font: 500 13.5px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
-.ex-solution .token.keyword {
-  color: var(--color-accent-400);
-}
-.ex-solution .token.string,
-.ex-solution .token.string-interpolation .token.string {
-  color: var(--color-accent-2-300);
-}
-.ex-solution .token.number,
-.ex-solution .token.boolean {
-  color: var(--color-accent-300);
-}
-.ex-solution .token.function,
-.ex-solution .token.builtin {
-  color: var(--color-neutral-300);
-}
-.ex-solution .token.comment {
-  color: var(--color-neutral-500);
-}
-.ex-solution .token.operator,
-.ex-solution .token.punctuation {
-  color: var(--color-neutral-400);
-}
-.ex-solution .token.interpolation-punctuation {
-  color: var(--color-accent-500);
 }
 
 .ex-checklist-title {

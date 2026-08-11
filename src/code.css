@@ -1,0 +1,37 @@
+/* Shared Python code block — dark code ground, Prism token colors drawn from
+   the tonal ramps only (design/tokens.css). Used by ExerciseView's model
+   solution and ModuleView's worked examples. */
+.py-code {
+  margin: 0;
+  padding: 16px;
+  background: var(--color-neutral-900);
+  color: var(--color-bg);
+  font: 500 13.5px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.py-code .token.keyword {
+  color: var(--color-accent-400);
+}
+.py-code .token.string,
+.py-code .token.string-interpolation .token.string {
+  color: var(--color-accent-2-300);
+}
+.py-code .token.number,
+.py-code .token.boolean {
+  color: var(--color-accent-300);
+}
+.py-code .token.function,
+.py-code .token.builtin {
+  color: var(--color-neutral-300);
+}
+.py-code .token.comment {
+  color: var(--color-neutral-500);
+}
+.py-code .token.operator,
+.py-code .token.punctuation {
+  color: var(--color-neutral-400);
+}
+.py-code .token.interpolation-punctuation {
+  color: var(--color-accent-500);
+}
