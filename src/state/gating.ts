@@ -42,6 +42,27 @@ export function moduleUnlocked(
   return passedOf(progress, sequence[index - 1].id);
 }
 
+/** The three states a module can be in on the Home map. Screens render these;
+ *  they never recombine `moduleUnlocked` and `passed` themselves. */
+export type ModuleState = 'locked' | 'available' | 'passed';
+
+export function moduleStateOf(
+  curriculum: Curriculum,
+  moduleId: string,
+  progress: Progress,
+): ModuleState {
+  if (passedOf(progress, moduleId)) return 'passed';
+  return moduleUnlocked(curriculum, moduleId, progress) ? 'available' : 'locked';
+}
+
+/** The checkpoint she is on: the first module that is unlocked and not yet
+ *  passed. Undefined only when every module has passed. */
+export function currentModule(curriculum: Curriculum, progress: Progress): Module | undefined {
+  return flatModules(curriculum).find(
+    (module) => moduleStateOf(curriculum, module.id, progress) === 'available',
+  );
+}
+
 /** §6: Tier 5 (Advanced) unlocks on capstone pass — the curriculum's last
  *  module. Consumed by HomeMap when the Advanced tier gets content. */
 export function tier5Unlocked(curriculum: Curriculum, progress: Progress): boolean {

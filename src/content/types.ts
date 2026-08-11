@@ -3,11 +3,17 @@
 
 export type Curriculum = { tiers: Tier[] };
 
-export type Tier = { id: string; title: string; modules: Module[] };
+export type Tier = {
+  id: string;
+  title: string;
+  era: string; // era label authored in curriculum.json ("Wings era") — DESIGN.md §6/§7
+  modules: Module[];
+};
 
 export type Module = {
   id: string; // "m5-lists"
   title: string; // "Lists — The Members"
+  anchor: string; // one-line "what you'll build" hook; authored, shown on the Home map
   concept: ConceptDoc; // explainer markdown + worked examples
   exercises: Exercise[]; // formative, ordered
   exitExercise: Exercise; // summative, no hints

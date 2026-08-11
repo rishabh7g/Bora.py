@@ -57,6 +57,7 @@ function toModule(rawModule: RawModule): Module {
   return {
     id: rawModule.id,
     title: rawModule.title,
+    anchor: rawModule.anchor,
     concept: rawModule.concept,
     exercises: rawModule.exercises.map(toExercise),
     exitExercise: toExercise(rawModule.exitExercise),
@@ -73,6 +74,7 @@ export function loadCurriculum(): Curriculum {
   const tiers: Tier[] = data.tiers.map((tier) => ({
     id: tier.id,
     title: tier.title,
+    era: tier.era,
     modules: tier.modules.map((moduleId) => {
       const rawModule = data.modules[moduleId];
       if (!rawModule) throw new Error(`Tier ${tier.id} references unknown module "${moduleId}"`);
