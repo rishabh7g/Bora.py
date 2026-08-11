@@ -14,6 +14,7 @@
 import { flatModules, moduleNumberOf } from './content/load';
 import type { Curriculum, Module } from './content/types';
 import { HOME_ROUTE, moduleHref } from './HomeMap';
+import PhotocardArt from './PhotocardArt';
 import { moduleStateOf } from './state/gating';
 import { moduleCracksOf, type Progress } from './state/progress';
 import './shelf.css';
@@ -46,16 +47,7 @@ function ShelfCard({
   const drawnCracks = earned ? Math.min(cracks, MAX_DRAWN_CRACKS) : 0;
   const face = (
     <>
-      {earned && module.photocard.art ? (
-        <span
-          className="shelf-art"
-          style={{
-            maskImage: `url("${module.photocard.art}")`,
-            WebkitMaskImage: `url("${module.photocard.art}")`,
-          }}
-          aria-hidden="true"
-        />
-      ) : null}
+      {earned ? <PhotocardArt art={module.photocard.art} className="shelf-art" /> : null}
       <span className="shelf-num">{number}</span>
       <span className="shelf-cardtitle">{module.photocard.title}</span>
       <span className="shelf-foot">{earned ? module.title : 'Not earned'}</span>
