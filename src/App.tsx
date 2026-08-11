@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import CelebrationScreen, { celebrationTriggered } from './CelebrationScreen';
 import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
 import ExerciseView from './ExerciseView';
-import HomeMap, { HOME_ROUTE, SETUP_ROUTE, SHELF_ROUTE } from './HomeMap';
+import HomeMap, { HOME_ROUTE, SETTINGS_ROUTE, SETUP_ROUTE, SHELF_ROUTE } from './HomeMap';
 import ModuleView from './ModuleView';
 import PhotocardShelf from './PhotocardShelf';
+import Settings from './Settings';
 import { exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './state/gating';
 import { exerciseStateOf } from './state/progress';
 import { useProgress } from './state/useProgress';
@@ -15,6 +16,7 @@ const curriculum = loadCurriculum();
 //   #/                            → HomeMap (root)
 //   #/setup                       → SetupGuide (placeholder until its issue)
 //   #/shelf                       → PhotocardShelf
+//   #/settings                    → Settings (export / import / reset)
 //   #/module/<id>                 → ModuleView
 //   #/module/<id>/exercise/<eid>  → ExerciseView (formative)
 //   #/module/<id>/exit            → ExerciseView (exit checkpoint)
@@ -22,11 +24,13 @@ type Route =
   | { screen: 'home' }
   | { screen: 'setup' }
   | { screen: 'shelf' }
+  | { screen: 'settings' }
   | { screen: 'module'; moduleId: string; exerciseId?: string; isExit: boolean };
 
 function routeFromHash(hash: string): Route {
   if (hash === SETUP_ROUTE) return { screen: 'setup' };
   if (hash === SHELF_ROUTE) return { screen: 'shelf' };
+  if (hash === SETTINGS_ROUTE) return { screen: 'settings' };
   const match = /^#\/module\/([^/]+)(?:\/exercise\/([^/]+)|\/(exit))?$/.exec(hash);
   // Anything unrecognised falls back to the map — it is the app's root.
   if (!match) return { screen: 'home' };
@@ -58,7 +62,7 @@ function SetupPlaceholder() {
 
 export default function App() {
   const [hash, setHash] = useState(() => window.location.hash || HOME_ROUTE);
-  const { progress, apply } = useProgress();
+  const { progress, apply, replaceAll, resetModule } = useProgress();
   // The celebration is transient by design (ENGINEERING.md §11 step 8): it is
   // set on the pass edge only, so a revisit or a reload never replays it.
   const [celebratingModuleId, setCelebratingModuleId] = useState<string | null>(null);
@@ -89,6 +93,19 @@ export default function App() {
     return (
       <main>
         <PhotocardShelf curriculum={curriculum} progress={progress} />
+      </main>
+    );
+  }
+
+  if (route.screen === 'settings') {
+    return (
+      <main>
+        <Settings
+          curriculum={curriculum}
+          progress={progress}
+          onImport={replaceAll}
+          onResetModule={resetModule}
+        />
       </main>
     );
   }

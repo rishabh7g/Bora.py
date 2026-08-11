@@ -13,8 +13,16 @@ vi.mock('idb-keyval', () => ({
   }),
 }));
 
-const { emptyProgress, exerciseStateOf, loadProgress, PROGRESS_KEY, saveProgress, updateExerciseState } =
-  await import('./progress');
+const {
+  emptyProgress,
+  exerciseStateOf,
+  hasModuleProgress,
+  loadProgress,
+  PROGRESS_KEY,
+  resetModule,
+  saveProgress,
+  updateExerciseState,
+} = await import('./progress');
 
 beforeEach(() => memory.clear());
 
@@ -71,5 +79,38 @@ describe('write-through persistence', () => {
 
   it('loadProgress returns empty v1 progress when nothing is stored', async () => {
     expect(await loadProgress()).toEqual({ version: 1, modules: {} });
+  });
+});
+
+describe('resetModule (pure) — Settings\' per-module reset', () => {
+  it('forgets only the named module and leaves the others whole', () => {
+    let p = emptyProgress();
+    p = updateExerciseState(p, 'm1', 'e1', false, (s) => declareAttempt(s, false));
+    p = updateExerciseState(p, 'm1', 'e1', false, (s) => viewHint(s, 1, false));
+    p = updateExerciseState(p, 'm1', 'exit', true, declareMatch);
+    p = updateExerciseState(p, 'm2', 'e1', false, (s) => declareAttempt(s, false));
+    const m2Before = p.modules.m2;
+
+    const after = resetModule(p, 'm1');
+    expect(hasModuleProgress(after, 'm1')).toBe(false);
+    expect(exerciseStateOf(after, 'm1', 'e1').attempts).toBe(0);
+    expect(after.modules.m2).toBe(m2Before); // untouched, not even rewritten
+    expect(after.version).toBe(1);
+    expect(p.modules.m1).toBeDefined(); // the input object is not mutated
+  });
+
+  it('returns the SAME object when the module has nothing stored', () => {
+    const p = emptyProgress();
+    expect(resetModule(p, 'm1')).toBe(p);
+  });
+
+  it('a reset module is written through and survives a reload', async () => {
+    let p = updateExerciseState(emptyProgress(), 'm1', 'exit', true, declareMatch);
+    p = updateExerciseState(p, 'm2', 'e1', false, (s) => declareAttempt(s, false));
+    await saveProgress(resetModule(p, 'm1'));
+
+    const reloaded = await loadProgress();
+    expect(hasModuleProgress(reloaded, 'm1')).toBe(false);
+    expect(hasModuleProgress(reloaded, 'm2')).toBe(true);
   });
 });

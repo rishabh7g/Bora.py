@@ -59,6 +59,24 @@ export function updateExerciseState(
   };
 }
 
+/** Whether anything is stored for a module. Screens ask this instead of
+ *  reaching into the persisted shape themselves. */
+export function hasModuleProgress(progress: Progress, moduleId: string): boolean {
+  return moduleId in progress.modules;
+}
+
+/** Pure update: forget one module's progress, leaving every other module
+ *  untouched. The module returns to its never-started state, so the §6 chain
+ *  (state/gating.ts) recomputes what is open from it — this function keeps no
+ *  gating rules of its own. Returns the same object when there was nothing
+ *  stored for the module. */
+export function resetModule(progress: Progress, moduleId: string): Progress {
+  if (!(moduleId in progress.modules)) return progress;
+  const modules = { ...progress.modules };
+  delete modules[moduleId];
+  return { ...progress, modules };
+}
+
 export async function loadProgress(): Promise<Progress> {
   try {
     const stored = await get<Progress>(PROGRESS_KEY);
