@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { findModule, loadCurriculum } from './content/load';
+import CelebrationScreen, { celebrationTriggered } from './CelebrationScreen';
+import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
 import ExerciseView from './ExerciseView';
 import HomeMap, { HOME_ROUTE, SETUP_ROUTE, SHELF_ROUTE } from './HomeMap';
 import ModuleView from './ModuleView';
 import PhotocardShelf from './PhotocardShelf';
-import { exitUnlocked, moduleUnlocked } from './state/gating';
+import { exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './state/gating';
 import { exerciseStateOf } from './state/progress';
 import { useProgress } from './state/useProgress';
 
@@ -58,6 +59,9 @@ function SetupPlaceholder() {
 export default function App() {
   const [hash, setHash] = useState(() => window.location.hash || HOME_ROUTE);
   const { progress, apply } = useProgress();
+  // The celebration is transient by design (ENGINEERING.md §11 step 8): it is
+  // set on the pass edge only, so a revisit or a reload never replays it.
+  const [celebratingModuleId, setCelebratingModuleId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!window.location.hash) window.location.hash = HOME_ROUTE;
@@ -139,15 +143,35 @@ export default function App() {
         </main>
       );
     }
+    const state = exerciseStateOf(progress, module.id, exercise.id);
+    const alreadyPassed = moduleStateOf(curriculum, module.id, progress) === 'passed';
     return (
       <main>
         <ExerciseView
           module={module}
           exercise={exercise}
           isExit={route.isExit}
-          state={exerciseStateOf(progress, module.id, exercise.id)}
-          onTransition={(transition) => apply(module.id, exercise.id, route.isExit, transition)}
+          state={state}
+          onTransition={(transition) => {
+            apply(module.id, exercise.id, route.isExit, transition);
+            // Celebrate the pass edge only — the exit exercise reaching matched
+            // while the module had not passed yet.
+            if (celebrationTriggered(route.isExit, alreadyPassed, transition(state))) {
+              setCelebratingModuleId(module.id);
+            }
+          }}
         />
+        {celebratingModuleId === module.id && (
+          <CelebrationScreen
+            module={module}
+            moduleNumber={moduleNumberOf(curriculum, module.id)}
+            tier5Unlocked={tier5Unlocked(curriculum, progress)}
+            onContinue={() => {
+              setCelebratingModuleId(null);
+              window.location.hash = HOME_ROUTE; // on to the map, next checkpoint open
+            }}
+          />
+        )}
       </main>
     );
   }

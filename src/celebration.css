@@ -1,0 +1,197 @@
+/* CelebrationScreen — the one red field in the system. Tokens and the
+   prototype's structural measures only; radius stays 0 by token. Structure
+   mirrors design/PyLearn Prototype.dc.html → Celebration screen. */
+
+.celebrate-field {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  display: flex;
+  align-items: center;
+}
+
+.celebrate-body {
+  position: relative; /* above the confetti */
+  z-index: 1;
+  width: min(860px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 24px clamp(20px, 5vw, 48px);
+  /* A very short viewport (landscape phone) must never trap the way out. */
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* flush left, including the button label */
+  gap: 18px;
+}
+
+.celebrate-kicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.celebrate-title {
+  margin: 0;
+  font-size: clamp(40px, 8vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.celebrate-line {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  max-width: 40ch;
+}
+
+/* — the photocard just earned — */
+.celebrate-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+  padding: 12px 88px 12px 16px;
+  border: 2px solid var(--color-bg);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.celebrate-cardnum {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.celebrate-cardtext {
+  display: flex;
+  flex-direction: column;
+}
+
+.celebrate-cardtitle {
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.celebrate-cardfoot {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+/* The module's own SVG art, painted as a mask so it takes the field's ink —
+   same art as the shelf card, same owner (PhotocardArt). */
+.celebrate-art {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  bottom: 8px;
+  width: 64px;
+  background: currentColor;
+  opacity: 0.32;
+  pointer-events: none;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.celebrate-unlock {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.celebrate-continue {
+  margin-top: 10px;
+  min-height: 44px;
+  padding: 14px 22px;
+  border: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: 700 14px var(--font-body);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+
+.celebrate-continue:hover {
+  background: var(--color-neutral-200);
+}
+
+/* The themed focus ring, recoloured for the inverted field: the accent ring
+   would vanish into the red ground, so the ring is drawn in the ground colour
+   with a gap of red between it and the button. */
+.celebrate-continue:focus-visible {
+  outline: 2px solid var(--color-bg);
+  outline-offset: 3px;
+}
+
+/* — confetti: decoration, nothing more — */
+.celebrate-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.celebrate-fleck {
+  position: absolute;
+  top: -26px;
+  width: 10px;
+  height: 16px;
+  animation-name: celebrate-fall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.celebrate-fleck--1 {
+  background: var(--color-bg);
+}
+.celebrate-fleck--2 {
+  background: var(--color-text);
+}
+.celebrate-fleck--3 {
+  background: var(--color-accent-300);
+}
+.celebrate-fleck--4 {
+  background: var(--color-accent-800);
+}
+
+@keyframes celebrate-fall {
+  to {
+    transform: translateY(110vh) rotate(300deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebrate-confetti {
+    display: none;
+  }
+}
+
+/* Phone: the field stays full-bleed, the card block keeps its art inside. */
+@media (max-width: 480px) {
+  .celebrate-card {
+    padding-right: 72px;
+  }
+  .celebrate-art {
+    width: 52px;
+  }
+}
