@@ -1,0 +1,6 @@
+<!-- The Traceback Era — original geometric art: an alert triangle over stack lines. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-hidden="true">
+  <path d="M24 2 46 32H2ZM22 12v11h4V12ZM22 25v4h4v-4Z" />
+  <rect x="6" y="36" width="36" height="3" />
+  <rect x="6" y="42" width="24" height="3" />
+</svg>

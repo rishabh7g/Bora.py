@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findModule, loadCurriculum } from './load';
+import { findModule, loadCurriculum, photocardArtUrl } from './load';
 
 describe('loadCurriculum', () => {
   const curriculum = loadCurriculum();
@@ -47,5 +47,22 @@ describe('loadCurriculum', () => {
 
   it('returns undefined for unknown module ids', () => {
     expect(findModule(curriculum, 'nope')).toBeUndefined();
+  });
+});
+
+describe('photocard art', () => {
+  const curriculum = loadCurriculum();
+
+  it('resolves every photocard to its original local SVG', () => {
+    for (const tier of curriculum.tiers) {
+      for (const module of tier.modules) {
+        expect(module.photocard.art, `${module.id} art`).toMatch(/card-.+\.svg/);
+        expect(module.photocard.art).not.toMatch(/^https?:/);
+      }
+    }
+  });
+
+  it('resolves an unknown art file name to an empty ref (content lint blocks it)', () => {
+    expect(photocardArtUrl('not-a-real-card.svg')).toBe('');
   });
 });

@@ -60,7 +60,8 @@
       "anchor": "Install Python + run your first .py file",
       "photocard": {
         "id": "card-m0",
-        "title": "The Debut Card"
+        "title": "The Debut Card",
+        "art": "card-m0.svg"
       },
       "concept": {
         "intro": "",
@@ -86,7 +87,8 @@
       "anchor": "Store member names; f-strings for \"My bias is…\"",
       "photocard": {
         "id": "card-m1",
-        "title": "The Variable Era"
+        "title": "The Variable Era",
+        "art": "card-m1.svg"
       },
       "concept": {
         "intro": "A variable is a named box for a value; print() is how your program talks back. An f-string — f\"My bias is {name}\" — drops variables straight into text. Everything runs on YOUR machine: write the file, run it in the terminal, compare outputs here.",
@@ -177,7 +179,8 @@
       "anchor": "Debut-year arithmetic (2026 − 2013)",
       "photocard": {
         "id": "card-m2",
-        "title": "The Arithmetic Era"
+        "title": "The Arithmetic Era",
+        "art": "card-m2.svg"
       },
       "concept": {
         "intro": "Numbers need no quotes. Python adds, subtracts, multiplies and divides with + - * and /, and // keeps only the whole part. Anything a calculator can do, print() can show — and f-strings can do the math mid-sentence.",
@@ -272,7 +275,8 @@
       "anchor": "upper(), len(\"Jungkook\"), slicing chants",
       "photocard": {
         "id": "card-m3",
-        "title": "The String Era"
+        "title": "The String Era",
+        "art": "card-m3.svg"
       },
       "concept": {
         "intro": "A string is text in quotes, and it carries tools called methods: chant.upper() returns a shouting copy of chant. Two built-ins matter now too — len() counts characters, and [start:stop] slices out a piece (the stop position is not included).",
@@ -367,7 +371,8 @@
       "anchor": "Read tracebacks; fix deliberately broken snippets",
       "photocard": {
         "id": "card-m4",
-        "title": "The Traceback Era"
+        "title": "The Traceback Era",
+        "art": "card-m4.svg"
       },
       "concept": {
         "intro": "Errors are not punishment — they are Python telling you exactly where it gave up. Read the LAST line first: the error type and its message. The lines above name the file and line; a ^ arrow points near the problem. Every exercise below hands you broken code to fix.",
@@ -457,7 +462,8 @@
       "anchor": "The members list — indexing, append, slicing the rap line",
       "photocard": {
         "id": "card-m5",
-        "title": "The List Era"
+        "title": "The List Era",
+        "art": "card-m5.svg"
       },
       "concept": {
         "intro": "A list keeps things in order inside one variable. Positions start at 0, len() counts items, .append() adds to the end, and [start:stop] slices a run of neighbours. Meet the members list — you will use it for the rest of the course.",
@@ -552,7 +558,8 @@
       "anchor": "\"Which era?\" logic; ticket-price checker",
       "photocard": {
         "id": "card-m6",
-        "title": "The Logic Era"
+        "title": "The Logic Era",
+        "art": "card-m6.svg"
       },
       "concept": {
         "intro": "if runs a block only when a test is True. The indented lines under the colon are the block. == asks \"are these equal?\" (one = stores, two == compare), elif tries the next test, else catches everything left. Python takes the FIRST true branch and skips the rest.",
@@ -647,7 +654,8 @@
       "anchor": "Fan chant one name per line; counting songs",
       "photocard": {
         "id": "card-m7",
-        "title": "The Loop Era"
+        "title": "The Loop Era",
+        "art": "card-m7.svg"
       },
       "concept": {
         "intro": "for repeats a block once per item in a list. The loop variable — for name in members — holds the current item and changes every pass. range(3) makes the numbers 0, 1, 2, handy for \"do this N times\". Indented lines run every pass; unindented lines run once, after.",
@@ -742,7 +750,8 @@
       "anchor": "Interactive quiz mechanics",
       "photocard": {
         "id": "card-m8",
-        "title": "The While Era"
+        "title": "The While Era",
+        "art": "card-m8.svg"
       },
       "concept": {
         "intro": "while repeats as long as its test stays True — so something inside must change, or it never ends (Ctrl+C stops a runaway loop). input(\"…\") shows a prompt, waits for typing, and hands back what was typed — always as text. Exercises tell you EXACTLY what to type so outputs match.",
@@ -843,7 +852,8 @@
       "anchor": "One song as a dict; look up album by title",
       "photocard": {
         "id": "card-m9",
-        "title": "The Dict Era"
+        "title": "The Dict Era",
+        "art": "card-m9.svg"
       },
       "concept": {
         "intro": "A dict stores labelled values: key on the left, value on the right. Look a value up with square brackets and the KEY — song[\"title\"] — not a position. Assigning to a new key adds it, and  \"album\" in song  asks whether a key exists.",
@@ -938,7 +948,8 @@
       "anchor": "recommend_song(mood), is_maknae(name)",
       "photocard": {
         "id": "card-m10",
-        "title": "The Function Era"
+        "title": "The Function Era",
+        "art": "card-m10.svg"
       },
       "concept": {
         "intro": "def gives a block a name so you can run it whenever you like. Parameters are its inputs; return hands a value back to the caller. Defining does nothing by itself — the CALL is what runs it. This is where your code stops being a script and starts being tools.",
@@ -1028,7 +1039,8 @@
       "anchor": "Lists of dicts + loops + functions together",
       "photocard": {
         "id": "card-m11",
-        "title": "The Combination Era"
+        "title": "The Combination Era",
+        "art": "card-m11.svg"
       },
       "concept": {
         "intro": "The final shape: a list of dicts — every song is a dict, the catalogue is a list of them. Loop over the list and each pass hands you one dict; add if to filter, a counter to count, and a function to wrap it up. This is what real data looks like.",
@@ -1123,7 +1135,8 @@
       "anchor": "Terminal BTS quiz or setlist builder, demo-ready",
       "photocard": {
         "id": "card-m12",
-        "title": "The Proof Era"
+        "title": "The Proof Era",
+        "art": "card-m12.svg"
       },
       "concept": {
         "intro": "The dream project: a terminal BTS quiz you can demo to friends. Nothing new to learn — variables, input(), if, loops and functions are the whole toolkit. Build it in three milestones; the exit is one full session that matches the transcript, typed inputs and all.",

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { findModule, loadCurriculum } from './content/load';
 import ExerciseView from './ExerciseView';
-import HomeMap, { SETUP_ROUTE } from './HomeMap';
+import HomeMap, { HOME_ROUTE, SETUP_ROUTE, SHELF_ROUTE } from './HomeMap';
 import ModuleView from './ModuleView';
+import PhotocardShelf from './PhotocardShelf';
 import { exitUnlocked, moduleUnlocked } from './state/gating';
 import { exerciseStateOf } from './state/progress';
 import { useProgress } from './state/useProgress';
@@ -12,18 +13,19 @@ const curriculum = loadCurriculum();
 // Minimal hash routing:
 //   #/                            → HomeMap (root)
 //   #/setup                       → SetupGuide (placeholder until its issue)
+//   #/shelf                       → PhotocardShelf
 //   #/module/<id>                 → ModuleView
 //   #/module/<id>/exercise/<eid>  → ExerciseView (formative)
 //   #/module/<id>/exit            → ExerciseView (exit checkpoint)
-const HOME_ROUTE = '#/';
-
 type Route =
   | { screen: 'home' }
   | { screen: 'setup' }
+  | { screen: 'shelf' }
   | { screen: 'module'; moduleId: string; exerciseId?: string; isExit: boolean };
 
 function routeFromHash(hash: string): Route {
   if (hash === SETUP_ROUTE) return { screen: 'setup' };
+  if (hash === SHELF_ROUTE) return { screen: 'shelf' };
   const match = /^#\/module\/([^/]+)(?:\/exercise\/([^/]+)|\/(exit))?$/.exec(hash);
   // Anything unrecognised falls back to the map — it is the app's root.
   if (!match) return { screen: 'home' };
@@ -75,6 +77,14 @@ export default function App() {
     return (
       <main>
         <HomeMap curriculum={curriculum} progress={progress} />
+      </main>
+    );
+  }
+
+  if (route.screen === 'shelf') {
+    return (
+      <main>
+        <PhotocardShelf curriculum={curriculum} progress={progress} />
       </main>
     );
   }

@@ -1,0 +1,10 @@
+<!-- The Function Era — original geometric art: arguments in, a return value out. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-hidden="true">
+  <path d="M14 14h20v20H14Zm4 4v12h12V18Z" />
+  <rect x="2" y="22" width="8" height="4" />
+  <rect x="38" y="22" width="8" height="4" />
+  <rect x="22" y="2" width="4" height="8" />
+  <rect x="22" y="38" width="4" height="8" />
+  <path d="M8 20l6 4-6 4Z" />
+  <path d="M40 20l-6 4 6 4Z" />
+</svg>

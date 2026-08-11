@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -34,7 +34,7 @@ function makeCurriculum(overrides: {
       m1: {
         id: 'm1',
         title: 'Module 1',
-        photocard: { id: 'pc1', title: 'Card', art: overrides.art ?? '' },
+        photocard: { id: 'pc1', title: 'Card', art: overrides.art ?? 'card-m1.svg' },
         concept: { intro: overrides.intro ?? 'Intro text.', examples: [] },
         exercises: [{ ...okExercise, ...overrides.exercise }],
         exitExercise: { ...okExit, ...overrides.exit },
@@ -122,12 +122,27 @@ describe('lintCurriculum', () => {
     expect(violations).toHaveLength(1);
     expect(violations[0].message).toMatch(/original local svg/);
   });
+
+  it('flags a photocard with no art at all — every card ships original art', () => {
+    const violations = lintCurriculum(makeCurriculum({ art: '' }));
+    expect(violations).toHaveLength(1);
+    expect(violations[0].message).toMatch(/original local svg/);
+  });
+
+  it('flags art whose svg file is missing from the repo', () => {
+    const violations = lintCurriculum(makeCurriculum({ art: 'card-m1.svg' }), () => false);
+    expect(violations).toHaveLength(1);
+    expect(violations[0].message).toMatch(/missing/);
+  });
 });
 
 describe('real curriculum', () => {
   it('content/curriculum.json passes the lint', () => {
     const curriculumPath = join(dirname(fileURLToPath(import.meta.url)), 'curriculum.json');
     const curriculum = JSON.parse(readFileSync(curriculumPath, 'utf8')) as RawCurriculum;
-    expect(lintCurriculum(curriculum)).toEqual([]);
+    const artDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'art', 'photocards');
+    expect(lintCurriculum(curriculum, (fileName) => existsSync(join(artDir, fileName)))).toEqual(
+      [],
+    );
   });
 });

@@ -19,6 +19,11 @@ import './home.css';
 export const SETUP_MODULE_ID = 'm0';
 export const SETUP_ROUTE = '#/setup';
 
+// The map is the app's root; the shelf hangs off it (routes live here so the
+// screens can link to each other without importing one another in a cycle).
+export const HOME_ROUTE = '#/';
+export const SHELF_ROUTE = '#/shelf';
+
 // No accounts and no settings screen yet, so the greeting uses the prototype's
 // default learner name.
 const LEARNER_NAME = 'ARMY';
@@ -134,7 +139,14 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
     <div className="home-screen">
       <div className="home-head">
         <p className="home-kicker">Checkpoint path</p>
-        <span className="tag tag-neutral home-count">{`${passedCount} / ${modules.length} CHECKPOINTS`}</span>
+        <div className="home-headright">
+          <span className="tag tag-neutral home-count">{`${passedCount} / ${modules.length} CHECKPOINTS`}</span>
+          {/* The shelf is reached from the map — the collection is a reward to
+              browse, never a task to chase. */}
+          <a className="btn btn-ghost home-shelflink" href={SHELF_ROUTE}>
+            Photocard shelf →
+          </a>
+        </div>
       </div>
       <h1 className="home-title">{`Annyeong, ${LEARNER_NAME}.`}</h1>
       <p className="home-lede">{`Progress is checkpoints passed — never days or streaks. ${progressLine}`}</p>

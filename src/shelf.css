@@ -1,0 +1,167 @@
+/* PhotocardShelf — Modernist system. Tokens and the prototype's structural
+   measures only; radius stays 0 by token. Structure mirrors
+   design/PyLearn Prototype.dc.html → Photocard shelf screen. */
+
+.shelf-screen {
+  width: min(1020px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 40px) 56px;
+}
+
+.shelf-back {
+  padding-inline: 0;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.shelf-kicker {
+  margin: 14px 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.shelf-title {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.shelf-lede {
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: var(--color-neutral-700);
+  max-width: 60ch;
+}
+
+.shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 20px;
+  margin-top: 36px;
+}
+
+.shelf-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* — the card — */
+.shelf-card {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 2 / 2.9;
+  padding: 14px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shelf-card--earned {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  text-decoration: none;
+  cursor: pointer;
+}
+.shelf-card--earned:hover {
+  background: var(--color-accent-600);
+}
+.shelf-card--earned:active {
+  background: var(--color-accent-700);
+}
+
+.shelf-card--locked {
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  color: var(--color-neutral-400);
+}
+
+.shelf-num {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 38px;
+  line-height: 1;
+}
+
+.shelf-cardtitle {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.2;
+  margin-top: auto;
+}
+
+.shelf-foot {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* Original SVG art as a watermark: the file is a mask, so the shape always
+   takes the card's own ink and can never fight its contrast. */
+.shelf-art {
+  position: absolute;
+  right: 8%;
+  top: 26%;
+  width: 58%;
+  aspect-ratio: 1 / 1;
+  background: currentColor;
+  opacity: 0.26;
+  pointer-events: none;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+/* — cracks: one per hint used, drawn as chipped corners (max four) — */
+.shelf-crack {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  transform: rotate(45deg);
+  background: var(--color-bg);
+  border: 2px solid var(--color-accent-900);
+  pointer-events: none;
+}
+.shelf-crack--1 {
+  top: -15px;
+  right: -15px;
+}
+.shelf-crack--2 {
+  bottom: -15px;
+  left: -15px;
+}
+.shelf-crack--3 {
+  top: -15px;
+  left: -15px;
+}
+.shelf-crack--4 {
+  bottom: -15px;
+  right: -15px;
+}
+
+.shelf-note {
+  font-size: 12px;
+  color: var(--color-neutral-600);
+}
+
+/* At phone width two cards per row still fit the prototype's proportions. */
+@media (max-width: 480px) {
+  .shelf-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+}

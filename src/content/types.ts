@@ -43,4 +43,8 @@ export type Exercise = {
   isExit?: boolean; // exit exercises: hints array empty, ladder disabled
 };
 
-export type Photocard = { id: string; title: string; art: string /* svg ref */ };
+export type Photocard = {
+  id: string;
+  title: string;
+  art: string; // URL of the module's original SVG art, resolved by content/load
+};

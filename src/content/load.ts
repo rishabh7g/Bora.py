@@ -3,6 +3,20 @@
 import raw from '../../content/curriculum.json';
 import type { Curriculum, Exercise, Module, Tier } from './types';
 
+// Photocard art: original SVGs authored in this repo (DESIGN.md §4 — no
+// official imagery). curriculum.json names the file ("card-m7.svg"); the
+// bundler owns the real URL, so the art survives hashing and any deploy base
+// path. An unknown name resolves to "" — content lint is what blocks that.
+const ART_URLS = import.meta.glob('../art/photocards/*.svg', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>;
+
+export function photocardArtUrl(fileName: string): string {
+  return ART_URLS[`../art/photocards/${fileName}`] ?? '';
+}
+
 // Shape of design/content/curriculum.json as delivered by the design handoff.
 type RawExercise = {
   id: string;
@@ -64,7 +78,7 @@ function toModule(rawModule: RawModule): Module {
     photocard: {
       id: rawModule.photocard.id,
       title: rawModule.photocard.title,
-      art: rawModule.photocard.art ?? '', // art not authored yet in the handoff JSON
+      art: photocardArtUrl(rawModule.photocard.art ?? ''),
     },
   };
 }
