@@ -1,0 +1,21 @@
+# CI per ENGINEERING.md §10: typecheck + content lint + build on every push/PR.
+# Deploy (GitHub Pages) is a separate workflow — arrives with issue #10.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint:content
+      - run: npm run build

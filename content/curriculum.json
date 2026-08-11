@@ -785,6 +785,9 @@
           "title": "Ask the bias",
           "prompt": "Ask with input(\"Bias? \") and echo the answer back. When it asks, type exactly: Jungkook",
           "expectedOutput": "Bias? Jungkook\nMy bias is Jungkook",
+          "inputsToType": [
+            "Jungkook"
+          ],
           "hints": [
             "input returns what was typed — store it in a variable.",
             "Shape:  answer = input(\"Bias? \")  then one f-string print."
@@ -800,6 +803,10 @@
           "title": "The magic word",
           "prompt": "Keep asking  Say the magic word:  until the answer is borahae, then print Doors open! When it asks, type exactly: army — then: borahae",
           "expectedOutput": "Say the magic word: army\nSay the magic word: borahae\nDoors open!",
+          "inputsToType": [
+            "army",
+            "borahae"
+          ],
           "hints": [
             "The test compares the LAST answer:  while word != \"borahae\":",
             "Start word = \"\" so the loop has something to test the first time."
@@ -816,6 +823,10 @@
         "title": "Exit — find the maknae",
         "prompt": "Keep asking  Maknae?  until the answer is Jungkook, then print Correct! When it asks, type exactly: Jimin — then: Jungkook",
         "expectedOutput": "Maknae? Jimin\nMaknae? Jungkook\nCorrect!",
+        "inputsToType": [
+          "Jimin",
+          "Jungkook"
+        ],
         "hints": [],
         "solution": "guess = \"\"\nwhile guess != \"Jungkook\":\n    guess = input(\"Maknae? \")\nprint(\"Correct!\")",
         "approachChecklist": [
@@ -1135,6 +1146,9 @@
           "title": "Milestone 1 — the greeting",
           "prompt": "Print the title, ask for a name, greet. When it asks, type exactly: Riya",
           "expectedOutput": "BTS QUIZ\nYour name? Riya\nWelcome, Riya!",
+          "inputsToType": [
+            "Riya"
+          ],
           "hints": [
             "Three lines: a print, an input, an f-string print.",
             "The typed Riya appears on the prompt line — that is normal."
@@ -1150,6 +1164,9 @@
           "title": "Milestone 2 — one scored question",
           "prompt": "Ask  Maknae?  — add a point when the answer is Jungkook, then print the score. When it asks, type exactly: Jungkook",
           "expectedOutput": "Maknae? Jungkook\nScore: 1/1",
+          "inputsToType": [
+            "Jungkook"
+          ],
           "hints": [
             "if guess == \"Jungkook\":  score = score + 1",
             "score starts at 0 BEFORE the question."
@@ -1165,6 +1182,11 @@
           "title": "Milestone 3 — three questions",
           "prompt": "Three questions, one score, one final line. When it asks, type exactly: Jungkook — then: 2013 — then: RM",
           "expectedOutput": "Maknae? Jungkook\nDebut year? 2013\nLeader? RM\nScore: 3/3",
+          "inputsToType": [
+            "Jungkook",
+            "2013",
+            "RM"
+          ],
           "hints": [
             "Repeating the if block three times is fine — or reuse the ask() function from the examples.",
             "input() returns TEXT: compare the year to \"2013\" in quotes."
@@ -1181,6 +1203,12 @@
         "title": "Exit — the demo session",
         "prompt": "The full app: title, name, three questions, score line, sign-off. One answer below is wrong on purpose — scoring must survive it. When it asks, type exactly: Riya — then: Jungkook — then: 2014 — then: RM",
         "expectedOutput": "BTS QUIZ\nYour name? Riya\nMaknae? Jungkook\nDebut year? 2014\nLeader? RM\nRiya, you scored 2/3\nBorahae!",
+        "inputsToType": [
+          "Riya",
+          "Jungkook",
+          "2014",
+          "RM"
+        ],
         "hints": [],
         "solution": "def ask(question, answer):\n    guess = input(question)\n    return guess == answer\n\nprint(\"BTS QUIZ\")\nname = input(\"Your name? \")\nscore = 0\nif ask(\"Maknae? \", \"Jungkook\"):\n    score = score + 1\nif ask(\"Debut year? \", \"2013\"):\n    score = score + 1\nif ask(\"Leader? \", \"RM\"):\n    score = score + 1\nprint(f\"{name}, you scored {score}/3\")\nprint(\"Borahae!\")",
         "approachChecklist": [
