@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { findModule, loadCurriculum } from './content/load';
 import ExerciseView from './ExerciseView';
 import ModuleView from './ModuleView';
+import { exitUnlocked } from './state/gating';
 import { exerciseStateOf } from './state/progress';
 import { useProgress } from './state/useProgress';
 
@@ -42,6 +43,11 @@ export default function App() {
     );
   }
 
+  // Wait for the stored progress before rendering any screen, so a click can
+  // never act on (and overwrite with) unloaded default state — and so chips
+  // and the exit lock never flash their defaults.
+  if (!progress) return <main />;
+
   const exercise = route.isExit
     ? module.exitExercise
     : route.exerciseId
@@ -56,9 +62,15 @@ export default function App() {
         </main>
       );
     }
-    // Wait for the stored progress before rendering the gate, so a click can
-    // never act on (and overwrite with) unloaded default state.
-    if (!progress) return <main />;
+    // §6 exit lock (state/gating.ts): a direct URL cannot bypass the gate —
+    // fall back to the module screen, whose locked row explains the rule.
+    if (route.isExit && !exitUnlocked(module, progress)) {
+      return (
+        <main>
+          <ModuleView curriculum={curriculum} module={module} progress={progress} />
+        </main>
+      );
+    }
     return (
       <main>
         <ExerciseView
@@ -74,8 +86,7 @@ export default function App() {
 
   return (
     <main>
-      <h1>bora.py</h1>
-      <ModuleView module={module} />
+      <ModuleView curriculum={curriculum} module={module} progress={progress} />
     </main>
   );
 }

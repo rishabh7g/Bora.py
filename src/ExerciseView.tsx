@@ -3,9 +3,8 @@
 // effort-gate buttons, hint ladder, solution reveal with approach checklist.
 // Every gating decision is read from src/state/effortGate.ts — the one owner
 // of the state machine. This component only renders and forwards transitions.
-import Prism from 'prismjs';
-import 'prismjs/components/prism-python';
 import type { Exercise, Module } from './content/types';
+import PythonCode from './PythonCode';
 import {
   declareAttempt,
   declareMatch,
@@ -24,15 +23,6 @@ export type ExerciseViewProps = {
   state: ExerciseState;
   onTransition: (transition: (state: ExerciseState) => ExerciseState) => void;
 };
-
-function PythonCode({ code }: { code: string }) {
-  const html = Prism.highlight(code, Prism.languages.python, 'python');
-  return (
-    <pre className="ex-solution">
-      <code dangerouslySetInnerHTML={{ __html: html }} />
-    </pre>
-  );
-}
 
 function HintRung({
   label,
@@ -194,7 +184,7 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
       {solutionShown && (
         <>
           <h2 className="ex-section-title">Model solution</h2>
-          <PythonCode code={exercise.solution} />
+          <PythonCode code={exercise.solution} className="ex-solution" />
           <h3 className="ex-checklist-title">Compare approaches</h3>
           <div className="ex-checklist">
             {exercise.approachChecklist.map((item, index) => (
