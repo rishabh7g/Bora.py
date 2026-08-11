@@ -23,9 +23,9 @@ export const SETUP_ROUTE = '#/setup';
 // screens can link to each other without importing one another in a cycle).
 export const HOME_ROUTE = '#/';
 export const SHELF_ROUTE = '#/shelf';
+export const SETTINGS_ROUTE = '#/settings';
 
-// No accounts and no settings screen yet, so the greeting uses the prototype's
-// default learner name.
+// No accounts, so the greeting uses the prototype's default learner name.
 const LEARNER_NAME = 'ARMY';
 
 export function moduleHref(moduleId: string): string {
@@ -145,6 +145,11 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
               browse, never a task to chase. */}
           <a className="btn btn-ghost home-shelflink" href={SHELF_ROUTE}>
             Photocard shelf →
+          </a>
+          {/* Settings hangs off the map too: export/import is the backup story
+              (ENGINEERING.md §4), reachable without hunting for it. */}
+          <a className="btn btn-ghost home-shelflink" href={SETTINGS_ROUTE}>
+            Settings →
           </a>
         </div>
       </div>

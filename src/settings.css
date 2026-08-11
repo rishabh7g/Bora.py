@@ -1,0 +1,178 @@
+/* Settings — Modernist system. Tokens and the prototype's structural measures
+   only (design/README.md): radius 0 by token, everything flush left, 2px rules
+   between sections, accent used sparingly, hit targets ≥ 44px. */
+
+.set-screen {
+  width: min(760px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 56px;
+}
+
+.set-back {
+  padding-inline: 0;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.set-kicker {
+  margin: 14px 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.set-title {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.set-lede {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 62ch;
+  color: var(--color-neutral-700);
+}
+
+/* Status line for the last thing that happened — a fact, stated once. */
+.set-notice {
+  margin: 16px 0 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  background: var(--color-surface);
+  border-left: 2px solid var(--color-accent);
+}
+
+.set-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* labels and controls flush left */
+}
+
+.set-h2 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.set-copy {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 62ch;
+  color: var(--color-neutral-800);
+}
+.set-copy--quiet {
+  color: var(--color-neutral-600);
+  font-size: 13px;
+}
+
+.set-file {
+  font: 500 13px/1.6 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+}
+
+/* Every control clears the 44px target the DS button alone does not. */
+.set-btn {
+  min-height: 44px;
+  margin-top: 16px;
+}
+
+.set-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.set-label {
+  margin: 16px 0 5px;
+  font-size: 12px;
+  color: var(--color-neutral-700);
+}
+
+.set-input {
+  max-width: 420px;
+  min-height: 44px;
+  padding-block: 10px;
+  cursor: pointer;
+}
+
+.set-error {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  max-width: 62ch;
+  color: var(--color-accent-900);
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border-left: 2px solid var(--color-accent);
+}
+
+.set-confirm {
+  margin-top: 18px;
+  padding: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+}
+
+/* — per-module reset rows — */
+.set-list {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  width: 100%;
+  border-top: 1px solid var(--color-divider);
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  min-height: 44px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.set-rownum {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1;
+  min-width: 2ch;
+}
+
+.set-rowtext {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: auto;
+}
+
+.set-rowtitle {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.set-rowstate {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-neutral-600);
+}
+
+/* In a row the buttons sit on the row's own baseline, not below it. */
+.set-row .set-btn {
+  margin-top: 0;
+}

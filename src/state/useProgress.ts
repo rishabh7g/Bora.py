@@ -1,7 +1,7 @@
 // React binding for Progress: load once on mount, write-through on every change.
 import { useCallback, useEffect, useState } from 'react';
 import type { ExerciseState } from './effortGate';
-import { loadProgress, saveProgress, updateExerciseState, type Progress } from './progress';
+import { loadProgress, resetModule, saveProgress, updateExerciseState, type Progress } from './progress';
 
 export type ApplyTransition = (
   moduleId: string,
@@ -10,7 +10,19 @@ export type ApplyTransition = (
   transition: (state: ExerciseState) => ExerciseState,
 ) => void;
 
-export function useProgress(): { progress: Progress | null; apply: ApplyTransition } {
+export type UseProgress = {
+  progress: Progress | null;
+  apply: ApplyTransition;
+  /** Replace the whole stored state — the import half of the backup story
+   *  (ENGINEERING.md §4). The caller validates the file first
+   *  (state/backup.parseBackup); this only writes. */
+  replaceAll: (next: Progress) => void;
+  /** Forget one module (Settings' per-module reset), written through like
+   *  every other change. */
+  resetModule: (moduleId: string) => void;
+};
+
+export function useProgress(): UseProgress {
   const [progress, setProgress] = useState<Progress | null>(null);
 
   useEffect(() => {
@@ -32,5 +44,19 @@ export function useProgress(): { progress: Progress | null; apply: ApplyTransiti
     });
   }, []);
 
-  return { progress, apply };
+  const replaceAll = useCallback((next: Progress) => {
+    setProgress(next);
+    void saveProgress(next); // write-through, same as every other change
+  }, []);
+
+  const forgetModule = useCallback((moduleId: string) => {
+    setProgress((previous) => {
+      if (!previous) return previous; // not loaded yet — never clobber stored state
+      const next = resetModule(previous, moduleId);
+      if (next !== previous) void saveProgress(next);
+      return next;
+    });
+  }, []);
+
+  return { progress, apply, replaceAll, resetModule: forgetModule };
 }
