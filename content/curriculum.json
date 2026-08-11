@@ -1,0 +1,1194 @@
+{
+  "version": 1,
+  "brand": "bora.py",
+  "tiers": [
+    {
+      "id": "t0",
+      "title": "Tier 0 — Setup",
+      "era": "Debut, 2013",
+      "modules": [
+        "m0"
+      ]
+    },
+    {
+      "id": "t1",
+      "title": "Tier 1 — Basics",
+      "era": "School trilogy era",
+      "modules": [
+        "m1",
+        "m2",
+        "m3",
+        "m4"
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Tier 2 — Beginner",
+      "era": "Wings era",
+      "modules": [
+        "m5",
+        "m6",
+        "m7",
+        "m8"
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Tier 3 — Intermediate",
+      "era": "Map of the Soul era",
+      "modules": [
+        "m9",
+        "m10",
+        "m11"
+      ]
+    },
+    {
+      "id": "t4",
+      "title": "Tier 4 — Capstone",
+      "era": "Proof era",
+      "modules": [
+        "m12"
+      ]
+    }
+  ],
+  "modules": {
+    "m0": {
+      "id": "m0",
+      "num": "00",
+      "tier": 0,
+      "title": "Hello, Python",
+      "anchor": "Install Python + run your first .py file",
+      "photocard": {
+        "id": "card-m0",
+        "title": "The Debut Card"
+      },
+      "concept": {
+        "intro": "",
+        "examples": []
+      },
+      "exercises": [],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — hello.py",
+        "prompt": "",
+        "expectedOutput": "Jimin",
+        "hints": [],
+        "solution": "print(\"Jimin\")",
+        "approachChecklist": [],
+        "isExit": true
+      }
+    },
+    "m1": {
+      "id": "m1",
+      "num": "01",
+      "tier": 1,
+      "title": "Variables + print",
+      "anchor": "Store member names; f-strings for \"My bias is…\"",
+      "photocard": {
+        "id": "card-m1",
+        "title": "The Variable Era"
+      },
+      "concept": {
+        "intro": "A variable is a named box for a value; print() is how your program talks back. An f-string — f\"My bias is {name}\" — drops variables straight into text. Everything runs on YOUR machine: write the file, run it in the terminal, compare outputs here.",
+        "examples": [
+          {
+            "code": "bias = \"Jungkook\"\nprint(bias)",
+            "output": "Jungkook",
+            "why": "A variable stores a value; print() writes it to the terminal."
+          },
+          {
+            "code": "debut = 2013\nprint(2026 - debut)",
+            "output": "13",
+            "why": "Python does the math right inside print()."
+          },
+          {
+            "code": "name = \"V\"\nprint(f\"My bias is {name}\")",
+            "output": "My bias is V",
+            "why": "An f-string drops a variable into the middle of text. Note the f before the quote."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Print your bias",
+          "prompt": "Store the name Jungkook in a variable, then print it. Run the file in your terminal and compare.",
+          "expectedOutput": "Jungkook",
+          "hints": [
+            "Which tool stores a value so you can reuse it later? A variable.",
+            "Shape:  name = \"...\"  on one line, then  print(name)  on the next."
+          ],
+          "solution": "bias = \"Jungkook\"\nprint(bias)",
+          "approachChecklist": [
+            "Did you print the variable, or retype the string inside print()?",
+            "Would your code still work if the name changed?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Years active",
+          "prompt": "BTS debuted in 2013. Print the sentence below — the 13 must be computed by Python, not typed by you.",
+          "expectedOutput": "BTS have been active for 13 years",
+          "hints": [
+            "Math works inside an f-string: {2026 - debut}.",
+            "Shape:  debut = 2013  then  print(f\"... {2026 - debut} ...\")"
+          ],
+          "solution": "debut = 2013\nprint(f\"BTS have been active for {2026 - debut} years\")",
+          "approachChecklist": [
+            "Is 13 computed, or hard-coded?",
+            "Does your spacing match the expected output exactly?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Bias and wrecker",
+          "prompt": "Two variables, exactly one line of output.",
+          "expectedOutput": "Bias: Jimin / Wrecker: V",
+          "hints": [
+            "Two variables can live in one f-string.",
+            "Shape:  print(f\"Bias: {a} / Wrecker: {b}\")"
+          ],
+          "solution": "bias = \"Jimin\"\nwrecker = \"V\"\nprint(f\"Bias: {bias} / Wrecker: {wrecker}\")",
+          "approachChecklist": [
+            "One print or two? One output line means one print.",
+            "Exact spaces around the slash?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — since 2018",
+        "prompt": "Novel task, same size as the practice set: print the line below. Use one variable for the name and one for the year.",
+        "expectedOutput": "RM has been my bias since 2018",
+        "hints": [],
+        "solution": "name = \"RM\"\nyear = 2018\nprint(f\"{name} has been my bias since {year}\")",
+        "approachChecklist": [
+          "Did both values come from variables?",
+          "Loop or repeat? Neither needed here — did you keep it simple?"
+        ],
+        "isExit": true
+      }
+    },
+    "m2": {
+      "id": "m2",
+      "num": "02",
+      "tier": 1,
+      "title": "Numbers + math",
+      "anchor": "Debut-year arithmetic (2026 − 2013)",
+      "photocard": {
+        "id": "card-m2",
+        "title": "The Arithmetic Era"
+      },
+      "concept": {
+        "intro": "Numbers need no quotes. Python adds, subtracts, multiplies and divides with + - * and /, and // keeps only the whole part. Anything a calculator can do, print() can show — and f-strings can do the math mid-sentence.",
+        "examples": [
+          {
+            "code": "debut = 2013\nnow = 2026\nprint(now - debut)",
+            "output": "13",
+            "why": "No quotes means numbers — and minus works on them."
+          },
+          {
+            "code": "members = 7\nalbums = 9\nprint(members * albums)",
+            "output": "63",
+            "why": "* multiplies. Variables holding numbers behave like numbers."
+          },
+          {
+            "code": "print(10 / 4)",
+            "output": "2.5",
+            "why": "/ always gives a decimal answer (a float), even for 10 / 5."
+          },
+          {
+            "code": "print(10 // 4)",
+            "output": "2",
+            "why": "// is whole-number division: it chops the decimal off."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Age of the maknae",
+          "prompt": "Jungkook was born in 1997. Print the line below — the 29 must come from subtraction, not your keyboard.",
+          "expectedOutput": "Jungkook is 29",
+          "hints": [
+            "Age is this year minus the birth year: 2026 - 1997.",
+            "Shape:  born = 1997  then  print(f\"Jungkook is {2026 - born}\")"
+          ],
+          "solution": "born = 1997\nprint(f\"Jungkook is {2026 - born}\")",
+          "approachChecklist": [
+            "Is 29 computed by Python?",
+            "Is 1997 in a variable, so it is easy to change?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Concert math",
+          "prompt": "One ticket costs 350. Print what 3 tickets cost — multiplied by Python.",
+          "expectedOutput": "3 tickets cost 1050",
+          "hints": [
+            "* multiplies two numbers.",
+            "Shape:  price = 350  then  print(f\"3 tickets cost {price * 3}\")"
+          ],
+          "solution": "price = 350\nprint(f\"3 tickets cost {price * 3}\")",
+          "approachChecklist": [
+            "Is 1050 computed?",
+            "Exact spacing in the sentence?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Split the bill",
+          "prompt": "Seven members split a 1000 won snack bill. Print each share as a whole number — use //.",
+          "expectedOutput": "Each member gets 142",
+          "hints": [
+            "// divides and drops the decimal part.",
+            "Shape:  print(f\"Each member gets {1000 // 7}\")"
+          ],
+          "solution": "print(f\"Each member gets {1000 // 7}\")",
+          "approachChecklist": [
+            "Did you use // instead of /?",
+            "What would / have printed instead? Try it."
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — countdown to 2030",
+        "prompt": "Print the line below. The 4 must be computed as 2030 minus a variable holding 2026.",
+        "expectedOutput": "Only 4 years until 2030",
+        "hints": [],
+        "solution": "year = 2026\nprint(f\"Only {2030 - year} years until 2030\")",
+        "approachChecklist": [
+          "Is the 4 computed from the variable?"
+        ],
+        "isExit": true
+      }
+    },
+    "m3": {
+      "id": "m3",
+      "num": "03",
+      "tier": 1,
+      "title": "Strings + methods",
+      "anchor": "upper(), len(\"Jungkook\"), slicing chants",
+      "photocard": {
+        "id": "card-m3",
+        "title": "The String Era"
+      },
+      "concept": {
+        "intro": "A string is text in quotes, and it carries tools called methods: chant.upper() returns a shouting copy of chant. Two built-ins matter now too — len() counts characters, and [start:stop] slices out a piece (the stop position is not included).",
+        "examples": [
+          {
+            "code": "chant = \"borahae\"\nprint(chant.upper())",
+            "output": "BORAHAE",
+            "why": ".upper() returns a capitals copy; the original stays lowercase."
+          },
+          {
+            "code": "print(len(\"Jungkook\"))",
+            "output": "8",
+            "why": "len() counts characters, spaces included."
+          },
+          {
+            "code": "print(\"kook\" in \"Jungkook\")",
+            "output": "True",
+            "why": "in asks \"is this inside that?\" — the answer is True or False."
+          },
+          {
+            "code": "name = \"Jungkook\"\nprint(name[0:4])",
+            "output": "Jung",
+            "why": "A slice [0:4] takes positions 0, 1, 2, 3 — the stop is not included."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Shout the chant",
+          "prompt": "Store run bts (lowercase, in quotes) in a variable and print it in capitals.",
+          "expectedOutput": "RUN BTS",
+          "hints": [
+            ".upper() returns the capitals version.",
+            "Shape:  chant = \"run bts\"  then  print(chant.upper())"
+          ],
+          "solution": "chant = \"run bts\"\nprint(chant.upper())",
+          "approachChecklist": [
+            "Did you call .upper() WITH the parentheses?",
+            "Did you print the result, not the original?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Count the letters",
+          "prompt": "Use len() so Python counts the letters in Taehyung for you.",
+          "expectedOutput": "Taehyung has 8 letters",
+          "hints": [
+            "len(name) gives a number you can drop into an f-string.",
+            "Shape:  print(f\"{name} has {len(name)} letters\")"
+          ],
+          "solution": "name = \"Taehyung\"\nprint(f\"{name} has {len(name)} letters\")",
+          "approachChecklist": [
+            "Counted by len(), not by you?",
+            "One variable, used twice?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "First four",
+          "prompt": "Slice the first four characters of Seokjin and print them.",
+          "expectedOutput": "Seok",
+          "hints": [
+            "Positions start at 0; a slice stops BEFORE its second number.",
+            "Shape:  name[0:4]"
+          ],
+          "solution": "name = \"Seokjin\"\nprint(name[0:4])",
+          "approachChecklist": [
+            "Why 0:4 and not 1:4?",
+            "What would name[0:3] print?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — shout and count",
+        "prompt": "One line of output, two tools: print the line below using .upper() and len() on the name Suga.",
+        "expectedOutput": "SUGA has 4 letters",
+        "hints": [],
+        "solution": "name = \"Suga\"\nprint(f\"{name.upper()} has {len(name)} letters\")",
+        "approachChecklist": [
+          "Both tools inside one f-string?"
+        ],
+        "isExit": true
+      }
+    },
+    "m4": {
+      "id": "m4",
+      "num": "04",
+      "tier": 1,
+      "title": "Errors 101",
+      "anchor": "Read tracebacks; fix deliberately broken snippets",
+      "photocard": {
+        "id": "card-m4",
+        "title": "The Traceback Era"
+      },
+      "concept": {
+        "intro": "Errors are not punishment — they are Python telling you exactly where it gave up. Read the LAST line first: the error type and its message. The lines above name the file and line; a ^ arrow points near the problem. Every exercise below hands you broken code to fix.",
+        "examples": [
+          {
+            "code": "print(\"Dynamite)",
+            "output": "  File \"hello.py\", line 1\n    print(\"Dynamite)\n          ^\nSyntaxError: unterminated string literal (detected at line 1)",
+            "why": "A SyntaxError happens before the program even runs. The arrow points at the unfinished string — a quote is missing."
+          },
+          {
+            "code": "print(bias)",
+            "output": "Traceback (most recent call last):\n  File \"hello.py\", line 1, in <module>\n    print(bias)\nNameError: name 'bias' is not defined",
+            "why": "NameError means a name was used before it got a value. Last line first, always."
+          },
+          {
+            "code": "print(\"7\" + 7)",
+            "output": "Traceback (most recent call last):\n  File \"hello.py\", line 1, in <module>\n    print(\"7\" + 7)\nTypeError: can only concatenate str (not \"int\") to str",
+            "why": "TypeError: text and numbers refuse to glue with +. Quotes made the first 7 text."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Fix the quote",
+          "prompt": "This crashes:  print(\"Butter)  — run it, read the traceback, fix it so it prints the song title.",
+          "expectedOutput": "Butter",
+          "hints": [
+            "Read the last traceback line: unterminated string literal.",
+            "Every opening quote needs a closing quote before the )."
+          ],
+          "solution": "print(\"Butter\")",
+          "approachChecklist": [
+            "Could you have found it from the ^ arrow alone?",
+            "Read the last traceback line out loud — does it describe the fix?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Fix the name",
+          "prompt": "This crashes:  member = \"Jin\"  then  print(Member)  — fix it so it prints the name.",
+          "expectedOutput": "Jin",
+          "hints": [
+            "NameError: name Member is not defined. Capital letters matter.",
+            "The variable you made is member, all lowercase."
+          ],
+          "solution": "member = \"Jin\"\nprint(member)",
+          "approachChecklist": [
+            "Are member and Member the same name to Python?",
+            "Which traceback line told you the answer?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Fix the type",
+          "prompt": "This crashes:  print(\"Debut: \" + 2013)  — fix it so it prints the line below.",
+          "expectedOutput": "Debut: 2013",
+          "hints": [
+            "TypeError: text will not + with a number.",
+            "An f-string prints numbers inside text with no glue needed."
+          ],
+          "solution": "year = 2013\nprint(f\"Debut: {year}\")",
+          "approachChecklist": [
+            "f-string, or quotes around 2013 — both work. Which did you pick?",
+            "Why exactly did + fail here?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — two bugs, one line",
+        "prompt": "This snippet hides two bugs:  chant = \"borahae  (missing quote)  then  print(chant.uper())  (misspelled method). Fix both.",
+        "expectedOutput": "BORAHAE",
+        "hints": [],
+        "solution": "chant = \"borahae\"\nprint(chant.upper())",
+        "approachChecklist": [
+          "Which bug did Python report first — and why only that one?"
+        ],
+        "isExit": true
+      }
+    },
+    "m5": {
+      "id": "m5",
+      "num": "05",
+      "tier": 2,
+      "title": "Lists",
+      "anchor": "The members list — indexing, append, slicing the rap line",
+      "photocard": {
+        "id": "card-m5",
+        "title": "The List Era"
+      },
+      "concept": {
+        "intro": "A list keeps things in order inside one variable. Positions start at 0, len() counts items, .append() adds to the end, and [start:stop] slices a run of neighbours. Meet the members list — you will use it for the rest of the course.",
+        "examples": [
+          {
+            "code": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nprint(members[0])",
+            "output": "RM",
+            "why": "Positions start at 0 — members[0] is the first item."
+          },
+          {
+            "code": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nprint(len(members))",
+            "output": "7",
+            "why": "len() works on lists too: it counts items, not letters."
+          },
+          {
+            "code": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nmaknae_line = members[4:7]\nprint(maknae_line)",
+            "output": "['Jimin', 'V', 'Jungkook']",
+            "why": "The slice takes positions 4, 5, 6 — stop 7 is not included. Printing a list shows brackets and quotes."
+          },
+          {
+            "code": "setlist = [\"Dynamite\"]\nsetlist.append(\"Butter\")\nprint(setlist)",
+            "output": "['Dynamite', 'Butter']",
+            "why": ".append() adds one item to the end, in place."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Who is members[3]?",
+          "prompt": "Using the full members list from the examples, print the member at position 3. Predict first, then check.",
+          "expectedOutput": "J-Hope",
+          "hints": [
+            "Count from 0: RM is 0, Jin is 1…",
+            "Shape:  print(members[3])"
+          ],
+          "solution": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nprint(members[3])",
+          "approachChecklist": [
+            "Did your prediction match?",
+            "Which position is Jungkook at?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Build a setlist",
+          "prompt": "Start a list with only Mic Drop, append Fire, then print the whole list. Brackets and quotes count — match exactly.",
+          "expectedOutput": "['Mic Drop', 'Fire']",
+          "hints": [
+            ".append() adds one item to the end.",
+            "Print the LIST itself, not each song."
+          ],
+          "solution": "setlist = [\"Mic Drop\"]\nsetlist.append(\"Fire\")\nprint(setlist)",
+          "approachChecklist": [
+            "Did you print the list once, or song by song?",
+            "Python prints single quotes — did that trip your match?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Slice the maknae line",
+          "prompt": "Slice Jimin, V and Jungkook out of the members list and print the slice.",
+          "expectedOutput": "['Jimin', 'V', 'Jungkook']",
+          "hints": [
+            "They sit at positions 4, 5 and 6.",
+            "The stop goes one PAST the last one you want: [4:7]"
+          ],
+          "solution": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nprint(members[4:7])",
+          "approachChecklist": [
+            "Why 7 and not 6?",
+            "Could a slice grab the rap line RM + Suga + J-Hope? (They are not all neighbours.)"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — the maknae",
+        "prompt": "Using the members list and an f-string, print the line below by looking the name up by its position.",
+        "expectedOutput": "The maknae is Jungkook",
+        "hints": [],
+        "solution": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nprint(f\"The maknae is {members[6]}\")",
+        "approachChecklist": [
+          "Position 6, or len(members) - 1 — both reach the end. Which did you use?"
+        ],
+        "isExit": true
+      }
+    },
+    "m6": {
+      "id": "m6",
+      "num": "06",
+      "tier": 2,
+      "title": "if / elif / else",
+      "anchor": "\"Which era?\" logic; ticket-price checker",
+      "photocard": {
+        "id": "card-m6",
+        "title": "The Logic Era"
+      },
+      "concept": {
+        "intro": "if runs a block only when a test is True. The indented lines under the colon are the block. == asks \"are these equal?\" (one = stores, two == compare), elif tries the next test, else catches everything left. Python takes the FIRST true branch and skips the rest.",
+        "examples": [
+          {
+            "code": "year = 2015\nif year < 2016:\n    print(\"School trilogy era\")",
+            "output": "School trilogy era",
+            "why": "The indented line runs only because the test is True."
+          },
+          {
+            "code": "name = \"V\"\nif name == \"V\":\n    print(\"Taehyung!\")",
+            "output": "Taehyung!",
+            "why": "== compares. One = stores a value; two == ask a question."
+          },
+          {
+            "code": "year = 2020\nif year < 2016:\n    print(\"School trilogy era\")\nelse:\n    print(\"A later era\")",
+            "output": "A later era",
+            "why": "else runs when the test fails — exactly one branch ever runs."
+          },
+          {
+            "code": "year = 2018\nif year < 2016:\n    print(\"School trilogy\")\nelif year < 2020:\n    print(\"Love Yourself era\")\nelse:\n    print(\"A recent era\")",
+            "output": "Love Yourself era",
+            "why": "2018 fails the first test, passes the second — and the rest is skipped."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Take my money",
+          "prompt": "price = 4500. If it is more than 4000, print Too pricey — otherwise print Take my money.",
+          "expectedOutput": "Too pricey",
+          "hints": [
+            "> compares numbers; the test goes right after if.",
+            "Shape:  if price > 4000:  indented print, then  else:  and another."
+          ],
+          "solution": "price = 4500\nif price > 4000:\n    print(\"Too pricey\")\nelse:\n    print(\"Take my money\")",
+          "approachChecklist": [
+            "What prints if you change price to 3000?",
+            "Is each print indented under its branch?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Which era?",
+          "prompt": "year = 2013. Build the ladder: before 2016 print School trilogy, before 2020 print Love Yourself era, otherwise print A recent era.",
+          "expectedOutput": "School trilogy",
+          "hints": [
+            "if, then elif, then else — three branches, one colon each.",
+            "Shape:  if year < 2016: … elif year < 2020: … else: …"
+          ],
+          "solution": "year = 2013\nif year < 2016:\n    print(\"School trilogy\")\nelif year < 2020:\n    print(\"Love Yourself era\")\nelse:\n    print(\"A recent era\")",
+          "approachChecklist": [
+            "Why does 2013 NOT also print the elif branch?",
+            "Trace year = 2019 by hand before running it."
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Bias check",
+          "prompt": "name = \"Jimin\". If name equals Jimin print Same bias! — otherwise print Respect.",
+          "expectedOutput": "Same bias!",
+          "hints": [
+            "Two equals signs compare; one stores.",
+            "Shape:  if name == \"Jimin\":"
+          ],
+          "solution": "name = \"Jimin\"\nif name == \"Jimin\":\n    print(\"Same bias!\")\nelse:\n    print(\"Respect.\")",
+          "approachChecklist": [
+            "What happens with name = \"V\"?",
+            "What does a single = inside the if do? Try it — read the error."
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — era ladder, new year",
+        "prompt": "year = 2022. Same ladder shape as practice: before 2016 → Early era, before 2020 → Middle era, otherwise → Recent era.",
+        "expectedOutput": "Recent era",
+        "hints": [],
+        "solution": "year = 2022\nif year < 2016:\n    print(\"Early era\")\nelif year < 2020:\n    print(\"Middle era\")\nelse:\n    print(\"Recent era\")",
+        "approachChecklist": [
+          "Which two tests did 2022 fail before landing in else?"
+        ],
+        "isExit": true
+      }
+    },
+    "m7": {
+      "id": "m7",
+      "num": "07",
+      "tier": 2,
+      "title": "for loops",
+      "anchor": "Fan chant one name per line; counting songs",
+      "photocard": {
+        "id": "card-m7",
+        "title": "The Loop Era"
+      },
+      "concept": {
+        "intro": "for repeats a block once per item in a list. The loop variable — for name in members — holds the current item and changes every pass. range(3) makes the numbers 0, 1, 2, handy for \"do this N times\". Indented lines run every pass; unindented lines run once, after.",
+        "examples": [
+          {
+            "code": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nfor name in members:\n    print(name)",
+            "output": "RM\nJin\nSuga\nJ-Hope\nJimin\nV\nJungkook",
+            "why": "One print, seven lines — the block runs once per member."
+          },
+          {
+            "code": "for name in [\"Jimin\", \"V\"]:\n    print(f\"{name}!\")",
+            "output": "Jimin!\nV!",
+            "why": "Any list works, and f-strings work inside the loop."
+          },
+          {
+            "code": "for i in range(3):\n    print(i)",
+            "output": "0\n1\n2",
+            "why": "range(3) counts 0, 1, 2 — three numbers, starting at 0."
+          },
+          {
+            "code": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\ncount = 0\nfor name in members:\n    count = count + 1\nprint(count)",
+            "output": "7",
+            "why": "The counter grows once per pass. The final print is unindented — outside the loop — so it runs once."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "The full fan chant",
+          "prompt": "Loop over the members list and print each name with an ! on its own line.",
+          "expectedOutput": "RM!\nJin!\nSuga!\nJ-Hope!\nJimin!\nV!\nJungkook!",
+          "hints": [
+            "One print inside the loop handles all seven.",
+            "Shape:  for name in members:  then  print(f\"{name}!\")"
+          ],
+          "solution": "members = [\"RM\", \"Jin\", \"Suga\", \"J-Hope\", \"Jimin\", \"V\", \"Jungkook\"]\nfor name in members:\n    print(f\"{name}!\")",
+          "approachChecklist": [
+            "A loop, or seven copied prints? Be honest.",
+            "What changes if you unindent the print?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Encore ×3",
+          "prompt": "Print Encore! exactly three times using range — not three print lines.",
+          "expectedOutput": "Encore!\nEncore!\nEncore!",
+          "hints": [
+            "range(3) runs a block three times.",
+            "Shape:  for i in range(3):"
+          ],
+          "solution": "for i in range(3):\n    print(\"Encore!\")",
+          "approachChecklist": [
+            "range, or copy-paste?",
+            "What does i hold each pass, even though you never printed it?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Count the line",
+          "prompt": "Loop over [\"Jimin\", \"V\", \"Jungkook\"] with a counter, then print the count after the loop.",
+          "expectedOutput": "3",
+          "hints": [
+            "Start count = 0 BEFORE the loop; add 1 inside it.",
+            "Print after the loop — unindented."
+          ],
+          "solution": "line = [\"Jimin\", \"V\", \"Jungkook\"]\ncount = 0\nfor name in line:\n    count = count + 1\nprint(count)",
+          "approachChecklist": [
+            "Why does the print sit outside the loop?",
+            "What would it print indented inside?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — now playing",
+        "prompt": "Loop over [\"Dynamite\", \"Butter\", \"Fire\"] and print each one as  Now playing: title.",
+        "expectedOutput": "Now playing: Dynamite\nNow playing: Butter\nNow playing: Fire",
+        "hints": [],
+        "solution": "songs = [\"Dynamite\", \"Butter\", \"Fire\"]\nfor song in songs:\n    print(f\"Now playing: {song}\")",
+        "approachChecklist": [
+          "One print or three?"
+        ],
+        "isExit": true
+      }
+    },
+    "m8": {
+      "id": "m8",
+      "num": "08",
+      "tier": 2,
+      "title": "while + input()",
+      "anchor": "Interactive quiz mechanics",
+      "photocard": {
+        "id": "card-m8",
+        "title": "The While Era"
+      },
+      "concept": {
+        "intro": "while repeats as long as its test stays True — so something inside must change, or it never ends (Ctrl+C stops a runaway loop). input(\"…\") shows a prompt, waits for typing, and hands back what was typed — always as text. Exercises tell you EXACTLY what to type so outputs match.",
+        "examples": [
+          {
+            "code": "n = 1\nwhile n <= 3:\n    print(n)\n    n = n + 1",
+            "output": "1\n2\n3",
+            "why": "n grows each pass; at 4 the test fails and the loop ends."
+          },
+          {
+            "code": "answer = input(\"Bias? \")\nprint(f\"{answer} is a great pick\")",
+            "output": "Bias? Jimin\nJimin is a great pick",
+            "why": "You typed Jimin. input() shows the prompt, waits, and returns the typed text — which also appears on the prompt line."
+          },
+          {
+            "code": "guess = \"\"\nwhile guess != \"V\":\n    guess = input(\"King of duality? \")\nprint(\"Correct!\")",
+            "output": "King of duality? Jin\nKing of duality? V\nCorrect!",
+            "why": "You typed Jin, then V. The loop keeps asking until the test fails."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Countdown",
+          "prompt": "Count 3, 2, 1 with a while loop, then print Comeback! after it ends.",
+          "expectedOutput": "3\n2\n1\nComeback!",
+          "hints": [
+            "Start n = 3; loop while n >= 1; shrink n inside.",
+            "The Comeback! print is unindented — after the loop."
+          ],
+          "solution": "n = 3\nwhile n >= 1:\n    print(n)\n    n = n - 1\nprint(\"Comeback!\")",
+          "approachChecklist": [
+            "What exactly stops the loop?",
+            "Move the last print inside — what changes?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Ask the bias",
+          "prompt": "Ask with input(\"Bias? \") and echo the answer back. When it asks, type exactly: Jungkook",
+          "expectedOutput": "Bias? Jungkook\nMy bias is Jungkook",
+          "hints": [
+            "input returns what was typed — store it in a variable.",
+            "Shape:  answer = input(\"Bias? \")  then one f-string print."
+          ],
+          "solution": "answer = input(\"Bias? \")\nprint(f\"My bias is {answer}\")",
+          "approachChecklist": [
+            "Why does Jungkook appear on the first line too? Your typing is part of the terminal.",
+            "The space after ?  is part of the prompt — did it match?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "The magic word",
+          "prompt": "Keep asking  Say the magic word:  until the answer is borahae, then print Doors open! When it asks, type exactly: army — then: borahae",
+          "expectedOutput": "Say the magic word: army\nSay the magic word: borahae\nDoors open!",
+          "hints": [
+            "The test compares the LAST answer:  while word != \"borahae\":",
+            "Start word = \"\" so the loop has something to test the first time."
+          ],
+          "solution": "word = \"\"\nwhile word != \"borahae\":\n    word = input(\"Say the magic word: \")\nprint(\"Doors open!\")",
+          "approachChecklist": [
+            "Why does word = \"\" make the loop start?",
+            "What happens if you type borahae first? Trace it."
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — find the maknae",
+        "prompt": "Keep asking  Maknae?  until the answer is Jungkook, then print Correct! When it asks, type exactly: Jimin — then: Jungkook",
+        "expectedOutput": "Maknae? Jimin\nMaknae? Jungkook\nCorrect!",
+        "hints": [],
+        "solution": "guess = \"\"\nwhile guess != \"Jungkook\":\n    guess = input(\"Maknae? \")\nprint(\"Correct!\")",
+        "approachChecklist": [
+          "Same shape as the magic word — did you rebuild it from memory?"
+        ],
+        "isExit": true
+      }
+    },
+    "m9": {
+      "id": "m9",
+      "num": "09",
+      "tier": 3,
+      "title": "Dicts",
+      "anchor": "One song as a dict; look up album by title",
+      "photocard": {
+        "id": "card-m9",
+        "title": "The Dict Era"
+      },
+      "concept": {
+        "intro": "A dict stores labelled values: key on the left, value on the right. Look a value up with square brackets and the KEY — song[\"title\"] — not a position. Assigning to a new key adds it, and  \"album\" in song  asks whether a key exists.",
+        "examples": [
+          {
+            "code": "song = {\"title\": \"Spring Day\", \"album\": \"You Never Walk Alone\", \"year\": 2017}\nprint(song[\"title\"])",
+            "output": "Spring Day",
+            "why": "Square brackets with the KEY, not a position number."
+          },
+          {
+            "code": "song = {\"title\": \"Spring Day\", \"year\": 2017}\nprint(song[\"year\"])",
+            "output": "2017",
+            "why": "Values can be any type — this one is a number."
+          },
+          {
+            "code": "song = {\"title\": \"Spring Day\", \"year\": 2017}\nsong[\"mood\"] = \"nostalgic\"\nprint(song[\"mood\"])",
+            "output": "nostalgic",
+            "why": "Assigning to a key that does not exist yet adds it."
+          },
+          {
+            "code": "song = {\"title\": \"Spring Day\", \"year\": 2017}\nprint(\"album\" in song)",
+            "output": "False",
+            "why": "in checks the KEYS — this dict has no album key."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Look up the album",
+          "prompt": "song = {\"title\": \"Spring Day\", \"album\": \"You Never Walk Alone\", \"year\": 2017}. Print the line below using two lookups.",
+          "expectedOutput": "Spring Day is on You Never Walk Alone",
+          "hints": [
+            "Both values come out with [\"…\"] lookups.",
+            "Store each lookup in a variable first, then one f-string."
+          ],
+          "solution": "song = {\"title\": \"Spring Day\", \"album\": \"You Never Walk Alone\", \"year\": 2017}\ntitle = song[\"title\"]\nalbum = song[\"album\"]\nprint(f\"{title} is on {album}\")",
+          "approachChecklist": [
+            "Lookups by key, not retyped values?",
+            "Could you do it without the helper variables?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Add the mood",
+          "prompt": "Same song dict. Add a mood key with the value hopeful, then print it back out.",
+          "expectedOutput": "hopeful",
+          "hints": [
+            "Assign to a key that does not exist yet:  song[\"mood\"] = …",
+            "Then print song[\"mood\"]."
+          ],
+          "solution": "song = {\"title\": \"Spring Day\", \"year\": 2017}\nsong[\"mood\"] = \"hopeful\"\nprint(song[\"mood\"])",
+          "approachChecklist": [
+            "Adding and updating a key look identical — why is that fine?",
+            "What happens when you print a key that does not exist? Try it: KeyError."
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Song card",
+          "prompt": "song = {\"title\": \"Dynamite\", \"year\": 2020}. Print the two-line card below.",
+          "expectedOutput": "Title: Dynamite\nYear: 2020",
+          "hints": [
+            "Two prints, one lookup each.",
+            "Inside an f-string, quote keys with SINGLE quotes: {song['title']}"
+          ],
+          "solution": "song = {\"title\": \"Dynamite\", \"year\": 2020}\nprint(f\"Title: {song['title']}\")\nprint(f\"Year: {song['year']}\")",
+          "approachChecklist": [
+            "Why single quotes for the key inside the f-string?",
+            "Helper variables would also work — which reads better to you?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — Butter card",
+        "prompt": "Make a dict for the song Butter, released 2021, and print the line below from lookups.",
+        "expectedOutput": "Butter came out in 2021",
+        "hints": [],
+        "solution": "song = {\"title\": \"Butter\", \"year\": 2021}\nprint(f\"{song['title']} came out in {song['year']}\")",
+        "approachChecklist": [
+          "Both values from the dict, not retyped?"
+        ],
+        "isExit": true
+      }
+    },
+    "m10": {
+      "id": "m10",
+      "num": "10",
+      "tier": 3,
+      "title": "Functions",
+      "anchor": "recommend_song(mood), is_maknae(name)",
+      "photocard": {
+        "id": "card-m10",
+        "title": "The Function Era"
+      },
+      "concept": {
+        "intro": "def gives a block a name so you can run it whenever you like. Parameters are its inputs; return hands a value back to the caller. Defining does nothing by itself — the CALL is what runs it. This is where your code stops being a script and starts being tools.",
+        "examples": [
+          {
+            "code": "def chant(name):\n    print(f\"{name}! {name}!\")\n\nchant(\"Jimin\")",
+            "output": "Jimin! Jimin!",
+            "why": "def defines the tool; the last line actually uses it."
+          },
+          {
+            "code": "def is_maknae(name):\n    return name == \"Jungkook\"\n\nprint(is_maknae(\"Jin\"))",
+            "output": "False",
+            "why": "return sends the True/False back to whoever asked."
+          },
+          {
+            "code": "def recommend_song(mood):\n    if mood == \"hype\":\n        return \"Fire\"\n    return \"Spring Day\"\n\nprint(recommend_song(\"hype\"))",
+            "output": "Fire",
+            "why": "A return ends the function immediately — the second return is the fallback."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Greeting function",
+          "prompt": "Write greet(name) that prints  Annyeong, name!  — then call it with RM.",
+          "expectedOutput": "Annyeong, RM!",
+          "hints": [
+            "def greet(name):  then an indented print.",
+            "Nothing prints until you CALL greet(\"RM\") at the bottom."
+          ],
+          "solution": "def greet(name):\n    print(f\"Annyeong, {name}!\")\n\ngreet(\"RM\")",
+          "approachChecklist": [
+            "Did you remember the call at the bottom?",
+            "Call it twice with different names — zero extra work."
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Double chant",
+          "prompt": "Write chant(name) that prints the name on two lines, then call it with V.",
+          "expectedOutput": "V\nV",
+          "hints": [
+            "Two prints inside the function — or one small loop.",
+            "The body is everything indented under def."
+          ],
+          "solution": "def chant(name):\n    print(name)\n    print(name)\n\nchant(\"V\")",
+          "approachChecklist": [
+            "Loop or two prints — which did you pick, and why?",
+            "What does chant(\"Jin\") print now?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Era function",
+          "prompt": "Write era(year) that RETURNS Early for years before 2016 and Later otherwise. Print era(2014).",
+          "expectedOutput": "Early",
+          "hints": [
+            "return sends the word back; the print happens at the call.",
+            "Shape:  if year < 2016:  return \"Early\"  then  return \"Later\""
+          ],
+          "solution": "def era(year):\n    if year < 2016:\n        return \"Early\"\n    return \"Later\"\n\nprint(era(2014))",
+          "approachChecklist": [
+            "Why is no else needed after a return?",
+            "Returning vs printing inside — what is the difference?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — rap line check",
+        "prompt": "Write is_rap_line(name) that returns True when the name is in [\"RM\", \"Suga\", \"J-Hope\"]. Print is_rap_line(\"Suga\").",
+        "expectedOutput": "True",
+        "hints": [],
+        "solution": "def is_rap_line(name):\n    return name in [\"RM\", \"Suga\", \"J-Hope\"]\n\nprint(is_rap_line(\"Suga\"))",
+        "approachChecklist": [
+          "One-line body — did in do the work, or a chain of ==?"
+        ],
+        "isExit": true
+      }
+    },
+    "m11": {
+      "id": "m11",
+      "num": "11",
+      "tier": 3,
+      "title": "Combining it all",
+      "anchor": "Lists of dicts + loops + functions together",
+      "photocard": {
+        "id": "card-m11",
+        "title": "The Combination Era"
+      },
+      "concept": {
+        "intro": "The final shape: a list of dicts — every song is a dict, the catalogue is a list of them. Loop over the list and each pass hands you one dict; add if to filter, a counter to count, and a function to wrap it up. This is what real data looks like.",
+        "examples": [
+          {
+            "code": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\nfor song in songs:\n    print(song[\"title\"])",
+            "output": "Fire\nSpring Day\nDynamite\nLife Goes On",
+            "why": "Each pass, song is one whole dict — so key lookups work inside the loop."
+          },
+          {
+            "code": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\nfor song in songs:\n    if song[\"year\"] == 2020:\n        print(song[\"title\"])",
+            "output": "Dynamite\nLife Goes On",
+            "why": "Loop + if = a filter. Only matching passes reach the print."
+          },
+          {
+            "code": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\ncount = 0\nfor song in songs:\n    if song[\"mood\"] == \"hype\":\n        count = count + 1\nprint(count)",
+            "output": "2",
+            "why": "Loop + if + counter = counting by rule. Print sits outside the loop."
+          },
+          {
+            "code": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\n\ndef first_hype(songs):\n    for song in songs:\n        if song[\"mood\"] == \"hype\":\n            return song[\"title\"]\n\nprint(first_hype(songs))",
+            "output": "Fire",
+            "why": "return ends the search on the first hit — a find-first tool."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Class of 2020",
+          "prompt": "Using the songs list from the examples, print the title of every song from 2020.",
+          "expectedOutput": "Dynamite\nLife Goes On",
+          "hints": [
+            "A filter: an if inside the for.",
+            "Compare song[\"year\"] == 2020 — a number, no quotes."
+          ],
+          "solution": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\nfor song in songs:\n    if song[\"year\"] == 2020:\n        print(song[\"title\"])",
+          "approachChecklist": [
+            "Why no quotes around 2020?",
+            "Change the filter to 2016 — predict before running."
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Count the hype",
+          "prompt": "Count how many songs have the mood hype, then print the count.",
+          "expectedOutput": "2",
+          "hints": [
+            "count = 0 before the loop, + 1 inside the if.",
+            "Print after the loop, unindented."
+          ],
+          "solution": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\ncount = 0\nfor song in songs:\n    if song[\"mood\"] == \"hype\":\n        count = count + 1\nprint(count)",
+          "approachChecklist": [
+            "Where does the print live, and why?",
+            "Same shape as Module 07 counting — did you notice?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Playlist by mood",
+          "prompt": "Write print_mood(songs, mood) that prints every matching title, then call it with hype.",
+          "expectedOutput": "Fire\nDynamite",
+          "hints": [
+            "The filter from exercise 1 goes INSIDE the function; mood becomes a parameter.",
+            "Call it at the bottom:  print_mood(songs, \"hype\")"
+          ],
+          "solution": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\n\ndef print_mood(songs, mood):\n    for song in songs:\n        if song[\"mood\"] == mood:\n            print(song[\"title\"])\n\nprint_mood(songs, \"hype\")",
+          "approachChecklist": [
+            "Can you now call it with calm for free?",
+            "Parameter vs hard-coded \"hype\" — why is the parameter better?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — find 2017",
+        "prompt": "Loop the songs list and print  Found: title  for the song released in 2017.",
+        "expectedOutput": "Found: Spring Day",
+        "hints": [],
+        "solution": "songs = [\n    {\"title\": \"Fire\", \"year\": 2016, \"mood\": \"hype\"},\n    {\"title\": \"Spring Day\", \"year\": 2017, \"mood\": \"nostalgic\"},\n    {\"title\": \"Dynamite\", \"year\": 2020, \"mood\": \"hype\"},\n    {\"title\": \"Life Goes On\", \"year\": 2020, \"mood\": \"calm\"},\n]\nfor song in songs:\n    if song[\"year\"] == 2017:\n        print(f\"Found: {song['title']}\")",
+        "approachChecklist": [
+          "Loop + if + f-string — three modules in one body."
+        ],
+        "isExit": true
+      }
+    },
+    "m12": {
+      "id": "m12",
+      "num": "12",
+      "tier": 4,
+      "title": "Capstone — the quiz app",
+      "anchor": "Terminal BTS quiz or setlist builder, demo-ready",
+      "photocard": {
+        "id": "card-m12",
+        "title": "The Proof Era"
+      },
+      "concept": {
+        "intro": "The dream project: a terminal BTS quiz you can demo to friends. Nothing new to learn — variables, input(), if, loops and functions are the whole toolkit. Build it in three milestones; the exit is one full session that matches the transcript, typed inputs and all.",
+        "examples": [
+          {
+            "code": "def ask(question, answer):\n    guess = input(question)\n    return guess == answer\n\nprint(ask(\"Maknae? \", \"Jungkook\"))",
+            "output": "Maknae? Jungkook\nTrue",
+            "why": "You typed Jungkook. One function can run ANY question — prompt and answer are parameters."
+          },
+          {
+            "code": "score = 0\nscore = score + 1\nprint(f\"Score: {score}/3\")",
+            "output": "Score: 1/3",
+            "why": "A counter plus an f-string is your whole scoreboard."
+          }
+        ]
+      },
+      "exercises": [
+        {
+          "id": "e1",
+          "title": "Milestone 1 — the greeting",
+          "prompt": "Print the title, ask for a name, greet. When it asks, type exactly: Riya",
+          "expectedOutput": "BTS QUIZ\nYour name? Riya\nWelcome, Riya!",
+          "hints": [
+            "Three lines: a print, an input, an f-string print.",
+            "The typed Riya appears on the prompt line — that is normal."
+          ],
+          "solution": "print(\"BTS QUIZ\")\nname = input(\"Your name? \")\nprint(f\"Welcome, {name}!\")",
+          "approachChecklist": [
+            "Prompt spacing exact?",
+            "Module 01 skills, nothing more — feel that?"
+          ]
+        },
+        {
+          "id": "e2",
+          "title": "Milestone 2 — one scored question",
+          "prompt": "Ask  Maknae?  — add a point when the answer is Jungkook, then print the score. When it asks, type exactly: Jungkook",
+          "expectedOutput": "Maknae? Jungkook\nScore: 1/1",
+          "hints": [
+            "if guess == \"Jungkook\":  score = score + 1",
+            "score starts at 0 BEFORE the question."
+          ],
+          "solution": "score = 0\nguess = input(\"Maknae? \")\nif guess == \"Jungkook\":\n    score = score + 1\nprint(f\"Score: {score}/1\")",
+          "approachChecklist": [
+            "What prints if you answer wrong?",
+            "Where must score = 0 sit, and why?"
+          ]
+        },
+        {
+          "id": "e3",
+          "title": "Milestone 3 — three questions",
+          "prompt": "Three questions, one score, one final line. When it asks, type exactly: Jungkook — then: 2013 — then: RM",
+          "expectedOutput": "Maknae? Jungkook\nDebut year? 2013\nLeader? RM\nScore: 3/3",
+          "hints": [
+            "Repeating the if block three times is fine — or reuse the ask() function from the examples.",
+            "input() returns TEXT: compare the year to \"2013\" in quotes."
+          ],
+          "solution": "score = 0\nif input(\"Maknae? \") == \"Jungkook\":\n    score = score + 1\nif input(\"Debut year? \") == \"2013\":\n    score = score + 1\nif input(\"Leader? \") == \"RM\":\n    score = score + 1\nprint(f\"Score: {score}/3\")",
+          "approachChecklist": [
+            "Why \"2013\" in quotes?",
+            "Repeat or reuse — both pass; which felt better?"
+          ]
+        }
+      ],
+      "exitExercise": {
+        "id": "exit",
+        "title": "Exit — the demo session",
+        "prompt": "The full app: title, name, three questions, score line, sign-off. One answer below is wrong on purpose — scoring must survive it. When it asks, type exactly: Riya — then: Jungkook — then: 2014 — then: RM",
+        "expectedOutput": "BTS QUIZ\nYour name? Riya\nMaknae? Jungkook\nDebut year? 2014\nLeader? RM\nRiya, you scored 2/3\nBorahae!",
+        "hints": [],
+        "solution": "def ask(question, answer):\n    guess = input(question)\n    return guess == answer\n\nprint(\"BTS QUIZ\")\nname = input(\"Your name? \")\nscore = 0\nif ask(\"Maknae? \", \"Jungkook\"):\n    score = score + 1\nif ask(\"Debut year? \", \"2013\"):\n    score = score + 1\nif ask(\"Leader? \", \"RM\"):\n    score = score + 1\nprint(f\"{name}, you scored {score}/3\")\nprint(\"Borahae!\")",
+        "approachChecklist": [
+          "This is the demo — run it for someone and let THEM type.",
+          "A wrong answer costs a point but never crashes. Why?"
+        ],
+        "isExit": true
+      }
+    }
+  }
+}
