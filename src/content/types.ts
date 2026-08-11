@@ -27,6 +27,7 @@ export type WorkedExample = {
 
 export type Exercise = {
   id: string;
+  title?: string; // short heading; authored in curriculum.json, shown by the prototype's Exercise screen
   prompt: string; // markdown task description
   expectedOutput: string; // exact, deterministic
   inputsToType?: string[]; // for input()-based exercises: the exact inputs

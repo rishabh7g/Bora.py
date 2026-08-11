@@ -3,10 +3,12 @@ import type { Exercise, Module } from './content/types';
 // Raw/unstyled render of a module — this slice proves the content model
 // end-to-end (ENGINEERING.md §11 step 1). Styling arrives in M2.
 
-function ExerciseBlock({ exercise }: { exercise: Exercise }) {
+function ExerciseBlock({ exercise, href }: { exercise: Exercise; href: string }) {
   return (
     <section>
-      <h4>{exercise.isExit ? 'Exit exercise' : `Exercise ${exercise.id}`}</h4>
+      <h4>
+        <a href={href}>{exercise.isExit ? 'Exit exercise' : `Exercise ${exercise.id}`}</a>
+      </h4>
       <p>{exercise.prompt}</p>
       <h5>Expected output</h5>
       <pre>
@@ -58,11 +60,15 @@ export default function ModuleView({ module }: { module: Module }) {
       <section>
         <h3>Exercises</h3>
         {module.exercises.map((exercise) => (
-          <ExerciseBlock key={exercise.id} exercise={exercise} />
+          <ExerciseBlock
+            key={exercise.id}
+            exercise={exercise}
+            href={`#/module/${module.id}/exercise/${exercise.id}`}
+          />
         ))}
       </section>
 
-      <ExerciseBlock exercise={module.exitExercise} />
+      <ExerciseBlock exercise={module.exitExercise} href={`#/module/${module.id}/exit`} />
     </article>
   );
 }
