@@ -10,7 +10,7 @@
 // 5. No copyrighted song-lyric lines anywhere in content (member names,
 //    song/album titles, and years are facts and fine); photocard art must be
 //    an original local svg ref, never official imagery.
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -119,7 +119,12 @@ function lintExercise(moduleId: string, exercise: RawExercise): Violation[] {
   return violations;
 }
 
-export function lintCurriculum(curriculum: RawCurriculum): Violation[] {
+/** `artExists` lets the CLI check the art file is really on disk; callers that
+ *  only lint data (unit tests) may omit it. */
+export function lintCurriculum(
+  curriculum: RawCurriculum,
+  artExists?: (fileName: string) => boolean,
+): Violation[] {
   const violations: Violation[] = [];
 
   for (const [moduleId, module] of Object.entries(curriculum.modules)) {
@@ -138,13 +143,16 @@ export function lintCurriculum(curriculum: RawCurriculum): Violation[] {
       violations.push({ moduleId, message: `contains copyrighted lyric line: "${lyric}"` });
     }
 
-    // Rule 5: photocard art must be original local svg — never official imagery.
+    // Rule 5: photocard art must be an original local svg — never official
+    // imagery, and never missing: every card ships art authored in this repo.
     const art = module.photocard.art ?? '';
-    if (/https?:\/\//.test(art) || /\.(jpe?g|png|gif|webp)\b/i.test(art)) {
+    if (!/^[\w-]+\.svg$/.test(art)) {
       violations.push({
         moduleId,
-        message: `photocard art must be an original local svg ref, got "${art}"`,
+        message: `photocard art must be an original local svg file name, got "${art}"`,
       });
+    } else if (artExists && !artExists(art)) {
+      violations.push({ moduleId, message: `photocard art file is missing: "${art}"` });
     }
   }
 
@@ -152,9 +160,14 @@ export function lintCurriculum(curriculum: RawCurriculum): Violation[] {
 }
 
 function main(): void {
-  const curriculumPath = join(dirname(fileURLToPath(import.meta.url)), 'curriculum.json');
-  const curriculum = JSON.parse(readFileSync(curriculumPath, 'utf8')) as RawCurriculum;
-  const violations = lintCurriculum(curriculum);
+  const contentDir = dirname(fileURLToPath(import.meta.url));
+  const curriculum = JSON.parse(
+    readFileSync(join(contentDir, 'curriculum.json'), 'utf8'),
+  ) as RawCurriculum;
+  const artDir = join(contentDir, '..', 'src', 'art', 'photocards');
+  const violations = lintCurriculum(curriculum, (fileName) =>
+    existsSync(join(artDir, fileName)),
+  );
 
   for (const violation of violations) {
     const where = violation.exerciseId

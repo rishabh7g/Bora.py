@@ -26,10 +26,25 @@
   color: var(--color-accent);
 }
 
+.home-headright {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .home-count {
   white-space: nowrap;
   letter-spacing: 0.1em;
   font-weight: 700;
+}
+
+.home-shelflink {
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .home-title {

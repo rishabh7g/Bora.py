@@ -24,6 +24,12 @@ export function exerciseStateOf(progress: Progress, moduleId: string, exerciseId
   return progress.modules[moduleId]?.exercises[exerciseId] ?? initialExerciseState();
 }
 
+/** Cracks on a module's photocard: the hints used in that module, already
+ *  computed and persisted here. Screens read this — they never recount hints. */
+export function moduleCracksOf(progress: Progress, moduleId: string): number {
+  return progress.modules[moduleId]?.cardCracks ?? 0;
+}
+
 /** Pure update: apply an effort-gate transition to one exercise and recompute
  *  the module's derived fields (cardCracks, passed) from the owner module's
  *  rules. Returns the same object when the transition was a no-op. */

@@ -1,0 +1,11 @@
+<!-- The List Era — original geometric art: indexed rows inside brackets. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-hidden="true">
+  <path d="M2 4h8v4H6v32h4v4H2Z" />
+  <path d="M46 4h-8v4h4v32h-4v4h8Z" />
+  <rect x="13" y="11" width="6" height="6" />
+  <rect x="13" y="21" width="6" height="6" />
+  <rect x="13" y="31" width="6" height="6" />
+  <rect x="23" y="12" width="16" height="4" />
+  <rect x="23" y="22" width="16" height="4" />
+  <rect x="23" y="32" width="16" height="4" />
+</svg>

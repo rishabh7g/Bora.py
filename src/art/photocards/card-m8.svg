@@ -1,0 +1,8 @@
+<!-- The While Era — original geometric art: a repeating loop held by a gate bar. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-hidden="true">
+  <path d="M6 10h36v12h-5v-7H11v7H6Z" />
+  <path d="M6 38h36V26h-5v7H11v-7H6Z" />
+  <rect x="2" y="22" width="44" height="4" />
+  <rect x="20" y="2" width="8" height="6" />
+  <rect x="20" y="40" width="8" height="6" />
+</svg>

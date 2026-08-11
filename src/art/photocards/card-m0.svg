@@ -1,0 +1,8 @@
+<!-- The Debut Card — original geometric art: a sun rising over a horizon line. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-hidden="true">
+  <path d="M10 30a14 14 0 0 1 28 0Z" />
+  <rect x="2" y="34" width="44" height="4" />
+  <rect x="22" y="2" width="4" height="8" />
+  <rect x="6" y="10" width="4" height="8" transform="rotate(-40 8 14)" />
+  <rect x="38" y="10" width="4" height="8" transform="rotate(40 40 14)" />
+</svg>
