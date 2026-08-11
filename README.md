@@ -41,5 +41,3 @@ exactly as delivered for now.
   issue; **squash-merge**; `main` is always deployable.
 - **Verify on the deployed/running instance before closing an issue** — green
   tests are not sufficient on their own.
-</content>
-</invoke>
