@@ -24,9 +24,17 @@ checkpoint-based — no streaks, no XP, no guilt mechanics.
 | [`design/content/curriculum.json`](design/content/curriculum.json) | The authored curriculum (13 modules) |
 | [`design/brand/BRAND.md`](design/brand/BRAND.md) | Brand + mark |
 
+## Live
+
+**https://rishabh7g.github.io/Bora.py/** — every push to `main` builds and
+publishes `dist/` to GitHub Pages (`.github/workflows/deploy.yml`), after
+typecheck and content lint pass. Pure static hosting: no server, no API. The
+build sets Vite `base: '/Bora.py/'` so the app, its service worker and its
+manifest all work under the repo subpath.
+
 ## Status
 
-Design package complete. Implementation not started.
+Design package complete. Implementation in progress.
 
 ## Naming
 

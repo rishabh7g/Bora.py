@@ -1,0 +1,52 @@
+# Deploy per ENGINEERING.md §10: typecheck + content lint + build, then publish
+# the Vite output to GitHub Pages on every push to main. Pure static hosting —
+# the artifact is `dist/` exactly as Vite emits it (shell, hashed assets,
+# manifest.webmanifest, sw.js at the root of /Bora.py/ so its scope covers the
+# whole app). CI (ci.yml) still runs the same gates for branches and PRs.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  # Lets a failed or superseded deploy be re-run without an empty commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; queue rather than cancel so main never lands on an
+# older build than the one already in flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/configure-pages@v5
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint:content
+      # `base: '/Bora.py/'` lives in vite.config.ts, so no --base flag here.
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
