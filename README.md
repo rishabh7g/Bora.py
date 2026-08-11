@@ -17,8 +17,8 @@ checkpoint-based — no streaks, no XP, no guilt mechanics.
 | Doc | What it is |
 |---|---|
 | [`design/README.md`](design/README.md) | Design handoff index — read this first |
-| [`design/DESIGN.md`](design/DESIGN.md) | Product spec — source of truth for behavior |
-| [`design/ENGINEERING.md`](design/ENGINEERING.md) | Architecture, content schema, state machine, build order |
+| [`docs/DESIGN.md`](docs/DESIGN.md) | Product spec — source of truth for behavior |
+| [`docs/ENGINEERING.md`](docs/ENGINEERING.md) | Architecture, content schema, state machine, build order |
 | [`design/PyLearn Prototype.dc.html`](design/PyLearn%20Prototype.dc.html) | Clickable visual + behavioral reference |
 | [`design/github-issues-guide.md`](design/github-issues-guide.md) | How the work is broken into issues |
 | [`design/content/curriculum.json`](design/content/curriculum.json) | The authored curriculum (13 modules) |
