@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/styles.css">
+  <script src="_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--color-bg); }
+    a { color: var(--color-accent-700); }
+    a:hover { color: var(--color-accent-600); }
+    @keyframes plfall { to { transform: translateY(112vh) rotate(560deg); } }
+  </style>
+</helmet>
+<div style="min-height:100vh;font-family:var(--font-body);color:var(--color-text);display:flex;flex-direction:column">
+
+  <header style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding:14px clamp(16px,4vw,40px);border-bottom:2px solid var(--color-divider)">
+    <div style="display:flex;align-items:center;gap:10px;margin-right:auto;cursor:pointer" onClick="{{ goHome }}">
+      <svg width="22" height="22" viewBox="0 0 64 64" aria-label="bora.py mark" style="display:block;flex:none"><rect width="64" height="64" fill="var(--color-accent)"></rect><polyline points="17,18 31,32 17,46" stroke="var(--color-bg)" stroke-width="8" fill="none" stroke-linecap="square"></polyline><rect x="37" y="38" width="12" height="8" fill="var(--color-bg)"></rect></svg>
+      <span style="font-family:var(--font-heading);font-weight:900;font-size:19px;letter-spacing:.01em">bora<span style="color:var(--color-accent-700)">.py</span></span>
+    </div>
+    <nav style="display:flex;align-items:center;gap:4px">
+      <sc-for list="{{ navItems }}" as="tab" hint-placeholder-count="3">
+        <button onClick="{{ tab.onClick }}" style="{{ tab.style }}" style-hover="background:color-mix(in srgb, var(--color-text) 7%, transparent)">{{ tab.label }}</button>
+      </sc-for>
+    </nav>
+    <span style="font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--color-neutral-700);white-space:nowrap">{{ passedLabel }} CHECKPOINTS</span>
+  </header>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <main data-screen-label="Home map" style="width:min(1020px,100%);box-sizing:border-box;margin:0 auto;padding:clamp(28px,5vw,56px) clamp(16px,4vw,40px) 48px;flex:1">
+      <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--color-accent)">Checkpoint path</p>
+      <h1 style="margin:0;font-size:clamp(30px,5vw,48px);line-height:1.05;letter-spacing:-.01em">Annyeong, {{ learnerName }}.</h1>
+      <p style="margin:10px 0 0;font-size:15px;color:var(--color-neutral-700);max-width:60ch">Progress is checkpoints passed — never days or streaks. {{ progressLine }}</p>
+      <div style="margin-top:36px">
+        <sc-for list="{{ tiers }}" as="tier" hint-placeholder-count="2">
+          <section style="border-top:2px solid var(--color-divider);padding:18px 0 8px;margin-bottom:16px">
+            <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+              <h2 style="margin:0;font-size:13px;letter-spacing:.12em;text-transform:uppercase">{{ tier.label }}</h2>
+              <span style="font-size:12px;color:var(--color-neutral-600);white-space:nowrap">{{ tier.era }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;margin-top:10px">
+              <sc-for list="{{ tier.modules }}" as="mod" hint-placeholder-count="2">
+                <div onClick="{{ mod.onOpen }}" style="{{ mod.rowStyle }}" style-hover="{{ mod.rowHover }}">
+                  <span style="{{ mod.numStyle }}">{{ mod.num }}</span>
+                  <span style="display:flex;flex-direction:column;gap:2px;min-width:200px;flex:1">
+                    <span style="font-weight:700;font-size:16px">{{ mod.title }}</span>
+                    <span style="font-size:13px;color:var(--color-neutral-600)">{{ mod.anchor }}</span>
+                  </span>
+                  <span class="tag {{ mod.tagClass }}" style="flex:none;white-space:nowrap">{{ mod.tag }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-for>
+        <section style="border-top:2px solid var(--color-divider);padding:18px 0;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;opacity:.5">
+          <h2 style="margin:0;font-size:13px;letter-spacing:.12em;text-transform:uppercase">Tier 5 — Advanced</h2>
+          <span style="font-size:12px">Files, APIs, classes. Unlocks after the capstone.</span>
+        </section>
+      </div>
+      <div style="border-top:2px solid var(--color-divider);margin-top:8px;padding-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--color-neutral-600);margin-right:8px">SETTINGS</span>
+        <button class="btn btn-ghost" onClick="{{ onExport }}">Export progress</button>
+        <label class="btn btn-ghost" style="cursor:pointer">Import<input type="file" accept="application/json" onChange="{{ onImportFile }}" style="display:none"></label>
+        <button class="btn btn-ghost" onClick="{{ onReset }}">Reset all</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isModule }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Module" style="width:min(860px,100%);box-sizing:border-box;margin:0 auto;padding:clamp(24px,4vw,44px) clamp(16px,4vw,40px) 56px;flex:1">
+      <button class="btn btn-ghost" onClick="{{ goHome }}" style="padding-inline:0;white-space:nowrap">← Map</button>
+      <p style="margin:18px 0 8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--color-accent)">{{ modKicker }}</p>
+      <h1 style="margin:0;font-size:clamp(28px,4.5vw,40px);line-height:1.05">{{ modTitle }}</h1>
+      <p style="margin:14px 0 0;font-size:15px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">{{ modIntro }}</p>
+
+      <h2 style="margin:40px 0 0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border-top:2px solid var(--color-divider);padding-top:16px">Worked examples</h2>
+      <p style="margin:6px 0 0;font-size:13px;color:var(--color-neutral-600)">Each shows the code, its exact terminal output, and why it works. Type and run every one on your machine.</p>
+      <div style="display:flex;flex-direction:column;gap:24px;margin-top:18px">
+        <sc-for list="{{ modExamples }}" as="ex" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:32px 1fr;gap:12px">
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:15px;color:var(--color-neutral-500)">{{ ex.n }}</span>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+              <pre style="margin:0;padding:14px 16px;background:var(--color-neutral-900);color:var(--color-bg);font:500 13.5px/1.6 ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;white-space:pre-wrap;overflow-wrap:break-word">{{ ex.code }}</pre>
+              <pre style="margin:0;padding:10px 16px;border:1px solid var(--color-divider);font:500 13.5px/1.6 ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;white-space:pre-wrap;color:var(--color-neutral-800)">{{ ex.output }}</pre>
+              <p style="margin:0;font-size:13px;color:var(--color-neutral-600)">{{ ex.why }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <h2 style="margin:40px 0 0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border-top:2px solid var(--color-divider);padding-top:16px">Exercises</h2>
+      <div style="display:flex;flex-direction:column;margin-top:10px">
+        <sc-for list="{{ modExercises }}" as="exr" hint-placeholder-count="3">
+          <div onClick="{{ exr.onOpen }}" style="display:grid;grid-template-columns:32px 1fr auto;gap:12px;align-items:center;padding:14px 8px 14px 0;border-top:1px solid color-mix(in srgb, var(--color-text) 15%, transparent);cursor:pointer;min-height:44px;box-sizing:border-box" style-hover="background:color-mix(in srgb, var(--color-text) 5%, transparent)">
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:15px;color:var(--color-neutral-500)">{{ exr.n }}</span>
+            <span style="font-weight:600;font-size:15px">{{ exr.title }}</span>
+            <span class="tag {{ exr.chipClass }}" style="white-space:nowrap">{{ exr.chip }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ exitLocked }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:32px 1fr auto;gap:12px;align-items:center;padding:16px 8px 16px 0;border-top:2px solid var(--color-divider);opacity:.55;min-height:44px;box-sizing:border-box">
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:15px">EX</span>
+            <span style="display:flex;flex-direction:column;gap:2px">
+              <span style="font-weight:700;font-size:15px">{{ exitTitle }}</span>
+              <span style="font-size:12.5px;color:var(--color-neutral-700)">Unlocks when every practice exercise is matched or its solution seen.</span>
+            </span>
+            <span class="tag tag-neutral" style="white-space:nowrap">LOCKED</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ exitOpen }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ onOpenExit }}" style="display:grid;grid-template-columns:32px 1fr auto;gap:12px;align-items:center;padding:16px 8px 16px 0;border-top:2px solid var(--color-divider);cursor:pointer;min-height:44px;box-sizing:border-box" style-hover="background:color-mix(in srgb, var(--color-accent) 6%, transparent)">
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:15px;color:var(--color-accent)">EX</span>
+            <span style="display:flex;flex-direction:column;gap:2px">
+              <span style="font-weight:700;font-size:15px">{{ exitTitle }}</span>
+              <span style="font-size:12.5px;color:var(--color-neutral-700)">Summative. No hints, no examples on screen. Passing awards the photocard.</span>
+            </span>
+            <span class="tag {{ exitChipClass }}" style="white-space:nowrap">{{ exitChip }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isExercise }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Exercise" style="width:min(780px,100%);box-sizing:border-box;margin:0 auto;padding:clamp(24px,4vw,44px) clamp(16px,4vw,40px) 64px;flex:1">
+      <button class="btn btn-ghost" onClick="{{ backToModule }}" style="padding-inline:0;white-space:nowrap">← {{ modTitle }}</button>
+      <p style="margin:18px 0 8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--color-accent)">{{ exKicker }}</p>
+      <h1 style="margin:0;font-size:clamp(26px,4vw,36px);line-height:1.1">{{ exTitle }}</h1>
+      <sc-if value="{{ exIsExit }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:12px 0 0;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--color-accent-700)">EXIT CHECKPOINT — UNSCAFFOLDED. NO HINTS ON THIS ONE.</p>
+      </sc-if>
+      <p style="margin:14px 0 0;font-size:15.5px;line-height:1.65;max-width:60ch">{{ exPrompt }}</p>
+
+      <div style="margin-top:28px;border:2px solid var(--color-text)">
+        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:10px 14px;border-bottom:2px solid var(--color-text)">
+          <span style="font-size:11px;letter-spacing:.12em;font-weight:800">EXPECTED OUTPUT</span>
+          <span style="font-size:12px;color:var(--color-neutral-600)">your terminal should print this</span>
+        </div>
+        <pre style="margin:0;padding:16px;font:600 14px/1.7 ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;white-space:pre-wrap;overflow-wrap:break-word">{{ exExpected }}</pre>
+      </div>
+
+      <sc-if value="{{ exMatched }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:20px;padding:14px 16px;background:var(--color-accent-100);color:var(--color-accent-800);font-weight:700;font-size:14.5px">Output matched — checkpoint logged. Model solution below: compare approaches, not text.</div>
+      </sc-if>
+      <sc-if value="{{ exUnmatched }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
+          <button class="btn btn-primary" onClick="{{ onMatch }}" style="min-height:46px;justify-content:flex-start;font-size:14px">My output matches</button>
+          <sc-if value="{{ exHasLadder }}" hint-placeholder-val="{{ true }}">
+            <button class="btn btn-secondary" onClick="{{ onStuck }}" style="min-height:46px;justify-content:flex-start;font-size:14px">I tried and got stuck</button>
+          </sc-if>
+          <sc-if value="{{ exIsExit }}" hint-placeholder-val="{{ false }}">
+            <button class="btn btn-secondary" onClick="{{ backToModule }}" style="min-height:46px;justify-content:flex-start;font-size:14px">Come back later</button>
+          </sc-if>
+        </div>
+        <p style="margin:10px 0 0;font-size:12.5px;color:var(--color-neutral-600)">{{ attemptsNote }}</p>
+      </sc-if>
+
+      <sc-if value="{{ exHasLadder }}" hint-placeholder-val="{{ true }}">
+        <h2 style="margin:36px 0 0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border-top:2px solid var(--color-divider);padding-top:16px">Hint ladder</h2>
+        <p style="margin:6px 0 0;font-size:12.5px;color:var(--color-neutral-600)">Attempt → hint → attempt → hint → attempt → solution. Each reveal cracks this module's photocard. Cracks never block anything.</p>
+        <div style="display:flex;flex-direction:column;margin-top:12px">
+          <sc-for list="{{ hintRows }}" as="h" hint-placeholder-count="3">
+            <div style="display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:start;padding:14px 0;border-top:1px solid color-mix(in srgb, var(--color-text) 15%, transparent)">
+              <span style="font-size:11.5px;letter-spacing:.1em;font-weight:800;padding-top:4px;color:{{ h.labelColor }}">{{ h.label }}</span>
+              <div style="min-width:0">
+                <sc-if value="{{ h.isSeen }}" hint-placeholder-val="{{ false }}">
+                  <p style="margin:0;font-size:14.5px;line-height:1.6">{{ h.body }}</p>
+                </sc-if>
+                <sc-if value="{{ h.isAvailable }}" hint-placeholder-val="{{ false }}">
+                  <button class="btn btn-secondary" onClick="{{ h.onReveal }}" style="justify-content:flex-start">{{ h.revealLabel }}</button>
+                </sc-if>
+                <sc-if value="{{ h.isLocked }}" hint-placeholder-val="{{ true }}">
+                  <p style="margin:0;font-size:13px;color:var(--color-neutral-500);padding-top:6px">{{ h.lockNote }}</p>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ solutionShown }}" hint-placeholder-val="{{ false }}">
+        <h2 style="margin:36px 0 0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;border-top:2px solid var(--color-divider);padding-top:16px">Model solution</h2>
+        <pre style="margin:14px 0 0;padding:16px;background:var(--color-neutral-900);color:var(--color-bg);font:500 13.5px/1.7 ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;white-space:pre-wrap;overflow-wrap:break-word">{{ exSolution }}</pre>
+        <h3 style="margin:22px 0 0;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Compare approaches</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+          <sc-for list="{{ exChecklist }}" as="c" hint-placeholder-count="2">
+            <div style="display:flex;gap:10px;align-items:baseline">
+              <span style="width:8px;height:8px;background:var(--color-accent);flex:none;transform:translateY(-1px)"></span>
+              <span style="font-size:14px;line-height:1.55">{{ c.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isShelf }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Photocard shelf" style="width:min(1020px,100%);box-sizing:border-box;margin:0 auto;padding:clamp(28px,5vw,56px) clamp(16px,4vw,40px) 56px;flex:1">
+      <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--color-accent)">Photocard shelf</p>
+      <h1 style="margin:0;font-size:clamp(30px,5vw,48px);line-height:1.05">{{ shelfHeadline }}</h1>
+      <p style="margin:10px 0 0;font-size:15px;color:var(--color-neutral-700);max-width:60ch">One original card per checkpoint. Hints crack corners — a visible cost, never a wall.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:20px;margin-top:36px">
+        <sc-for list="{{ cards }}" as="card" hint-placeholder-count="6">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="{{ card.style }}">
+              <span style="font-family:var(--font-heading);font-weight:900;font-size:38px;line-height:1">{{ card.num }}</span>
+              <span style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.2;margin-top:auto">{{ card.title }}</span>
+              <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.75">{{ card.foot }}</span>
+              <sc-for list="{{ card.cracks }}" as="crack" hint-placeholder-count="0">
+                <span style="{{ crack.style }}"></span>
+              </sc-for>
+            </div>
+            <span style="font-size:12px;color:var(--color-neutral-600)">{{ card.note }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Setup guide" style="width:min(780px,100%);box-sizing:border-box;margin:0 auto;padding:clamp(24px,4vw,44px) clamp(16px,4vw,40px) 64px;flex:1">
+      <button class="btn btn-ghost" onClick="{{ goHome }}" style="padding-inline:0;white-space:nowrap">← Map</button>
+      <p style="margin:18px 0 8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--color-accent)">Module 00 — Setup</p>
+      <h1 style="margin:0;font-size:clamp(28px,4.5vw,40px);line-height:1.05">Hello, Python</h1>
+      <p style="margin:14px 0 0;font-size:15px;line-height:1.6;max-width:60ch;color:var(--color-neutral-800)">Get Python on your machine and run one file from the terminal. Follow each step on your own screen — the app just guides.</p>
+      <div style="display:flex;gap:0;margin-top:24px;border:1px solid var(--color-divider);width:fit-content">
+        <button onClick="{{ pickWin }}" style="{{ winBtnStyle }}">Windows</button>
+        <button onClick="{{ pickMac }}" style="{{ macBtnStyle }}">Mac</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0;margin-top:28px">
+        <sc-for list="{{ setupSteps }}" as="step" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:40px 1fr;gap:16px;padding:22px 0;border-top:1px solid color-mix(in srgb, var(--color-text) 15%, transparent)">
+            <span style="font-family:var(--font-heading);font-weight:900;font-size:22px;color:var(--color-accent)">{{ step.n }}</span>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+              <h3 style="margin:0;font-size:17px">{{ step.title }}</h3>
+              <p style="margin:0;font-size:14.5px;line-height:1.6;color:var(--color-neutral-800)">{{ step.body }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:16px;border:2px solid var(--color-text);padding:20px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--color-accent)">EXIT CHECKPOINT</span>
+        <p style="margin:0;font-size:15px;line-height:1.6">Create <span style="font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700">hello.py</span> yourself, make it print your chosen member's name, and run it from the terminal.</p>
+        <pre style="margin:0;padding:12px 16px;border:1px solid var(--color-divider);font:600 14px/1.6 ui-monospace,'Cascadia Mono',Menlo,Consolas,monospace;white-space:pre-wrap">Jimin</pre>
+        <sc-if value="{{ m0Passed }}" hint-placeholder-val="{{ false }}">
+          <span class="tag tag-accent" style="width:fit-content;white-space:nowrap">PASSED — Module 01 unlocked</span>
+        </sc-if>
+        <sc-if value="{{ m0Open }}" hint-placeholder-val="{{ true }}">
+          <button class="btn btn-primary" onClick="{{ onM0Match }}" style="min-height:46px;justify-content:flex-start;width:fit-content">My output matches</button>
+        </sc-if>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ celebrating }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Celebration" style="position:fixed;inset:0;background:var(--color-accent);color:var(--color-bg);z-index:60;display:flex;align-items:center;overflow:hidden">
+      {{ confettiEls }}
+      <div style="width:min(860px,100%);box-sizing:border-box;margin:0 auto;padding:0 clamp(20px,5vw,48px);display:flex;flex-direction:column;align-items:flex-start;gap:18px">
+        <span style="font-size:12px;letter-spacing:.16em;font-weight:800;white-space:nowrap">CHECKPOINT PASSED</span>
+        <h1 style="margin:0;font-size:clamp(40px,8vw,88px);line-height:.98;letter-spacing:-.01em">{{ celebTitle }}</h1>
+        <p style="margin:0;font-size:17px;font-weight:600">{{ celebLine }}</p>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:8px;border:2px solid var(--color-bg);padding:12px 16px">
+          <span style="font-family:var(--font-heading);font-weight:900;font-size:26px">{{ celebNum }}</span>
+          <span style="display:flex;flex-direction:column">
+            <span style="font-weight:800;font-size:15px">{{ celebCard }}</span>
+            <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;white-space:nowrap">Photocard added to shelf</span>
+          </span>
+        </div>
+        <button onClick="{{ onContinue }}" style="margin-top:10px;background:var(--color-bg);color:var(--color-text);border:0;font:700 14px var(--font-body);padding:14px 22px;cursor:pointer;display:inline-flex;justify-content:flex-start;white-space:nowrap" style-hover="background:var(--color-neutral-200)">Continue →</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;learnerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;ARMY&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;unlockAll&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;previewCelebration&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.DATA = this.buildData();
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('pylearn-proto-v1') || 'null'); } catch (e) {}
+    this.state = Object.assign(
+      { screen: 'home', moduleId: null, exerciseId: null, progress: {}, os: 'win', showWs: false, copied: false, celebrating: null },
+      saved || {}, { celebrating: null, copied: false, showWs: false });
+  }
+
+  buildData() {
+    const mods = [
+      ['m0', '00', 0, 'Hello, Python', 'Install Python + run your first .py file', 'The Debut Card'],
+      ['m1', '01', 1, 'Variables + print', 'Store member names; f-strings for "My bias is…"', 'The Variable Era'],
+      ['m2', '02', 1, 'Numbers + math', 'Debut-year arithmetic (2026 − 2013)', 'The Arithmetic Era'],
+      ['m3', '03', 1, 'Strings + methods', 'upper(), len("Jungkook"), slicing chants', 'The String Era'],
+      ['m4', '04', 1, 'Errors 101', 'Read tracebacks; fix deliberately broken snippets', 'The Traceback Era'],
+      ['m5', '05', 2, 'Lists', 'The members list — indexing, append, slicing the rap line', 'The List Era'],
+      ['m6', '06', 2, 'if / elif / else', '"Which era?" logic; ticket-price checker', 'The Logic Era'],
+      ['m7', '07', 2, 'for loops', 'Fan chant one name per line; counting songs', 'The Loop Era'],
+      ['m8', '08', 2, 'while + input()', 'Interactive quiz mechanics', 'The While Era'],
+      ['m9', '09', 3, 'Dicts', 'One song as a dict; look up album by title', 'The Dict Era'],
+      ['m10', '10', 3, 'Functions', 'recommend_song(mood), is_maknae(name)', 'The Function Era'],
+      ['m11', '11', 3, 'Combining it all', 'Lists of dicts + loops + functions together', 'The Combination Era'],
+      ['m12', '12', 4, 'Capstone — the quiz app', 'Terminal BTS quiz or setlist builder, demo-ready', 'The Proof Era']
+    ].map(m => ({ id: m[0], num: m[1], tier: m[2], title: m[3], anchor: m[4], card: m[5] }));
+    const tiers = [
+      { n: 0, label: 'Tier 0 — Setup', era: 'Debut, 2013' },
+      { n: 1, label: 'Tier 1 — Basics', era: 'School trilogy era' },
+      { n: 2, label: 'Tier 2 — Beginner', era: 'Wings era' },
+      { n: 3, label: 'Tier 3 — Intermediate', era: 'Map of the Soul era' },
+      { n: 4, label: 'Tier 4 — Capstone', era: 'Proof era' }
+    ];
+    const content = this.authoredContent();
+    return { mods, tiers, content };
+  }
+
+  authoredContent() {
+    const MEM = 'members = ["RM", "Jin", "Suga", "J-Hope", "Jimin", "V", "Jungkook"]';
+    const SONGS = 'songs = [\n    {"title": "Fire", "year": 2016, "mood": "hype"},\n    {"title": "Spring Day", "year": 2017, "mood": "nostalgic"},\n    {"title": "Dynamite", "year": 2020, "mood": "hype"},\n    {"title": "Life Goes On", "year": 2020, "mood": "calm"},\n]';
+    return {
+      m0: { intro: '', examples: [], exercises: [], exit: { id: 'exit', title: 'Exit — hello.py', prompt: '', expected: 'Jimin', hints: [], solution: 'print("Jimin")', checklist: [] } },
+      m1: {
+        intro: 'A variable is a named box for a value; print() is how your program talks back. An f-string — f"My bias is {name}" — drops variables straight into text. Everything runs on YOUR machine: write the file, run it in the terminal, compare outputs here.',
+        examples: [
+          { code: 'bias = "Jungkook"\nprint(bias)', output: 'Jungkook', why: 'A variable stores a value; print() writes it to the terminal.' },
+          { code: 'debut = 2013\nprint(2026 - debut)', output: '13', why: 'Python does the math right inside print().' },
+          { code: 'name = "V"\nprint(f"My bias is {name}")', output: 'My bias is V', why: 'An f-string drops a variable into the middle of text. Note the f before the quote.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Print your bias', prompt: 'Store the name Jungkook in a variable, then print it. Run the file in your terminal and compare.', expected: 'Jungkook', hints: ['Which tool stores a value so you can reuse it later? A variable.', 'Shape:  name = "..."  on one line, then  print(name)  on the next.'], solution: 'bias = "Jungkook"\nprint(bias)', checklist: ['Did you print the variable, or retype the string inside print()?', 'Would your code still work if the name changed?'] },
+          { id: 'e2', title: 'Years active', prompt: 'BTS debuted in 2013. Print the sentence below — the 13 must be computed by Python, not typed by you.', expected: 'BTS have been active for 13 years', hints: ['Math works inside an f-string: {2026 - debut}.', 'Shape:  debut = 2013  then  print(f"... {2026 - debut} ...")'], solution: 'debut = 2013\nprint(f"BTS have been active for {2026 - debut} years")', checklist: ['Is 13 computed, or hard-coded?', 'Does your spacing match the expected output exactly?'] },
+          { id: 'e3', title: 'Bias and wrecker', prompt: 'Two variables, exactly one line of output.', expected: 'Bias: Jimin / Wrecker: V', hints: ['Two variables can live in one f-string.', 'Shape:  print(f"Bias: {a} / Wrecker: {b}")'], solution: 'bias = "Jimin"\nwrecker = "V"\nprint(f"Bias: {bias} / Wrecker: {wrecker}")', checklist: ['One print or two? One output line means one print.', 'Exact spaces around the slash?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — since 2018', prompt: 'Novel task, same size as the practice set: print the line below. Use one variable for the name and one for the year.', expected: 'RM has been my bias since 2018', hints: [], solution: 'name = "RM"\nyear = 2018\nprint(f"{name} has been my bias since {year}")', checklist: ['Did both values come from variables?', 'Loop or repeat? Neither needed here — did you keep it simple?'] }
+      },
+      m2: {
+        intro: 'Numbers need no quotes. Python adds, subtracts, multiplies and divides with + - * and /, and // keeps only the whole part. Anything a calculator can do, print() can show — and f-strings can do the math mid-sentence.',
+        examples: [
+          { code: 'debut = 2013\nnow = 2026\nprint(now - debut)', output: '13', why: 'No quotes means numbers — and minus works on them.' },
+          { code: 'members = 7\nalbums = 9\nprint(members * albums)', output: '63', why: '* multiplies. Variables holding numbers behave like numbers.' },
+          { code: 'print(10 / 4)', output: '2.5', why: '/ always gives a decimal answer (a float), even for 10 / 5.' },
+          { code: 'print(10 // 4)', output: '2', why: '// is whole-number division: it chops the decimal off.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Age of the maknae', prompt: 'Jungkook was born in 1997. Print the line below — the 29 must come from subtraction, not your keyboard.', expected: 'Jungkook is 29', hints: ['Age is this year minus the birth year: 2026 - 1997.', 'Shape:  born = 1997  then  print(f"Jungkook is {2026 - born}")'], solution: 'born = 1997\nprint(f"Jungkook is {2026 - born}")', checklist: ['Is 29 computed by Python?', 'Is 1997 in a variable, so it is easy to change?'] },
+          { id: 'e2', title: 'Concert math', prompt: 'One ticket costs 350. Print what 3 tickets cost — multiplied by Python.', expected: '3 tickets cost 1050', hints: ['* multiplies two numbers.', 'Shape:  price = 350  then  print(f"3 tickets cost {price * 3}")'], solution: 'price = 350\nprint(f"3 tickets cost {price * 3}")', checklist: ['Is 1050 computed?', 'Exact spacing in the sentence?'] },
+          { id: 'e3', title: 'Split the bill', prompt: 'Seven members split a 1000 won snack bill. Print each share as a whole number — use //.', expected: 'Each member gets 142', hints: ['// divides and drops the decimal part.', 'Shape:  print(f"Each member gets {1000 // 7}")'], solution: 'print(f"Each member gets {1000 // 7}")', checklist: ['Did you use // instead of /?', 'What would / have printed instead? Try it.'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — countdown to 2030', prompt: 'Print the line below. The 4 must be computed as 2030 minus a variable holding 2026.', expected: 'Only 4 years until 2030', hints: [], solution: 'year = 2026\nprint(f"Only {2030 - year} years until 2030")', checklist: ['Is the 4 computed from the variable?'] }
+      },
+      m3: {
+        intro: 'A string is text in quotes, and it carries tools called methods: chant.upper() returns a shouting copy of chant. Two built-ins matter now too — len() counts characters, and [start:stop] slices out a piece (the stop position is not included).',
+        examples: [
+          { code: 'chant = "borahae"\nprint(chant.upper())', output: 'BORAHAE', why: '.upper() returns a capitals copy; the original stays lowercase.' },
+          { code: 'print(len("Jungkook"))', output: '8', why: 'len() counts characters, spaces included.' },
+          { code: 'print("kook" in "Jungkook")', output: 'True', why: 'in asks "is this inside that?" — the answer is True or False.' },
+          { code: 'name = "Jungkook"\nprint(name[0:4])', output: 'Jung', why: 'A slice [0:4] takes positions 0, 1, 2, 3 — the stop is not included.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Shout the chant', prompt: 'Store run bts (lowercase, in quotes) in a variable and print it in capitals.', expected: 'RUN BTS', hints: ['.upper() returns the capitals version.', 'Shape:  chant = "run bts"  then  print(chant.upper())'], solution: 'chant = "run bts"\nprint(chant.upper())', checklist: ['Did you call .upper() WITH the parentheses?', 'Did you print the result, not the original?'] },
+          { id: 'e2', title: 'Count the letters', prompt: 'Use len() so Python counts the letters in Taehyung for you.', expected: 'Taehyung has 8 letters', hints: ['len(name) gives a number you can drop into an f-string.', 'Shape:  print(f"{name} has {len(name)} letters")'], solution: 'name = "Taehyung"\nprint(f"{name} has {len(name)} letters")', checklist: ['Counted by len(), not by you?', 'One variable, used twice?'] },
+          { id: 'e3', title: 'First four', prompt: 'Slice the first four characters of Seokjin and print them.', expected: 'Seok', hints: ['Positions start at 0; a slice stops BEFORE its second number.', 'Shape:  name[0:4]'], solution: 'name = "Seokjin"\nprint(name[0:4])', checklist: ['Why 0:4 and not 1:4?', 'What would name[0:3] print?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — shout and count', prompt: 'One line of output, two tools: print the line below using .upper() and len() on the name Suga.', expected: 'SUGA has 4 letters', hints: [], solution: 'name = "Suga"\nprint(f"{name.upper()} has {len(name)} letters")', checklist: ['Both tools inside one f-string?'] }
+      },
+      m4: {
+        intro: 'Errors are not punishment — they are Python telling you exactly where it gave up. Read the LAST line first: the error type and its message. The lines above name the file and line; a ^ arrow points near the problem. Every exercise below hands you broken code to fix.',
+        examples: [
+          { code: 'print("Dynamite)', output: '  File "hello.py", line 1\n    print("Dynamite)\n          ^\nSyntaxError: unterminated string literal (detected at line 1)', why: 'A SyntaxError happens before the program even runs. The arrow points at the unfinished string — a quote is missing.' },
+          { code: 'print(bias)', output: 'Traceback (most recent call last):\n  File "hello.py", line 1, in <module>\n    print(bias)\nNameError: name \'bias\' is not defined', why: 'NameError means a name was used before it got a value. Last line first, always.' },
+          { code: 'print("7" + 7)', output: 'Traceback (most recent call last):\n  File "hello.py", line 1, in <module>\n    print("7" + 7)\nTypeError: can only concatenate str (not "int") to str', why: 'TypeError: text and numbers refuse to glue with +. Quotes made the first 7 text.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Fix the quote', prompt: 'This crashes:  print("Butter)  — run it, read the traceback, fix it so it prints the song title.', expected: 'Butter', hints: ['Read the last traceback line: unterminated string literal.', 'Every opening quote needs a closing quote before the ).'], solution: 'print("Butter")', checklist: ['Could you have found it from the ^ arrow alone?', 'Read the last traceback line out loud — does it describe the fix?'] },
+          { id: 'e2', title: 'Fix the name', prompt: 'This crashes:  member = "Jin"  then  print(Member)  — fix it so it prints the name.', expected: 'Jin', hints: ['NameError: name Member is not defined. Capital letters matter.', 'The variable you made is member, all lowercase.'], solution: 'member = "Jin"\nprint(member)', checklist: ['Are member and Member the same name to Python?', 'Which traceback line told you the answer?'] },
+          { id: 'e3', title: 'Fix the type', prompt: 'This crashes:  print("Debut: " + 2013)  — fix it so it prints the line below.', expected: 'Debut: 2013', hints: ['TypeError: text will not + with a number.', 'An f-string prints numbers inside text with no glue needed.'], solution: 'year = 2013\nprint(f"Debut: {year}")', checklist: ['f-string, or quotes around 2013 — both work. Which did you pick?', 'Why exactly did + fail here?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — two bugs, one line', prompt: 'This snippet hides two bugs:  chant = "borahae  (missing quote)  then  print(chant.uper())  (misspelled method). Fix both.', expected: 'BORAHAE', hints: [], solution: 'chant = "borahae"\nprint(chant.upper())', checklist: ['Which bug did Python report first — and why only that one?'] }
+      },
+      m5: {
+        intro: 'A list keeps things in order inside one variable. Positions start at 0, len() counts items, .append() adds to the end, and [start:stop] slices a run of neighbours. Meet the members list — you will use it for the rest of the course.',
+        examples: [
+          { code: MEM + '\nprint(members[0])', output: 'RM', why: 'Positions start at 0 — members[0] is the first item.' },
+          { code: MEM + '\nprint(len(members))', output: '7', why: 'len() works on lists too: it counts items, not letters.' },
+          { code: MEM + '\nmaknae_line = members[4:7]\nprint(maknae_line)', output: "['Jimin', 'V', 'Jungkook']", why: 'The slice takes positions 4, 5, 6 — stop 7 is not included. Printing a list shows brackets and quotes.' },
+          { code: 'setlist = ["Dynamite"]\nsetlist.append("Butter")\nprint(setlist)', output: "['Dynamite', 'Butter']", why: '.append() adds one item to the end, in place.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Who is members[3]?', prompt: 'Using the full members list from the examples, print the member at position 3. Predict first, then check.', expected: 'J-Hope', hints: ['Count from 0: RM is 0, Jin is 1…', 'Shape:  print(members[3])'], solution: MEM + '\nprint(members[3])', checklist: ['Did your prediction match?', 'Which position is Jungkook at?'] },
+          { id: 'e2', title: 'Build a setlist', prompt: 'Start a list with only Mic Drop, append Fire, then print the whole list. Brackets and quotes count — match exactly.', expected: "['Mic Drop', 'Fire']", hints: ['.append() adds one item to the end.', 'Print the LIST itself, not each song.'], solution: 'setlist = ["Mic Drop"]\nsetlist.append("Fire")\nprint(setlist)', checklist: ['Did you print the list once, or song by song?', 'Python prints single quotes — did that trip your match?'] },
+          { id: 'e3', title: 'Slice the maknae line', prompt: 'Slice Jimin, V and Jungkook out of the members list and print the slice.', expected: "['Jimin', 'V', 'Jungkook']", hints: ['They sit at positions 4, 5 and 6.', 'The stop goes one PAST the last one you want: [4:7]'], solution: MEM + '\nprint(members[4:7])', checklist: ['Why 7 and not 6?', 'Could a slice grab the rap line RM + Suga + J-Hope? (They are not all neighbours.)'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — the maknae', prompt: 'Using the members list and an f-string, print the line below by looking the name up by its position.', expected: 'The maknae is Jungkook', hints: [], solution: MEM + '\nprint(f"The maknae is {members[6]}")', checklist: ['Position 6, or len(members) - 1 — both reach the end. Which did you use?'] }
+      },
+      m6: {
+        intro: 'if runs a block only when a test is True. The indented lines under the colon are the block. == asks "are these equal?" (one = stores, two == compare), elif tries the next test, else catches everything left. Python takes the FIRST true branch and skips the rest.',
+        examples: [
+          { code: 'year = 2015\nif year < 2016:\n    print("School trilogy era")', output: 'School trilogy era', why: 'The indented line runs only because the test is True.' },
+          { code: 'name = "V"\nif name == "V":\n    print("Taehyung!")', output: 'Taehyung!', why: '== compares. One = stores a value; two == ask a question.' },
+          { code: 'year = 2020\nif year < 2016:\n    print("School trilogy era")\nelse:\n    print("A later era")', output: 'A later era', why: 'else runs when the test fails — exactly one branch ever runs.' },
+          { code: 'year = 2018\nif year < 2016:\n    print("School trilogy")\nelif year < 2020:\n    print("Love Yourself era")\nelse:\n    print("A recent era")', output: 'Love Yourself era', why: '2018 fails the first test, passes the second — and the rest is skipped.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Take my money', prompt: 'price = 4500. If it is more than 4000, print Too pricey — otherwise print Take my money.', expected: 'Too pricey', hints: ['> compares numbers; the test goes right after if.', 'Shape:  if price > 4000:  indented print, then  else:  and another.'], solution: 'price = 4500\nif price > 4000:\n    print("Too pricey")\nelse:\n    print("Take my money")', checklist: ['What prints if you change price to 3000?', 'Is each print indented under its branch?'] },
+          { id: 'e2', title: 'Which era?', prompt: 'year = 2013. Build the ladder: before 2016 print School trilogy, before 2020 print Love Yourself era, otherwise print A recent era.', expected: 'School trilogy', hints: ['if, then elif, then else — three branches, one colon each.', 'Shape:  if year < 2016: … elif year < 2020: … else: …'], solution: 'year = 2013\nif year < 2016:\n    print("School trilogy")\nelif year < 2020:\n    print("Love Yourself era")\nelse:\n    print("A recent era")', checklist: ['Why does 2013 NOT also print the elif branch?', 'Trace year = 2019 by hand before running it.'] },
+          { id: 'e3', title: 'Bias check', prompt: 'name = "Jimin". If name equals Jimin print Same bias! — otherwise print Respect.', expected: 'Same bias!', hints: ['Two equals signs compare; one stores.', 'Shape:  if name == "Jimin":'], solution: 'name = "Jimin"\nif name == "Jimin":\n    print("Same bias!")\nelse:\n    print("Respect.")', checklist: ['What happens with name = "V"?', 'What does a single = inside the if do? Try it — read the error.'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — era ladder, new year', prompt: 'year = 2022. Same ladder shape as practice: before 2016 → Early era, before 2020 → Middle era, otherwise → Recent era.', expected: 'Recent era', hints: [], solution: 'year = 2022\nif year < 2016:\n    print("Early era")\nelif year < 2020:\n    print("Middle era")\nelse:\n    print("Recent era")', checklist: ['Which two tests did 2022 fail before landing in else?'] }
+      },
+      m7: {
+        intro: 'for repeats a block once per item in a list. The loop variable — for name in members — holds the current item and changes every pass. range(3) makes the numbers 0, 1, 2, handy for "do this N times". Indented lines run every pass; unindented lines run once, after.',
+        examples: [
+          { code: MEM + '\nfor name in members:\n    print(name)', output: 'RM\nJin\nSuga\nJ-Hope\nJimin\nV\nJungkook', why: 'One print, seven lines — the block runs once per member.' },
+          { code: 'for name in ["Jimin", "V"]:\n    print(f"{name}!")', output: 'Jimin!\nV!', why: 'Any list works, and f-strings work inside the loop.' },
+          { code: 'for i in range(3):\n    print(i)', output: '0\n1\n2', why: 'range(3) counts 0, 1, 2 — three numbers, starting at 0.' },
+          { code: MEM + '\ncount = 0\nfor name in members:\n    count = count + 1\nprint(count)', output: '7', why: 'The counter grows once per pass. The final print is unindented — outside the loop — so it runs once.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'The full fan chant', prompt: 'Loop over the members list and print each name with an ! on its own line.', expected: 'RM!\nJin!\nSuga!\nJ-Hope!\nJimin!\nV!\nJungkook!', hints: ['One print inside the loop handles all seven.', 'Shape:  for name in members:  then  print(f"{name}!")'], solution: MEM + '\nfor name in members:\n    print(f"{name}!")', checklist: ['A loop, or seven copied prints? Be honest.', 'What changes if you unindent the print?'] },
+          { id: 'e2', title: 'Encore ×3', prompt: 'Print Encore! exactly three times using range — not three print lines.', expected: 'Encore!\nEncore!\nEncore!', hints: ['range(3) runs a block three times.', 'Shape:  for i in range(3):'], solution: 'for i in range(3):\n    print("Encore!")', checklist: ['range, or copy-paste?', 'What does i hold each pass, even though you never printed it?'] },
+          { id: 'e3', title: 'Count the line', prompt: 'Loop over ["Jimin", "V", "Jungkook"] with a counter, then print the count after the loop.', expected: '3', hints: ['Start count = 0 BEFORE the loop; add 1 inside it.', 'Print after the loop — unindented.'], solution: 'line = ["Jimin", "V", "Jungkook"]\ncount = 0\nfor name in line:\n    count = count + 1\nprint(count)', checklist: ['Why does the print sit outside the loop?', 'What would it print indented inside?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — now playing', prompt: 'Loop over ["Dynamite", "Butter", "Fire"] and print each one as  Now playing: title.', expected: 'Now playing: Dynamite\nNow playing: Butter\nNow playing: Fire', hints: [], solution: 'songs = ["Dynamite", "Butter", "Fire"]\nfor song in songs:\n    print(f"Now playing: {song}")', checklist: ['One print or three?'] }
+      },
+      m8: {
+        intro: 'while repeats as long as its test stays True — so something inside must change, or it never ends (Ctrl+C stops a runaway loop). input("…") shows a prompt, waits for typing, and hands back what was typed — always as text. Exercises tell you EXACTLY what to type so outputs match.',
+        examples: [
+          { code: 'n = 1\nwhile n <= 3:\n    print(n)\n    n = n + 1', output: '1\n2\n3', why: 'n grows each pass; at 4 the test fails and the loop ends.' },
+          { code: 'answer = input("Bias? ")\nprint(f"{answer} is a great pick")', output: 'Bias? Jimin\nJimin is a great pick', why: 'You typed Jimin. input() shows the prompt, waits, and returns the typed text — which also appears on the prompt line.' },
+          { code: 'guess = ""\nwhile guess != "V":\n    guess = input("King of duality? ")\nprint("Correct!")', output: 'King of duality? Jin\nKing of duality? V\nCorrect!', why: 'You typed Jin, then V. The loop keeps asking until the test fails.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Countdown', prompt: 'Count 3, 2, 1 with a while loop, then print Comeback! after it ends.', expected: '3\n2\n1\nComeback!', hints: ['Start n = 3; loop while n >= 1; shrink n inside.', 'The Comeback! print is unindented — after the loop.'], solution: 'n = 3\nwhile n >= 1:\n    print(n)\n    n = n - 1\nprint("Comeback!")', checklist: ['What exactly stops the loop?', 'Move the last print inside — what changes?'] },
+          { id: 'e2', title: 'Ask the bias', prompt: 'Ask with input("Bias? ") and echo the answer back. When it asks, type exactly: Jungkook', expected: 'Bias? Jungkook\nMy bias is Jungkook', hints: ['input returns what was typed — store it in a variable.', 'Shape:  answer = input("Bias? ")  then one f-string print.'], solution: 'answer = input("Bias? ")\nprint(f"My bias is {answer}")', checklist: ['Why does Jungkook appear on the first line too? Your typing is part of the terminal.', 'The space after ?  is part of the prompt — did it match?'] },
+          { id: 'e3', title: 'The magic word', prompt: 'Keep asking  Say the magic word:  until the answer is borahae, then print Doors open! When it asks, type exactly: army — then: borahae', expected: 'Say the magic word: army\nSay the magic word: borahae\nDoors open!', hints: ['The test compares the LAST answer:  while word != "borahae":', 'Start word = "" so the loop has something to test the first time.'], solution: 'word = ""\nwhile word != "borahae":\n    word = input("Say the magic word: ")\nprint("Doors open!")', checklist: ['Why does word = "" make the loop start?', 'What happens if you type borahae first? Trace it.'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — find the maknae', prompt: 'Keep asking  Maknae?  until the answer is Jungkook, then print Correct! When it asks, type exactly: Jimin — then: Jungkook', expected: 'Maknae? Jimin\nMaknae? Jungkook\nCorrect!', hints: [], solution: 'guess = ""\nwhile guess != "Jungkook":\n    guess = input("Maknae? ")\nprint("Correct!")', checklist: ['Same shape as the magic word — did you rebuild it from memory?'] }
+      },
+      m9: {
+        intro: 'A dict stores labelled values: key on the left, value on the right. Look a value up with square brackets and the KEY — song["title"] — not a position. Assigning to a new key adds it, and  "album" in song  asks whether a key exists.',
+        examples: [
+          { code: 'song = {"title": "Spring Day", "album": "You Never Walk Alone", "year": 2017}\nprint(song["title"])', output: 'Spring Day', why: 'Square brackets with the KEY, not a position number.' },
+          { code: 'song = {"title": "Spring Day", "year": 2017}\nprint(song["year"])', output: '2017', why: 'Values can be any type — this one is a number.' },
+          { code: 'song = {"title": "Spring Day", "year": 2017}\nsong["mood"] = "nostalgic"\nprint(song["mood"])', output: 'nostalgic', why: 'Assigning to a key that does not exist yet adds it.' },
+          { code: 'song = {"title": "Spring Day", "year": 2017}\nprint("album" in song)', output: 'False', why: 'in checks the KEYS — this dict has no album key.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Look up the album', prompt: 'song = {"title": "Spring Day", "album": "You Never Walk Alone", "year": 2017}. Print the line below using two lookups.', expected: 'Spring Day is on You Never Walk Alone', hints: ['Both values come out with ["…"] lookups.', 'Store each lookup in a variable first, then one f-string.'], solution: 'song = {"title": "Spring Day", "album": "You Never Walk Alone", "year": 2017}\ntitle = song["title"]\nalbum = song["album"]\nprint(f"{title} is on {album}")', checklist: ['Lookups by key, not retyped values?', 'Could you do it without the helper variables?'] },
+          { id: 'e2', title: 'Add the mood', prompt: 'Same song dict. Add a mood key with the value hopeful, then print it back out.', expected: 'hopeful', hints: ['Assign to a key that does not exist yet:  song["mood"] = …', 'Then print song["mood"].'], solution: 'song = {"title": "Spring Day", "year": 2017}\nsong["mood"] = "hopeful"\nprint(song["mood"])', checklist: ['Adding and updating a key look identical — why is that fine?', 'What happens when you print a key that does not exist? Try it: KeyError.'] },
+          { id: 'e3', title: 'Song card', prompt: 'song = {"title": "Dynamite", "year": 2020}. Print the two-line card below.', expected: 'Title: Dynamite\nYear: 2020', hints: ['Two prints, one lookup each.', 'Inside an f-string, quote keys with SINGLE quotes: {song[\'title\']}'], solution: 'song = {"title": "Dynamite", "year": 2020}\nprint(f"Title: {song[\'title\']}")\nprint(f"Year: {song[\'year\']}")', checklist: ['Why single quotes for the key inside the f-string?', 'Helper variables would also work — which reads better to you?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — Butter card', prompt: 'Make a dict for the song Butter, released 2021, and print the line below from lookups.', expected: 'Butter came out in 2021', hints: [], solution: 'song = {"title": "Butter", "year": 2021}\nprint(f"{song[\'title\']} came out in {song[\'year\']}")', checklist: ['Both values from the dict, not retyped?'] }
+      },
+      m10: {
+        intro: 'def gives a block a name so you can run it whenever you like. Parameters are its inputs; return hands a value back to the caller. Defining does nothing by itself — the CALL is what runs it. This is where your code stops being a script and starts being tools.',
+        examples: [
+          { code: 'def chant(name):\n    print(f"{name}! {name}!")\n\nchant("Jimin")', output: 'Jimin! Jimin!', why: 'def defines the tool; the last line actually uses it.' },
+          { code: 'def is_maknae(name):\n    return name == "Jungkook"\n\nprint(is_maknae("Jin"))', output: 'False', why: 'return sends the True/False back to whoever asked.' },
+          { code: 'def recommend_song(mood):\n    if mood == "hype":\n        return "Fire"\n    return "Spring Day"\n\nprint(recommend_song("hype"))', output: 'Fire', why: 'A return ends the function immediately — the second return is the fallback.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Greeting function', prompt: 'Write greet(name) that prints  Annyeong, name!  — then call it with RM.', expected: 'Annyeong, RM!', hints: ['def greet(name):  then an indented print.', 'Nothing prints until you CALL greet("RM") at the bottom.'], solution: 'def greet(name):\n    print(f"Annyeong, {name}!")\n\ngreet("RM")', checklist: ['Did you remember the call at the bottom?', 'Call it twice with different names — zero extra work.'] },
+          { id: 'e2', title: 'Double chant', prompt: 'Write chant(name) that prints the name on two lines, then call it with V.', expected: 'V\nV', hints: ['Two prints inside the function — or one small loop.', 'The body is everything indented under def.'], solution: 'def chant(name):\n    print(name)\n    print(name)\n\nchant("V")', checklist: ['Loop or two prints — which did you pick, and why?', 'What does chant("Jin") print now?'] },
+          { id: 'e3', title: 'Era function', prompt: 'Write era(year) that RETURNS Early for years before 2016 and Later otherwise. Print era(2014).', expected: 'Early', hints: ['return sends the word back; the print happens at the call.', 'Shape:  if year < 2016:  return "Early"  then  return "Later"'], solution: 'def era(year):\n    if year < 2016:\n        return "Early"\n    return "Later"\n\nprint(era(2014))', checklist: ['Why is no else needed after a return?', 'Returning vs printing inside — what is the difference?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — rap line check', prompt: 'Write is_rap_line(name) that returns True when the name is in ["RM", "Suga", "J-Hope"]. Print is_rap_line("Suga").', expected: 'True', hints: [], solution: 'def is_rap_line(name):\n    return name in ["RM", "Suga", "J-Hope"]\n\nprint(is_rap_line("Suga"))', checklist: ['One-line body — did in do the work, or a chain of ==?'] }
+      },
+      m11: {
+        intro: 'The final shape: a list of dicts — every song is a dict, the catalogue is a list of them. Loop over the list and each pass hands you one dict; add if to filter, a counter to count, and a function to wrap it up. This is what real data looks like.',
+        examples: [
+          { code: SONGS + '\nfor song in songs:\n    print(song["title"])', output: 'Fire\nSpring Day\nDynamite\nLife Goes On', why: 'Each pass, song is one whole dict — so key lookups work inside the loop.' },
+          { code: SONGS + '\nfor song in songs:\n    if song["year"] == 2020:\n        print(song["title"])', output: 'Dynamite\nLife Goes On', why: 'Loop + if = a filter. Only matching passes reach the print.' },
+          { code: SONGS + '\ncount = 0\nfor song in songs:\n    if song["mood"] == "hype":\n        count = count + 1\nprint(count)', output: '2', why: 'Loop + if + counter = counting by rule. Print sits outside the loop.' },
+          { code: SONGS + '\n\ndef first_hype(songs):\n    for song in songs:\n        if song["mood"] == "hype":\n            return song["title"]\n\nprint(first_hype(songs))', output: 'Fire', why: 'return ends the search on the first hit — a find-first tool.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Class of 2020', prompt: 'Using the songs list from the examples, print the title of every song from 2020.', expected: 'Dynamite\nLife Goes On', hints: ['A filter: an if inside the for.', 'Compare song["year"] == 2020 — a number, no quotes.'], solution: SONGS + '\nfor song in songs:\n    if song["year"] == 2020:\n        print(song["title"])', checklist: ['Why no quotes around 2020?', 'Change the filter to 2016 — predict before running.'] },
+          { id: 'e2', title: 'Count the hype', prompt: 'Count how many songs have the mood hype, then print the count.', expected: '2', hints: ['count = 0 before the loop, + 1 inside the if.', 'Print after the loop, unindented.'], solution: SONGS + '\ncount = 0\nfor song in songs:\n    if song["mood"] == "hype":\n        count = count + 1\nprint(count)', checklist: ['Where does the print live, and why?', 'Same shape as Module 07 counting — did you notice?'] },
+          { id: 'e3', title: 'Playlist by mood', prompt: 'Write print_mood(songs, mood) that prints every matching title, then call it with hype.', expected: 'Fire\nDynamite', hints: ['The filter from exercise 1 goes INSIDE the function; mood becomes a parameter.', 'Call it at the bottom:  print_mood(songs, "hype")'], solution: SONGS + '\n\ndef print_mood(songs, mood):\n    for song in songs:\n        if song["mood"] == mood:\n            print(song["title"])\n\nprint_mood(songs, "hype")', checklist: ['Can you now call it with calm for free?', 'Parameter vs hard-coded "hype" — why is the parameter better?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — find 2017', prompt: 'Loop the songs list and print  Found: title  for the song released in 2017.', expected: 'Found: Spring Day', hints: [], solution: SONGS + '\nfor song in songs:\n    if song["year"] == 2017:\n        print(f"Found: {song[\'title\']}")', checklist: ['Loop + if + f-string — three modules in one body.'] }
+      },
+      m12: {
+        intro: 'The dream project: a terminal BTS quiz you can demo to friends. Nothing new to learn — variables, input(), if, loops and functions are the whole toolkit. Build it in three milestones; the exit is one full session that matches the transcript, typed inputs and all.',
+        examples: [
+          { code: 'def ask(question, answer):\n    guess = input(question)\n    return guess == answer\n\nprint(ask("Maknae? ", "Jungkook"))', output: 'Maknae? Jungkook\nTrue', why: 'You typed Jungkook. One function can run ANY question — prompt and answer are parameters.' },
+          { code: 'score = 0\nscore = score + 1\nprint(f"Score: {score}/3")', output: 'Score: 1/3', why: 'A counter plus an f-string is your whole scoreboard.' }
+        ],
+        exercises: [
+          { id: 'e1', title: 'Milestone 1 — the greeting', prompt: 'Print the title, ask for a name, greet. When it asks, type exactly: Riya', expected: 'BTS QUIZ\nYour name? Riya\nWelcome, Riya!', hints: ['Three lines: a print, an input, an f-string print.', 'The typed Riya appears on the prompt line — that is normal.'], solution: 'print("BTS QUIZ")\nname = input("Your name? ")\nprint(f"Welcome, {name}!")', checklist: ['Prompt spacing exact?', 'Module 01 skills, nothing more — feel that?'] },
+          { id: 'e2', title: 'Milestone 2 — one scored question', prompt: 'Ask  Maknae?  — add a point when the answer is Jungkook, then print the score. When it asks, type exactly: Jungkook', expected: 'Maknae? Jungkook\nScore: 1/1', hints: ['if guess == "Jungkook":  score = score + 1', 'score starts at 0 BEFORE the question.'], solution: 'score = 0\nguess = input("Maknae? ")\nif guess == "Jungkook":\n    score = score + 1\nprint(f"Score: {score}/1")', checklist: ['What prints if you answer wrong?', 'Where must score = 0 sit, and why?'] },
+          { id: 'e3', title: 'Milestone 3 — three questions', prompt: 'Three questions, one score, one final line. When it asks, type exactly: Jungkook — then: 2013 — then: RM', expected: 'Maknae? Jungkook\nDebut year? 2013\nLeader? RM\nScore: 3/3', hints: ['Repeating the if block three times is fine — or reuse the ask() function from the examples.', 'input() returns TEXT: compare the year to "2013" in quotes.'], solution: 'score = 0\nif input("Maknae? ") == "Jungkook":\n    score = score + 1\nif input("Debut year? ") == "2013":\n    score = score + 1\nif input("Leader? ") == "RM":\n    score = score + 1\nprint(f"Score: {score}/3")', checklist: ['Why "2013" in quotes?', 'Repeat or reuse — both pass; which felt better?'] }
+        ],
+        exit: { id: 'exit', title: 'Exit — the demo session', prompt: 'The full app: title, name, three questions, score line, sign-off. One answer below is wrong on purpose — scoring must survive it. When it asks, type exactly: Riya — then: Jungkook — then: 2014 — then: RM', expected: 'BTS QUIZ\nYour name? Riya\nMaknae? Jungkook\nDebut year? 2014\nLeader? RM\nRiya, you scored 2/3\nBorahae!', hints: [], solution: 'def ask(question, answer):\n    guess = input(question)\n    return guess == answer\n\nprint("BTS QUIZ")\nname = input("Your name? ")\nscore = 0\nif ask("Maknae? ", "Jungkook"):\n    score = score + 1\nif ask("Debut year? ", "2013"):\n    score = score + 1\nif ask("Leader? ", "RM"):\n    score = score + 1\nprint(f"{name}, you scored {score}/3")\nprint("Borahae!")', checklist: ['This is the demo — run it for someone and let THEM type.', 'A wrong answer costs a point but never crashes. Why?'] }
+      }
+    };
+  }
+
+  save(patch) {
+    this.setState(patch, () => {
+      const s = this.state;
+      try { localStorage.setItem('pylearn-proto-v1', JSON.stringify({ screen: s.screen, moduleId: s.moduleId, exerciseId: s.exerciseId, progress: s.progress, os: s.os })); } catch (e) {}
+    });
+  }
+
+  exState(mid, eid) {
+    const mp = this.state.progress[mid] || {};
+    return Object.assign({ attempts: 0, hintsSeen: 0, stuck: false, matched: false, revealed: false }, (mp.ex || {})[eid]);
+  }
+  setEx(mid, eid, patch, extra) {
+    const progress = JSON.parse(JSON.stringify(this.state.progress));
+    const mp = progress[mid] = progress[mid] || { ex: {}, passed: false };
+    mp.ex = mp.ex || {};
+    mp.ex[eid] = Object.assign(this.exState(mid, eid), patch);
+    if (extra) extra(mp);
+    this.save({ progress });
+  }
+  cracks(mid) {
+    const mp = this.state.progress[mid]; if (!mp || !mp.ex) return 0;
+    return Object.values(mp.ex).reduce((a, e) => a + (e.hintsSeen || 0), 0);
+  }
+  passed(mid) { return !!(this.state.progress[mid] && this.state.progress[mid].passed); }
+  unlocked(idx) {
+    if (this.props.unlockAll) return true;
+    if (idx === 0) return true;
+    return this.passed(this.DATA.mods[idx - 1].id);
+  }
+  exitOpenFor(mod) {
+    const c = this.DATA.content[mod.id];
+    return c.exercises.every(e => { const s = this.exState(mod.id, e.id); return s.matched || s.revealed; });
+  }
+  markMatched(mod, ex, isExit) {
+    const celebrate = isExit && !this.passed(mod.id);
+    this.setEx(mod.id, ex.id, { matched: true, revealed: true }, mp => { if (isExit) mp.passed = true; });
+    if (celebrate) {
+      const lines = ['Borahae. On to the next era.', 'Namjoon would be proud of that punctuation.', 'No skips, no shortcuts. Legend behavior.', 'Add it to the setlist.'];
+      this.setState({ celebrating: { num: mod.num, title: mod.title, card: mod.card, line: lines[parseInt(mod.num, 10) % lines.length] } });
+    }
+  }
+
+  confetti() {
+    const cols = ['#f3f2f2', '#201e1d', '#ffc4b8', '#7c1405'];
+    const kids = [];
+    for (let i = 0; i < 28; i++) {
+      kids.push(React.createElement('span', { key: i, style: { position: 'absolute', top: '-26px', left: (i * 3.6 + 1) + '%', width: '10px', height: '16px', background: cols[i % 4], animation: 'plfall ' + (1.7 + (i % 5) * 0.25) + 's linear ' + ((i % 7) * 0.13) + 's forwards' } }));
+    }
+    return React.createElement('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' } }, kids);
+  }
+
+  chipFor(st) {
+    if (st.matched) return { chip: 'MATCHED', chipClass: 'tag-accent' };
+    if (st.revealed) return { chip: 'SOLUTION SEEN', chipClass: 'tag-neutral' };
+    if (st.attempts > 0) return { chip: 'TRIED ×' + st.attempts, chipClass: 'tag-outline' };
+    return { chip: 'NOT STARTED', chipClass: 'tag-neutral' };
+  }
+
+  renderVals() {
+    const D = this.DATA, S = this.state, go = (screen, moduleId, exerciseId) => () => this.save({ screen, moduleId: moduleId === undefined ? S.moduleId : moduleId, exerciseId: exerciseId === undefined ? null : exerciseId, showWs: false, copied: false });
+    const passedCount = D.mods.filter(m => this.passed(m.id)).length;
+    const tabBase = 'border:0;background:transparent;cursor:pointer;font:700 12.5px var(--font-body);letter-spacing:.08em;padding:10px 12px;min-height:44px;color:var(--color-text);border-bottom:2px solid transparent';
+    const navItems = [
+      { key: 'home', label: 'MAP', onClick: go('home', null) },
+      { key: 'shelf', label: 'SHELF', onClick: go('shelf', null) },
+      { key: 'setup', label: 'SETUP', onClick: go('setup', null) }
+    ].map(t => ({ ...t, style: tabBase + (S.screen === t.key ? ';border-bottom-color:var(--color-accent);color:var(--color-accent-700)' : '') }));
+
+    // home
+    const firstOpen = D.mods.find((m, i) => this.unlocked(i) && !this.passed(m.id));
+    const tiers = D.tiers.map(t => ({
+      key: 't' + t.n, label: t.label, era: t.era,
+      modules: D.mods.filter(m => m.tier === t.n).map(m => {
+        const i = D.mods.indexOf(m), un = this.unlocked(i), isPassed = this.passed(m.id), isNext = firstOpen && firstOpen.id === m.id;
+        const rowBase = 'display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:14px 8px 14px 0;border-top:1px solid color-mix(in srgb, var(--color-text) 15%, transparent);min-height:44px;box-sizing:border-box';
+        return {
+          key: m.id, num: m.num, title: m.title, anchor: m.anchor,
+          tag: isPassed ? 'PASSED' : isNext ? 'UP NEXT' : un ? 'OPEN' : 'LOCKED',
+          tagClass: isPassed ? 'tag-accent' : isNext ? 'tag-outline' : 'tag-neutral',
+          rowStyle: rowBase + (un ? ';cursor:pointer' : ';opacity:.45;cursor:default'),
+          rowHover: un ? 'background:color-mix(in srgb, var(--color-text) 5%, transparent)' : '',
+          numStyle: 'font-family:var(--font-heading);font-weight:900;font-size:24px;' + (isNext ? 'color:var(--color-accent)' : isPassed ? 'color:var(--color-text)' : 'color:var(--color-neutral-400)'),
+          onOpen: un ? (m.id === 'm0' ? go('setup', null) : go('module', m.id)) : () => {}
+        };
+      })
+    }));
+
+    // module
+    const mod = D.mods.find(m => m.id === S.moduleId) || D.mods[1];
+    const mc = D.content[mod.id];
+    const exitOpen = this.exitOpenFor(mod);
+    const exitSt = this.exState(mod.id, 'exit');
+    const modExercises = mc.exercises.map((e, i) => ({ n: String(i + 1).padStart(2, '0'), title: e.title, ...this.chipFor(this.exState(mod.id, e.id)), onOpen: go('exercise', mod.id, e.id) }));
+
+    // exercise
+    const isExit = S.exerciseId === 'exit';
+    const ex = (isExit ? mc.exit : mc.exercises.find(e => e.id === S.exerciseId)) || mc.exercises[0];
+    const st = this.exState(mod.id, ex.id);
+    const exExpected = ex.expected;
+    const hintRows = [];
+    if (!isExit) {
+      [0, 1].forEach(i => {
+        const seen = st.hintsSeen > i, avail = !seen && st.hintsSeen === i && st.stuck;
+        hintRows.push({
+          key: 'h' + i, label: 'HINT ' + (i + 1), labelColor: seen || avail ? 'var(--color-accent-700)' : 'var(--color-neutral-500)',
+          isSeen: seen, isAvailable: avail, isLocked: !seen && !avail, body: ex.hints[i],
+          revealLabel: 'Reveal hint ' + (i + 1) + ' — cracks the card',
+          lockNote: st.attempts === 0 ? 'Locked. Mark "I tried and got stuck" after a real attempt.' : 'Locked. Another declared attempt unlocks this.',
+          onReveal: () => this.setEx(mod.id, ex.id, { hintsSeen: i + 1, stuck: false })
+        });
+      });
+      const solAvail = !st.revealed && st.hintsSeen === 2 && st.stuck;
+      hintRows.push({
+        key: 'sol', label: 'SOLUTION', labelColor: st.revealed || solAvail ? 'var(--color-accent-700)' : 'var(--color-neutral-500)',
+        isSeen: false, isAvailable: solAvail, isLocked: !st.revealed && !solAvail,
+        body: '', revealLabel: 'Reveal solution',
+        lockNote: st.revealed ? 'Revealed below.' : 'Reachable only after the full ladder — or by matching.',
+        onReveal: () => this.setEx(mod.id, ex.id, { revealed: true, stuck: false })
+      });
+    }
+
+    // shelf
+    const cards = D.mods.map(m => {
+      const got = this.passed(m.id), n = this.cracks(m.id);
+      const base = 'position:relative;overflow:hidden;aspect-ratio:2/2.9;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;';
+      const corners = ['top:-15px;right:-15px', 'bottom:-15px;left:-15px', 'top:-15px;left:-15px', 'bottom:-15px;right:-15px'];
+      return {
+        key: m.id, num: m.num, title: m.card, foot: got ? m.title : 'Locked',
+        style: base + (got ? 'background:var(--color-accent);color:var(--color-bg)' : 'background:transparent;border:1px solid var(--color-divider);color:var(--color-neutral-400)'),
+        cracks: got ? corners.slice(0, Math.min(n, 4)).map((pos, i) => ({ key: 'c' + i, style: 'position:absolute;width:30px;height:30px;transform:rotate(45deg);background:var(--color-bg);border:2px solid var(--color-accent-900);' + pos })) : [],
+        note: got ? (n === 0 ? 'Mint — no hints used' : n + (n === 1 ? ' crack' : ' cracks')) : '—'
+      };
+    });
+    const gotCount = cards.filter(c => c.foot !== 'Locked').length;
+
+    // setup
+    const isMac = S.os === 'mac';
+    const segBase = 'border:0;cursor:pointer;font:600 13px var(--font-body);padding:10px 18px;min-height:44px;';
+    const steps = isMac ? [
+      { title: 'Download the installer', body: 'Go to python.org/downloads and grab the macOS installer.' },
+      { title: 'Run the .pkg', body: 'Open the downloaded file and click through with the defaults.' },
+      { title: 'Open Terminal', body: 'Press ⌘ Space, type "Terminal", hit Enter.' },
+      { title: 'Make hello.py and run it', body: 'Save a file containing one print(...), then run:  python3 hello.py' }
+    ] : [
+      { title: 'Download the installer', body: 'Go to python.org/downloads and grab the Windows installer.' },
+      { title: 'Run it — tick "Add python.exe to PATH"', body: 'The one checkbox that saves an hour of pain. Then click Install.' },
+      { title: 'Open PowerShell', body: 'Open the Start menu, type "powershell", hit Enter.' },
+      { title: 'Make hello.py and run it', body: 'Save a file containing one print(...), then run:  python hello.py' }
+    ];
+    const m0 = D.mods[0];
+
+    const celeb = this.props.previewCelebration ? { num: '07', title: 'for loops', card: 'The Loop Era', line: 'Borahae. On to the next era.' } : S.celebrating;
+
+    return {
+      learnerName: this.props.learnerName ?? 'ARMY',
+      passedLabel: passedCount + '/' + D.mods.length,
+      progressLine: passedCount === 0 ? 'Start at Module 00 — setup is the first checkpoint.' : 'Next up: Module ' + (firstOpen ? firstOpen.num : '—') + '.',
+      goHome: go('home', null), navItems,
+      isHome: S.screen === 'home', isModule: S.screen === 'module', isExercise: S.screen === 'exercise', isShelf: S.screen === 'shelf', isSetup: S.screen === 'setup',
+      tiers,
+      onExport: () => { const blob = new Blob([JSON.stringify({ version: 1, progress: S.progress }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'bora-py-progress.json'; a.click(); },
+      onImportFile: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; f.text().then(t => { try { const d = JSON.parse(t); if (d && d.progress) this.save({ progress: d.progress }); } catch (err) { alert('Not a PyLearn progress file.'); } }); e.target.value = ''; },
+      onReset: () => { if (confirm('Reset all progress?')) { try { localStorage.removeItem('pylearn-proto-v1'); } catch (e) {} this.setState({ progress: {}, screen: 'home', moduleId: null, exerciseId: null }); } },
+      // module
+      modKicker: 'Module ' + mod.num + ' — ' + (D.tiers.find(t => t.n === mod.tier) || {}).label,
+      modTitle: mod.title,
+      modIntro: mc.intro,
+      modExamples: mc.examples.map((e, i) => ({ n: String(i + 1).padStart(2, '0'), ...e, key: 'ex' + i })),
+      modExercises,
+      exitTitle: mc.exit.title, exitLocked: !exitOpen, exitOpen: exitOpen,
+      exitChip: exitSt.matched ? 'PASSED' : 'READY', exitChipClass: exitSt.matched ? 'tag-accent' : 'tag-outline',
+      onOpenExit: go('exercise', mod.id, 'exit'),
+      backToModule: go('module', mod.id),
+      // exercise
+      exKicker: 'Module ' + mod.num + (isExit ? ' — exit checkpoint' : ' — exercise ' + Math.max(1, mc.exercises.findIndex(e2 => e2.id === ex.id) + 1) + ' of ' + mc.exercises.length),
+      exTitle: ex.title, exPrompt: ex.prompt, exIsExit: isExit, exHasLadder: !isExit,
+      exExpected,
+      exMatched: st.matched, exUnmatched: !st.matched,
+      onMatch: () => this.markMatched(mod, ex, isExit),
+      onStuck: () => this.setEx(mod.id, ex.id, { attempts: st.attempts + 1, stuck: true }),
+      attemptsNote: st.attempts === 0 ? 'Write it on your machine, run it, compare. Declaring an attempt unlocks the next rung.' : st.attempts + (st.attempts === 1 ? ' attempt declared.' : ' attempts declared.') + (st.stuck ? ' Next rung unlocked below.' : ' Try again to unlock the next rung.'),
+      hintRows,
+      solutionShown: st.revealed, exSolution: ex.solution,
+      exChecklist: ex.checklist.map((c, i) => ({ key: 'c' + i, text: c })),
+      // shelf
+      shelfHeadline: gotCount === 0 ? 'Empty shelf. For now.' : gotCount + ' of ' + D.mods.length + ' collected.',
+      cards,
+      // setup
+      pickWin: () => this.save({ os: 'win' }), pickMac: () => this.save({ os: 'mac' }),
+      winBtnStyle: segBase + (!isMac ? 'background:var(--color-accent);color:var(--color-bg)' : 'background:transparent;color:var(--color-text)'),
+      macBtnStyle: segBase + (isMac ? 'background:var(--color-accent);color:var(--color-bg)' : 'background:transparent;color:var(--color-text)') + ';border-left:1px solid var(--color-divider)',
+      setupSteps: steps.map((s, i) => ({ ...s, n: String(i + 1), key: 's' + i })),
+      m0Passed: this.passed('m0'), m0Open: !this.passed('m0'),
+      onM0Match: () => this.markMatched(m0, m0.id && this.DATA.content.m0.exit, true),
+      // celebration
+      celebrating: !!celeb,
+      celebTitle: celeb ? 'Module ' + celeb.num + ' cleared.' : '',
+      celebLine: celeb ? celeb.line : '', celebNum: celeb ? celeb.num : '', celebCard: celeb ? celeb.card : '',
+      confettiEls: celeb ? this.confetti() : null,
+      onContinue: () => this.save({ celebrating: null, screen: 'home', exerciseId: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
