@@ -147,6 +147,8 @@ it('ends in the exit checkpoint: expected output, match or come back later, no h
   expect(html).toContain(escaped(m0.exitExercise.prompt));
   expect(html).toContain('EXPECTED OUTPUT');
   expect(html).toContain(m0.exitExercise.expectedOutput);
+  // Same shared block as ExerciseView, toggle included — no second implementation.
+  expect(html).toContain('Show whitespace');
   expect(html).toContain('My output matches');
   expect(html).toContain('Come back later');
   expect(html).not.toContain('I tried and got stuck');
