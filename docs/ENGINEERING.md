@@ -130,7 +130,7 @@ Rules:
 - `ModuleView` — concept doc, worked examples (code blocks with copy button), exercise list with state chips
 - `ExerciseView` — the core screen: prompt, expected-output block (monospace, copy-safe, whitespace-visible toggle for trailing-space debugging), attempt/hint/match buttons per state machine, revealed solution with syntax highlighting + approach checklist
 - `PhotocardShelf` — grid of cards, crack overlays
-- `SetupGuide` — OS picker (Windows/Mac), stepper with screenshots (bundled images)
+- `SetupGuide` — OS picker (Windows/Mac), stepper with screenshots (bundled images). Module 0 is the setup guide and nothing else: it has no concept doc and no formative exercises, so it has **no `ModuleView` route** — its exit checkpoint is rendered inline at the end of the guide, and every `#/module/m0…` hash is canonicalised to `#/setup`
 - `Settings` — export/import progress, reset module
 
 **Expected-output block detail:** render with a "show whitespace" toggle (·  for spaces, ⏎ for newlines). The #1 beginner frustration with output matching is invisible trailing spaces/newlines — surface it, and the concept doc for Module 1 explicitly teaches "outputs must match exactly, here's how to check."
