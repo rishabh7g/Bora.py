@@ -27,6 +27,8 @@ it('shows prompt and expected output, with NO copy button (trust-based)', () => 
   const html = render();
   expect(html).toContain('EXPECTED OUTPUT');
   expect(html).toContain(exercise.expectedOutput);
+  // The shared block brings its whitespace toggle with it (ExpectedOutput.tsx).
+  expect(html).toContain('Show whitespace');
   expect(html.toLowerCase()).not.toContain('copy');
 });
 
@@ -82,6 +84,7 @@ it('after the full ladder + reveal: solution shown, match still offered', () => 
 it('exit variant: no hint ladder, only match or come back later', () => {
   const html = render(initialExerciseState(), true);
   expect(html).toContain('EXIT CHECKPOINT');
+  expect(html).toContain('Show whitespace'); // on the exit block too
   expect(html).toContain('My output matches');
   expect(html).toContain('Come back later');
   expect(html).not.toContain('I tried and got stuck');

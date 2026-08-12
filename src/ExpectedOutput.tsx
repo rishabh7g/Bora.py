@@ -9,10 +9,11 @@
 // Whitespace toggle (ENGINEERING.md §7, §12 "output-match false negatives" — the
 // #1 beginner frustration). Off by default. When on it *annotates*, it does not
 // rewrite: every character in the <pre> is still the authored character, and each
-// marker (· space, → tab, ⏎ line break) is a CSS pseudo-element drawn over or
-// after it. So selecting the block still yields the real text, and the markers
-// can only show whitespace that is actually there — in particular the last line
-// gets no ⏎, because authored outputs omit the program's final newline.
+// marker (· space, → tab, ⏎ line break) is a CSS pseudo-element on its own
+// aria-hidden element, drawn over or after it. So selecting the block still
+// yields the real text, a screen reader still reads the real output, and the
+// markers can only show whitespace that is actually there — in particular the
+// last line gets no ⏎, because authored outputs omit the program's final newline.
 import { Fragment, useState } from 'react';
 import { loadWhitespaceVisible, saveWhitespaceVisible } from './state/whitespaceVisible';
 import './exercise.css';
@@ -67,21 +68,25 @@ export function OutputText({
   if (!showWhitespace) return <pre>{output}</pre>;
   const lines = splitOutput(output);
   return (
-    <pre className="ex-expected-marked">
+    <pre>
       {lines.map((line, lineIndex) => (
         <Fragment key={lineIndex}>
           {line.chunks.map((chunk, chunkIndex) =>
             chunk.kind === 'text' ? (
               <Fragment key={chunkIndex}>{chunk.value}</Fragment>
             ) : (
-              // One wrapper per character, because one pseudo-element draws one
-              // glyph: the character stays in the text, the marker sits on top.
+              // One wrapper per character, because one marker draws one glyph:
+              // the character stays in the text, the marker sits on top of it in
+              // its own aria-hidden element — Chrome exposes pseudo-element
+              // content to the accessibility tree, so a marker that is not
+              // hidden would be read out in the middle of the output.
               [...chunk.value].map((character, characterIndex) => (
                 <span
                   key={`${chunkIndex}-${characterIndex}`}
                   className={chunk.kind === 'space' ? 'ex-ws-space' : 'ex-ws-tab'}
                 >
                   {character}
+                  <span className="ex-ws-mark" aria-hidden="true" />
                 </span>
               ))
             ),

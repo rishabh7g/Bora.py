@@ -85,35 +85,39 @@
   letter-spacing: 0.02em;
 }
 
-/* Markers are pseudo-elements over the real characters, never replacements: the
-   text in the block stays byte-identical to the authored output, so a selection
-   still yields exactly what the terminal must print. */
+/* Markers are drawn over the real characters, never in place of them: the text in
+   the block stays byte-identical to the authored output, so a selection still
+   yields exactly what the terminal must print. Each glyph is pseudo-element
+   content on its own aria-hidden .ex-ws-mark — pseudo content reaches the
+   accessibility tree, so hiding the host is what keeps the block readable aloud. */
 .ex-ws-space,
 .ex-ws-tab {
   position: relative;
 }
-.ex-ws-space::before,
-.ex-ws-tab::before {
+.ex-ws-mark {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   pointer-events: none;
 }
-.ex-ws-space::before,
-.ex-ws-tab::before,
+.ex-ws-mark,
 .ex-ws-newline::before {
   color: var(--color-accent);
 }
 /* One dot per space, centred in the character cell it marks. */
-.ex-ws-space::before {
-  content: '·';
+.ex-ws-space .ex-ws-mark {
   justify-content: center;
 }
+.ex-ws-space .ex-ws-mark::before {
+  content: '·';
+}
 /* A tab is many cells wide; its arrow starts where the tab does, like an editor. */
-.ex-ws-tab::before {
-  content: '→';
+.ex-ws-tab .ex-ws-mark {
   justify-content: flex-start;
+}
+.ex-ws-tab .ex-ws-mark::before {
+  content: '→';
 }
 /* The only marker that takes space: it sits after the line's last character,
    where the terminal actually broke the line. Absent on the final line —

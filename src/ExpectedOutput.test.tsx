@@ -73,6 +73,18 @@ it('annotates rather than rewrites — the text stays byte-identical', () => {
   expect(textOf(renderToString(<OutputText output={OUTPUT} showWhitespace={false} />))).toBe(OUTPUT);
 });
 
+it('hides every marker from assistive tech, so the output still reads aloud', () => {
+  // Pseudo-element content DOES reach the accessibility tree, so each glyph has
+  // to hang off an aria-hidden element — otherwise a screen reader announces
+  // "Now dot playing" in the middle of the expected output.
+  const html = marked(OUTPUT);
+  const markers = html.match(/class="ex-ws-(?:mark|newline)"[^>]*/g) ?? [];
+  expect(markers).toHaveLength(3 + 1 + 3); // spaces + tab + line breaks
+  for (const marker of markers) expect(marker).toContain('aria-hidden="true"');
+  // …and nothing else in the block is hidden: the characters themselves stay.
+  expect(html.match(/aria-hidden="true"/g)).toHaveLength(markers.length);
+});
+
 it('names only the whitespace kinds the output actually contains', () => {
   expect(whitespaceLegend(splitOutput(OUTPUT))).toEqual(['· space', '→ tab', '⏎ line break']);
   expect(whitespaceLegend(splitOutput('a\nb'))).toEqual(['⏎ line break']);
