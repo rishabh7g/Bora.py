@@ -131,8 +131,14 @@
   white-space: nowrap;
 }
 
+/* Hover and pressed are one tonal step apart on the same ramp, so the inverted
+   button answers a press exactly like the system's buttons do on the light
+   ground (.btn-primary:hover / :active). */
 .celebrate-continue:hover {
   background: var(--color-neutral-200);
+}
+.celebrate-continue:active {
+  background: var(--color-neutral-300);
 }
 
 /* The themed focus ring, recoloured for the inverted field: the accent ring

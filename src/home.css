@@ -116,6 +116,13 @@
   color: inherit;
   text-decoration: none;
 }
+/* Rows sit flush against each other, so the ring is drawn inside the row's own
+   box — the design system's own precedent for a flush control
+   (.seg-opt:has(input:focus-visible)). An outset ring would land on the
+   neighbouring row instead of on this one. */
+.home-row--open:focus-visible {
+  outline-offset: -2px;
+}
 .home-row--open:hover {
   background: color-mix(in srgb, var(--color-text) 5%, transparent);
 }

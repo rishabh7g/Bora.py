@@ -105,3 +105,14 @@ it('unlocks Tier 5 exactly when the capstone passes (§6 owner)', () => {
   progress = updateExerciseState(progress, m12.id, m12.exitExercise.id, true, declareMatch);
   expect(tier5Unlocked(curriculum, progress)).toBe(true);
 });
+
+// #15 interaction polish: the field covers a screen that is still in the DOM, so
+// it holds focus (Tab kept on the button, Escape as the way out — see
+// CelebrationScreen.tsx). That containment is only complete while this is the
+// one focusable control on the field, which is what the markup has to keep true.
+it('is a modal field whose only focusable control is Continue', () => {
+  const html = render();
+  expect(html).toContain('role="dialog"');
+  expect(html).toContain('aria-modal="true"');
+  expect(html.match(/<button|<a |tabindex="0"/g)).toHaveLength(1);
+});

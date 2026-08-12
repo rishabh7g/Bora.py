@@ -9,11 +9,15 @@
   padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 56px;
 }
 
-/* Back link — ghost button as anchor, flush left. */
+/* Back link — ghost button as anchor, flush left. The label is short ("← Map"),
+   so the target needs a width floor as well as a height one to clear 44px;
+   flex-start keeps the label flush left inside it. */
 .mod-back {
   padding-inline: 0;
   white-space: nowrap;
   min-height: 44px;
+  min-width: 44px;
+  justify-content: flex-start;
 }
 
 .mod-kicker {
@@ -155,6 +159,11 @@
 }
 .mod-exrow:active {
   background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+/* Flush rows: the ring goes inside the row, as on the map (src/home.css). */
+.mod-exrow:focus-visible,
+.mod-exitrow--open:focus-visible {
+  outline-offset: -2px;
 }
 .mod-exrow-title {
   font-weight: 600;

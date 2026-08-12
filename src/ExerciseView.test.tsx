@@ -91,3 +91,29 @@ it('exit variant: no hint ladder, only match or come back later', () => {
   expect(html).not.toContain('Hint ladder');
   expect(html).not.toContain('Model solution');
 });
+
+// #15 interaction polish: every reveal replaces the button that triggered it, so
+// each thing revealed has to be able to take the focus that button had. Which
+// element gets it is behaviour (verified in a browser); what the markup must
+// carry is a programmatic-only focus target on each one — never a new tab stop.
+it('reveals are focus targets: hint text, solution heading and matched banner', () => {
+  const revealed = render(viewHint(declareAttempt(initialExerciseState(), false), 1, false));
+  expect(revealed).toContain('<p class="ex-hint-text" tabindex="-1">');
+
+  let ladder = initialExerciseState();
+  for (const hint of [1, 2] as const) {
+    ladder = viewHint(declareAttempt(ladder, false), hint, false);
+  }
+  ladder = revealSolution(declareAttempt(ladder, false), false);
+  expect(render(ladder)).toContain('<h2 class="ex-section-title" tabindex="-1">Model solution</h2>');
+
+  // The banner is also the announcement of the pass, so it is a live region.
+  const matched = render(declareMatch(initialExerciseState()));
+  expect(matched).toContain('<div class="ex-matched-banner" role="status" tabindex="-1">');
+});
+
+it('the focus targets are not extra tab stops', () => {
+  // -1 only: tabbing down the screen still goes button to button.
+  const html = render(viewHint(declareAttempt(initialExerciseState(), false), 1, false));
+  expect(html).not.toContain('tabindex="0"');
+});

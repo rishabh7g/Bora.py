@@ -3,6 +3,7 @@
 // effort-gate buttons, hint ladder, solution reveal with approach checklist.
 // Every gating decision is read from src/state/effortGate.ts — the one owner
 // of the state machine. This component only renders and forwards transitions.
+import { useEffect, useRef, useState } from 'react';
 import type { Exercise, Module } from './content/types';
 import ExpectedOutput from './ExpectedOutput';
 import PythonCode from './PythonCode';
@@ -25,6 +26,15 @@ export type ExerciseViewProps = {
   onTransition: (transition: (state: ExerciseState) => ExerciseState) => void;
 };
 
+// Every reveal on this screen replaces the button that triggered it with the
+// text it revealed, so the browser drops focus to the document and the next Tab
+// starts the whole screen again. Each one hands focus to what just appeared
+// instead: the keyboard learner reads on from where she was, and the themed ring
+// lands on the new content — which is also what a screen reader then announces.
+// The target is set by the handler that caused the change, so nothing here
+// guesses; `null` means focus is fine where it is.
+type RevealedFocus = 'hint1' | 'hint2' | 'solution' | 'matched' | null;
+
 function HintRung({
   label,
   active,
@@ -34,6 +44,7 @@ function HintRung({
   revealLabel,
   lockNote,
   onReveal,
+  textRef,
 }: {
   label: string;
   active: boolean;
@@ -43,13 +54,18 @@ function HintRung({
   revealLabel: string;
   lockNote: string;
   onReveal: () => void;
+  textRef?: React.Ref<HTMLParagraphElement>;
 }) {
   return (
     <div className="ex-rung">
       <span className={`ex-rung-label${active ? ' ex-rung-label--active' : ''}`}>{label}</span>
       <div className="ex-rung-body">
         {seen ? (
-          <p className="ex-hint-text">{body}</p>
+          // Focusable programmatically only (-1): revealing it moves focus here,
+          // but it never becomes a stop on the way down the screen.
+          <p className="ex-hint-text" tabIndex={-1} ref={textRef}>
+            {body}
+          </p>
         ) : available ? (
           <button type="button" className="btn btn-secondary btn-action" onClick={onReveal}>
             {revealLabel}
@@ -67,6 +83,26 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
   const matched = gate === 'MATCHED';
   const solutionShown = isSolutionVisible(state);
   const moduleHref = `#/module/${module.id}`;
+
+  const [revealed, setRevealed] = useState<RevealedFocus>(null);
+  const hintRefs = useRef<Record<'hint1' | 'hint2', HTMLParagraphElement | null>>({
+    hint1: null,
+    hint2: null,
+  });
+  const solutionRef = useRef<HTMLHeadingElement>(null);
+  const matchedRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!revealed) return;
+    const target =
+      revealed === 'matched'
+        ? matchedRef.current
+        : revealed === 'solution'
+          ? solutionRef.current
+          : hintRefs.current[revealed];
+    target?.focus();
+    setRevealed(null); // one move per reveal — never on a re-render after it
+  }, [revealed]);
 
   const exerciseIndex = module.exercises.findIndex((candidate) => candidate.id === exercise.id);
   const kicker = isExit
@@ -101,7 +137,7 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
       <ExpectedOutput output={exercise.expectedOutput} />
 
       {matched ? (
-        <div className="ex-matched-banner">
+        <div className="ex-matched-banner" role="status" tabIndex={-1} ref={matchedRef}>
           Output matched — checkpoint logged. Model solution below: compare approaches, not text.
         </div>
       ) : (
@@ -110,7 +146,10 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
             <button
               type="button"
               className="btn btn-primary btn-action"
-              onClick={() => onTransition(declareMatch)}
+              onClick={() => {
+                onTransition(declareMatch);
+                setRevealed('matched');
+              }}
             >
               My output matches
             </button>
@@ -154,7 +193,13 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
                   body={exercise.hints[hintNumber - 1]}
                   revealLabel={`Reveal hint ${hintNumber} — cracks the card`}
                   lockNote={hintLockNote}
-                  onReveal={() => onTransition((current) => viewHint(current, hintNumber, isExit))}
+                  textRef={(node) => {
+                    hintRefs.current[`hint${hintNumber}`] = node;
+                  }}
+                  onReveal={() => {
+                    onTransition((current) => viewHint(current, hintNumber, isExit));
+                    setRevealed(`hint${hintNumber}`);
+                  }}
                 />
               );
             })}
@@ -170,7 +215,12 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
                   ? 'Revealed below.'
                   : 'Reachable only after the full ladder — or by matching.'
               }
-              onReveal={() => onTransition((current) => revealSolution(current, isExit))}
+              onReveal={() => {
+                onTransition((current) => revealSolution(current, isExit));
+                // The rung itself only says "Revealed below.", so focus goes to
+                // the solution that appeared further down the screen.
+                setRevealed('solution');
+              }}
             />
           </div>
         </>
@@ -178,7 +228,9 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
 
       {solutionShown && (
         <>
-          <h2 className="ex-section-title">Model solution</h2>
+          <h2 className="ex-section-title" tabIndex={-1} ref={solutionRef}>
+            Model solution
+          </h2>
           <PythonCode code={exercise.solution} className="ex-solution" />
           <h3 className="ex-checklist-title">Compare approaches</h3>
           <div className="ex-checklist">

@@ -15,7 +15,9 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
   min-height: 44px;
+  min-width: 44px;
 }
 
 .shelf-kicker {
@@ -77,6 +79,13 @@
 }
 .shelf-card--earned:active {
   background: var(--color-accent-700);
+}
+/* The themed ring, recoloured for the card's red ground — same reasoning as the
+   celebration field (src/celebration.css): an accent ring hugging an accent card
+   reads as nothing, so it is drawn inside the card in the ground colour. */
+.shelf-card--earned:focus-visible {
+  outline-color: var(--color-bg);
+  outline-offset: -4px;
 }
 
 .shelf-card--locked {

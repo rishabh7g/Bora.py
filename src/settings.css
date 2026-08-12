@@ -15,7 +15,9 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
   min-height: 44px;
+  min-width: 44px;
 }
 
 .set-kicker {
@@ -101,9 +103,36 @@
 
 .set-input {
   max-width: 420px;
-  min-height: 44px;
-  padding-block: 10px;
+  /* 46px, not 44: the button inside is the real target, and it needs a 44px
+     content box between the field's 1px borders. */
+  min-height: 46px;
+  padding: 0;
   cursor: pointer;
+}
+
+/* The file input's own button is the one control the browser draws itself —
+   left alone it is a 22px outset-bevel default. Themed as the system's
+   secondary button, flush inside the field, with the same 44px target as every
+   other control on this screen. */
+.set-input::file-selector-button {
+  min-height: 44px;
+  margin-inline-end: var(--space-3);
+  padding-inline: var(--space-4);
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 13px;
+  color: var(--color-text);
+  background: transparent;
+  border: 0;
+  border-inline-end: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.set-input::file-selector-button:hover {
+  background: color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+.set-input::file-selector-button:active {
+  background: color-mix(in srgb, var(--color-text) 14%, transparent);
 }
 
 .set-error {

@@ -86,8 +86,31 @@ export default function CelebrationScreen({
     continueRef.current?.focus();
   }, []);
 
+  // …and keep it there. The screen underneath is still in the DOM, just hidden
+  // under the red field, so an untrapped Tab walks into controls nobody can see
+  // — the sighted-keyboard half of the `aria-modal` promise. Continue is the
+  // only control in here, so holding Tab on it contains focus completely, and
+  // Escape takes the same way out as the button (never a dead end).
+  function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      onContinue();
+      return;
+    }
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      continueRef.current?.focus();
+    }
+  }
+
   return (
-    <div className="celebrate-field" role="dialog" aria-modal="true" aria-label="Checkpoint passed">
+    <div
+      className="celebrate-field"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Checkpoint passed"
+      onKeyDown={onKeyDown}
+    >
       <Confetti />
       <div className="celebrate-body">
         <p className="celebrate-kicker">CHECKPOINT PASSED</p>
