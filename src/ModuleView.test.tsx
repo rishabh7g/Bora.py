@@ -4,7 +4,7 @@
 // from src/state/gating.ts.
 import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
-import ModuleView, { exerciseChipOf } from './ModuleView';
+import ModuleView, { copyLabelOf, copyStatusOf, exerciseChipOf } from './ModuleView';
 import { findModule, loadCurriculum } from './content/load';
 import {
   declareAttempt,
@@ -51,6 +51,47 @@ it('worked examples: highlighted code with a copy button each; output blocks get
   const copyButtons = html.match(/COPY/g) ?? [];
   // Exactly one copy button per example — none on outputs or anywhere else.
   expect(copyButtons.length).toBe(m1.concept.examples.length);
+});
+
+// #44: a browser can refuse the clipboard write (permission not granted, an
+// embedded or permission-policy-restricted context) or not expose the API at
+// all. Neither may reach the console as an unhandled rejection, and neither may
+// leave the button silently saying COPY as if the code had been copied.
+it('a refused clipboard write resolves to failed — it never rejects', async () => {
+  const refused = {
+    writeText: () => Promise.reject(new Error("Failed to execute 'writeText': Write permission denied.")),
+  };
+  await expect(copyStatusOf('bias = "Jungkook"', refused)).resolves.toBe('failed');
+
+  // Some browsers throw synchronously rather than returning a rejected promise.
+  const throwing = {
+    writeText: () => {
+      throw new Error('Write permission denied.');
+    },
+  };
+  await expect(copyStatusOf('bias = "Jungkook"', throwing)).resolves.toBe('failed');
+
+  // No clipboard API at all is the same class of failure: say so, do not no-op.
+  await expect(copyStatusOf('bias = "Jungkook"', undefined)).resolves.toBe('failed');
+});
+
+it('a granted clipboard write copies the code verbatim and resolves to copied', async () => {
+  const written: string[] = [];
+  const granted = {
+    writeText: (text: string) => {
+      written.push(text);
+      return Promise.resolve();
+    },
+  };
+  const code = m1.concept.examples[0].code;
+  await expect(copyStatusOf(code, granted)).resolves.toBe('copied');
+  expect(written).toEqual([code]);
+});
+
+it('each copy status has its own label — the failure is visible on the button', () => {
+  expect(copyLabelOf('idle')).toBe('COPY');
+  expect(copyLabelOf('copied')).toBe('COPIED');
+  expect(copyLabelOf('failed')).toBe('COPY FAILED');
 });
 
 it('exercise rows link to the exercise route and start NOT STARTED', () => {

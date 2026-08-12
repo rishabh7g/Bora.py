@@ -128,7 +128,7 @@ Rules:
 ## 7. Screens → Components
 
 - `HomeMap` — tier/module path, era-themed; reads Progress
-- `ModuleView` — concept doc, worked examples (code blocks with copy button), exercise list with state chips
+- `ModuleView` — concept doc, worked examples (code blocks with copy button — a browser that refuses the clipboard write gets a caught rejection and a temporary `COPY FAILED` plus a note, never a silent no-op), exercise list with state chips
 - `ExerciseView` — the core screen: prompt, expected-output block (monospace, copy-safe, whitespace-visible toggle for trailing-space debugging), attempt/hint/match buttons per state machine, revealed solution with syntax highlighting + approach checklist
 - `PhotocardShelf` — grid of cards, crack overlays
 - `SetupGuide` — OS picker (Windows/Mac), stepper with screenshots (bundled images). Module 0 is the setup guide and nothing else: it has no concept doc and no formative exercises, so it has **no `ModuleView` route** — its exit checkpoint is rendered inline at the end of the guide, and every `#/module/m0…` hash is canonicalised to `#/setup`
