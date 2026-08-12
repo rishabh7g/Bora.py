@@ -109,12 +109,18 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
     ? 'Exit checkpoint'
     : `Exercise ${Math.max(1, exerciseIndex + 1)} of ${module.exercises.length}`;
 
-  const attemptsNote =
-    state.attempts === 0
+  // The top of the ladder has no next rung, so nothing here may promise one and
+  // the "stuck" button is not offered (§5: an attempt declared past the solution
+  // unlocks nothing). Every other state still points at the rung it can reach.
+  const ladderSpent = gate === 'SOLUTION_REVEALED';
+  const declaredCount = `${state.attempts} ${state.attempts === 1 ? 'attempt' : 'attempts'} declared.`;
+  const attemptsNote = ladderSpent
+    ? `${declaredCount} Every rung is open — the model solution is below. Compare it with yours, then mark the match whenever your output lines up.`
+    : state.attempts === 0
       ? isExit
         ? 'Write it on your machine, run it, compare. No hints on this one — leave and come back anytime.'
         : 'Write it on your machine, run it, compare. Declaring an attempt unlocks the next rung.'
-      : `${state.attempts} ${state.attempts === 1 ? 'attempt' : 'attempts'} declared.` +
+      : declaredCount +
         (state.stuck ? ' Next rung unlocked below.' : ' Try again to unlock the next rung.');
 
   const hintLockNote =
@@ -153,7 +159,7 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
             >
               My output matches
             </button>
-            {!isExit && (
+            {!isExit && !ladderSpent && (
               <button
                 type="button"
                 className="btn btn-secondary btn-action"
