@@ -115,6 +115,7 @@ Rules:
 - Solution is reachable only via MATCHED or the full ladder (3 declared attempts minimum)
 - Exit exercises: no ladder; only MATCHED or "come back later" (never blocked forever — she can leave and return, state persists)
 - Each hint viewed adds one "crack" to the module's photocard (visual only, never blocks anything)
+- `SOLUTION_REVEALED` is the top of the ladder: there is no rung past it, so a further declared attempt unlocks nothing. The screen therefore offers **only** "My output matches" there, and says nothing about a next rung — no control that cannot move the state, no promise the state machine cannot keep
 - Trust-based by design: she *can* lie about matching. That's fine — audience of one, and the capstone is the real test. Do not add verification friction.
 
 ## 6. Module Gating
