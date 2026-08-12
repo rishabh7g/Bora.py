@@ -26,7 +26,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-text-accent);
 }
 
 .mod-title {
@@ -54,7 +54,7 @@
 .mod-section-sub {
   margin: 6px 0 0;
   font-size: 13px;
-  color: var(--color-neutral-600);
+  color: var(--color-text-quiet);
 }
 
 /* — worked examples — */
@@ -73,10 +73,12 @@
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 15px;
-  color: var(--color-neutral-500);
+  /* 15px/800 is below the large-text threshold, so the quiet role's 4.5:1 is
+     the bar it has to clear — --color-neutral-500 was 2.59:1 (#46). */
+  color: var(--color-text-quiet);
 }
 .mod-num--accent {
-  color: var(--color-accent);
+  color: var(--color-text-accent);
 }
 .mod-example-body {
   display: flex;
@@ -123,7 +125,7 @@
 .mod-copy-note {
   margin: 6px 0 0;
   font-size: 12.5px;
-  color: var(--color-neutral-700);
+  color: var(--color-text-quiet);
 }
 .mod-copy:hover {
   background: color-mix(in srgb, var(--color-bg) 12%, transparent);
@@ -145,7 +147,7 @@
 .mod-example-why {
   margin: 0;
   font-size: 13px;
-  color: var(--color-neutral-600);
+  color: var(--color-text-quiet);
 }
 
 /* — exercise list — */
@@ -213,7 +215,7 @@
    `opacity: 0.55` folded it to 1.62–2.83:1 (#45). Quieter ink instead, on the
    row and on the number it contains. */
 .mod-exitrow--locked {
-  color: var(--color-neutral-700);
+  color: var(--color-text-locked);
 }
 .mod-exitrow--locked .mod-num,
 .mod-exitrow--locked .mod-exitrow-sub {
@@ -230,5 +232,5 @@
 }
 .mod-exitrow-sub {
   font-size: 12.5px;
-  color: var(--color-neutral-700);
+  color: var(--color-text-quiet);
 }

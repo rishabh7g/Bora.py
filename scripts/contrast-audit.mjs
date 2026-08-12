@@ -131,6 +131,36 @@ const ROWS = [
   // The open row is here as the control: locked ink must clear AA without
   // becoming the open row's ink.
   ['home-fresh', '.home-row--open .home-rowtitle', 'open module title (control)'],
+  // #46 — quiet supporting text and small accent labels
+  ['home-fresh', '.home-kicker', 'CHECKPOINT PATH kicker'],
+  ['home-fresh', '.home-row--open .home-rowanchor', 'open row anchor'],
+  ['home-fresh', '.home-tier .home-tierera', 'era label'],
+  ['home-fresh', '.home-lede', 'home lede'],
+  ['home-fresh', '.home-num--current', 'current module numeral (accent, large)'],
+  ['shelf-fresh', '.shelf-note', 'card caption'],
+  ['shelf-fresh', '.shelf-kicker', 'shelf kicker'],
+  ['module-m1', '.mod-kicker', 'module kicker'],
+  ['module-m1', '.mod-section-sub', 'section sub'],
+  ['module-m1', '.mod-example-why', 'why line'],
+  ['module-m1', '.mod-num', 'example numeral'],
+  ['exercise-e1', '.ex-kicker', 'exercise kicker'],
+  ['exercise-e1', '.ex-expected-sub', 'expected-output sub'],
+  ['exercise-e1', '.ex-section-sub', 'ladder section sub'],
+  ['exercise-e1-ws', '.ex-ws-legend', 'whitespace legend'],
+  ['exercise-e1-tried', '.ex-note', 'attempts note'],
+  ['exercise-e1-tried', '.ex-rung-label--active', 'active rung label (accent)'],
+  ['exit-m1', '.ex-exit-note', 'exit-checkpoint note (accent)'],
+  ['settings', '.set-kicker', 'settings kicker'],
+  ['settings', '.set-label', 'settings field label'],
+  ['settings', '.set-copy--quiet', 'settings quiet copy'],
+  ['settings', '.set-rowstate', 'settings row state'],
+  ['setup', '.setup-kicker', 'setup kicker'],
+  ['setup', '.setup-os-note', 'setup OS note'],
+  ['setup', '.setup-term-label', 'terminal label'],
+  ['setup', '.setup-shot figcaption', 'screenshot caption'],
+  ['setup', '.setup-shot-pending', 'screenshot-pending note'],
+  ['setup', '.setup-step-num', 'step numeral (accent, large)'],
+  ['setup', '.setup-exit-label', 'setup exit label (accent)'],
 ];
 
 const { chromium } = await import(join(resolvePlaywrightDir(), 'index.mjs'));
@@ -162,6 +192,39 @@ const FIXTURES = {
   'shelf-fresh': () => open('#/shelf'),
   'module-m1': () => passModule0('#/module/m1'),
   'exercise-e1': () => passModule0('#/module/m1/exercise/e1'),
+  'exercise-e1-ws': async () => {
+    const { ctx, page } = await passModule0('#/module/m1/exercise/e1');
+    // The legend only renders with whitespace on. Click the label, never the
+    // input (docs/QA.md — the design system's segment input is 0x0).
+    await page.locator('.ex-ws-toggle .seg-opt').click();
+    await wait(300);
+    return { ctx, page };
+  },
+  // One declared attempt: the attempts note and the rung that just went live.
+  'exercise-e1-tried': async () => {
+    const { ctx, page } = await passModule0('#/module/m1/exercise/e1');
+    await page.getByRole('button', { name: 'I tried and got stuck' }).click();
+    await wait(400);
+    return { ctx, page };
+  },
+  // The exit checkpoint renders its own note. It stays locked until every
+  // formative exercise is matched or solution-seen (§6) — and a locked exit
+  // falls back to the module screen — so all three are matched first.
+  'exit-m1': async () => {
+    const { ctx, page } = await passModule0('#/module/m1/exercise/e1');
+    for (const id of ['e1', 'e2', 'e3']) {
+      await page.goto(`${BASE}#/module/m1/exercise/${id}`, { waitUntil: 'domcontentloaded' });
+      await wait(700);
+      await page.getByRole('button', { name: 'My output matches' }).click();
+      await wait(400);
+    }
+    await page.goto(`${BASE}#/module/m1/exit`, { waitUntil: 'domcontentloaded' });
+    await wait(900);
+    return { ctx, page };
+  },
+  // A settings row only exists once a module has saved work.
+  settings: () => passModule0('#/settings'),
+  setup: () => open('#/setup'),
 };
 
 let failed = 0;

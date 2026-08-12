@@ -154,6 +154,10 @@ Rules:
 
 - Repo layout:
   - `/src` — app
+  - `/src/tokens.css` — app text roles on top of the design system's ramps (`--color-text-quiet`,
+    `--color-text-locked`, `--color-text-accent`). `design/_ds/…/styles.css` stays the system's
+    source of truth and is never edited here; this file only decides which step each job uses,
+    once, so screens do not each pick a ramp step and drift (DESIGN.md §7a)
   - `/content` — curriculum TS/JSON files (one file per module)
   - `/content/lint.ts` — authoring-rule checks, runs in CI
 - CI: typecheck + content lint + build → deploy to static host on push
