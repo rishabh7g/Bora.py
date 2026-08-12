@@ -1,0 +1,41 @@
+/* Progress-loading screen — Modernist system, tokens only (design/README.md):
+   flush left, radius 0 by token, accent used sparingly. */
+
+.load-screen {
+  width: min(760px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 56px;
+}
+
+.load-title {
+  margin: 0 0 var(--space-2);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.load-body {
+  margin: 0 0 var(--space-4);
+  max-width: 52ch;
+  opacity: 0.8;
+}
+
+/* A fast load must not flash "Loading…": the text is in the DOM at once (so it
+   is announced and so nothing is ever truly blank), but only becomes visible if
+   the read is still running after a beat. */
+.load-body-pending {
+  opacity: 0;
+  animation: load-appear 200ms ease-out 600ms forwards;
+}
+
+@keyframes load-appear {
+  to {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .load-body-pending {
+    animation-duration: 1ms;
+  }
+}
