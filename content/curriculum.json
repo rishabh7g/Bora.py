@@ -375,7 +375,7 @@
         "art": "card-m4.svg"
       },
       "concept": {
-        "intro": "Errors are not punishment — they are Python telling you exactly where it gave up. Read the LAST line first: the error type and its message. The lines above name the file and line; a ^ arrow points near the problem. Every exercise below hands you broken code to fix.",
+        "intro": "Errors are not punishment — they are Python telling you exactly where it gave up. Read the LAST line first: the error type and its message. The lines above name the file and line, and ^ marks under the code point at the exact part that broke. Your File line shows the full path to hello.py on your own machine — that part will not match ours, everything else will. Every exercise below hands you broken code to fix.",
         "examples": [
           {
             "code": "print(\"Dynamite)",
@@ -384,13 +384,13 @@
           },
           {
             "code": "print(bias)",
-            "output": "Traceback (most recent call last):\n  File \"hello.py\", line 1, in <module>\n    print(bias)\nNameError: name 'bias' is not defined",
-            "why": "NameError means a name was used before it got a value. Last line first, always."
+            "output": "Traceback (most recent call last):\n  File \"hello.py\", line 1, in <module>\n    print(bias)\n          ^^^^\nNameError: name 'bias' is not defined",
+            "why": "NameError means a name was used before it got a value. The ^^^^ sits under the guilty name. Last line first, always."
           },
           {
             "code": "print(\"7\" + 7)",
-            "output": "Traceback (most recent call last):\n  File \"hello.py\", line 1, in <module>\n    print(\"7\" + 7)\nTypeError: can only concatenate str (not \"int\") to str",
-            "why": "TypeError: text and numbers refuse to glue with +. Quotes made the first 7 text."
+            "output": "Traceback (most recent call last):\n  File \"hello.py\", line 1, in <module>\n    print(\"7\" + 7)\n          ~~~~^~~\nTypeError: can only concatenate str (not \"int\") to str",
+            "why": "TypeError: text and numbers refuse to glue with +. The ^ marks the + that failed, with ~ under the two sides. Quotes made the first 7 text."
           }
         ]
       },
