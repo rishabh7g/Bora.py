@@ -91,7 +91,7 @@
         "art": "card-m1.svg"
       },
       "concept": {
-        "intro": "A variable is a named box for a value; print() is how your program talks back. An f-string — f\"My bias is {name}\" — drops variables straight into text. Everything runs on YOUR machine: write the file, run it in the terminal, compare outputs here.",
+        "intro": "A variable is a named box for a value; print() is how your program talks back. An f-string — f\"My bias is {name}\" — drops variables straight into text. Everything runs on YOUR machine: write the file, run it in the terminal, compare outputs here. Outputs must match exactly, character for character — and a missing space is invisible. When one looks identical but feels wrong, switch on \"Show whitespace\" on any expected-output block: · marks each space, → a tab, ⏎ the end of a line.",
         "examples": [
           {
             "code": "bias = \"Jungkook\"\nprint(bias)",

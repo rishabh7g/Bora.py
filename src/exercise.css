@@ -69,6 +69,74 @@
   overflow-wrap: break-word;
 }
 
+/* — "show whitespace" toggle (ENGINEERING.md §7, §12) —
+   Off by default. The control is the design system's segment, so hover /
+   pressed / :focus-visible are the shared themed states; only the hit target is
+   bumped, since the default segment is denser than 44px. */
+.ex-ws-toggle {
+  margin-left: auto;
+  align-self: center;
+}
+.ex-ws-toggle .seg-opt {
+  min-height: 44px;
+  padding-inline: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Markers are pseudo-elements over the real characters, never replacements: the
+   text in the block stays byte-identical to the authored output, so a selection
+   still yields exactly what the terminal must print. */
+.ex-ws-space,
+.ex-ws-tab {
+  position: relative;
+}
+.ex-ws-space::before,
+.ex-ws-tab::before {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+.ex-ws-space::before,
+.ex-ws-tab::before,
+.ex-ws-newline::before {
+  color: var(--color-accent);
+}
+/* One dot per space, centred in the character cell it marks. */
+.ex-ws-space::before {
+  content: '·';
+  justify-content: center;
+}
+/* A tab is many cells wide; its arrow starts where the tab does, like an editor. */
+.ex-ws-tab::before {
+  content: '→';
+  justify-content: flex-start;
+}
+/* The only marker that takes space: it sits after the line's last character,
+   where the terminal actually broke the line. Absent on the final line —
+   authored outputs omit the program's last newline, so there is none to show. */
+.ex-ws-newline::before {
+  content: '⏎';
+  padding-inline-start: 2px;
+}
+
+.ex-ws-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 8px 16px 10px;
+  border-top: 1px dashed var(--color-divider);
+  font-size: 12px;
+  color: var(--color-neutral-600);
+}
+.ex-ws-legend-item {
+  white-space: nowrap;
+}
+
 .ex-matched-banner {
   margin-top: 20px;
   padding: 14px 16px;
