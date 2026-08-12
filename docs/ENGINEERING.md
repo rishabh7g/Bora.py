@@ -120,6 +120,7 @@ Rules:
 ## 6. Module Gating
 
 - Module N+1 unlocks when Module N `passed === true`
+- Unlocking is one-way: a module whose own `passed === true` stays unlocked whatever happens in front of it, so resetting Module N never shuts a checkpoint she already cleared (its concept stays readable, its earned photocard keeps opening it)
 - Within a module: exit exercise unlocks when every formative exercise is `matched || solutionRevealed` (she must engage with each, but a revealed solution still counts as engagement — no dead ends)
 - Tier 5 (Advanced) unlocks on capstone pass
 

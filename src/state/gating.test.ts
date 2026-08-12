@@ -10,7 +10,7 @@ import {
   type ExerciseState,
 } from './effortGate';
 import { currentModule, exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './gating';
-import { emptyProgress, updateExerciseState, type Progress } from './progress';
+import { emptyProgress, resetModule, updateExerciseState, type Progress } from './progress';
 
 function makeExercise(id: string, isExit = false): Exercise {
   return {
@@ -133,6 +133,45 @@ describe('moduleUnlocked — module N+1 unlocks when module N passed', () => {
 
   it('an unknown module id is never unlocked', () => {
     expect(moduleUnlocked(curriculum, 'nope', emptyProgress())).toBe(false);
+  });
+
+  // Regression: issue #40. Unlocking is one-way — a checkpoint she cleared
+  // stays open whatever happens to the module in front of it.
+  it('a passed module stays unlocked when the module before it is reset', () => {
+    let p = emptyProgress();
+    for (const id of ['m0', 'm1', 'm2']) p = passModule(p, id);
+    const afterReset = resetModule(p, 'm1');
+
+    expect(moduleUnlocked(curriculum, 'm2', afterReset)).toBe(true);
+    expect(moduleStateOf(curriculum, 'm2', afterReset)).toBe('passed');
+    // The reset module itself is handed back, still open behind m0's pass.
+    expect(moduleStateOf(curriculum, 'm1', afterReset)).toBe('available');
+    expect(currentModule(curriculum, afterReset)?.id).toBe('m1');
+  });
+
+  it('resetting a module leaves a never-passed follower locked', () => {
+    const p = resetModule(passModule(emptyProgress(), 'm1'), 'm1');
+    expect(moduleUnlocked(curriculum, 'm2', p)).toBe(false);
+    expect(moduleStateOf(curriculum, 'm2', p)).toBe('locked');
+  });
+
+  // The affordance invariant the screens rely on: `'locked'` is exactly
+  // `!moduleUnlocked`, so a rendered link is never a route the guard refuses.
+  it("'locked' and !moduleUnlocked agree for every module in every state", () => {
+    const states: Progress[] = [emptyProgress()];
+    let built = emptyProgress();
+    for (const id of ['m0', 'm1', 'm2', 'm12']) {
+      built = passModule(built, id);
+      states.push(built);
+      for (const resetId of ['m0', 'm1', 'm2', 'm12']) states.push(resetModule(built, resetId));
+    }
+    for (const p of states) {
+      for (const id of ['m0', 'm1', 'm2', 'm12']) {
+        expect(moduleStateOf(curriculum, id, p) === 'locked').toBe(
+          !moduleUnlocked(curriculum, id, p),
+        );
+      }
+    }
   });
 });
 

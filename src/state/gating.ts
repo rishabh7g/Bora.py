@@ -7,7 +7,9 @@
 //   is matched || solutionRevealed. A revealed solution still counts as
 //   engagement — no dead ends.
 // - Module N+1 unlocks when Module N `passed === true` (curriculum order,
-//   flat across tiers). The first module is always unlocked.
+//   flat across tiers). The first module is always unlocked. A module she has
+//   already passed stays unlocked whatever happens in front of it — access is
+//   never taken back (no decay, no guilt).
 // - Tier 5 (Advanced) unlocks on capstone pass. The capstone is the last
 //   module of the curriculum (Tier 4).
 import { flatModules } from '../content/load';
@@ -29,7 +31,13 @@ function passedOf(progress: Progress, moduleId: string): boolean {
   return progress.modules[moduleId]?.passed ?? false;
 }
 
-/** §6 unlock chain: Module N+1 unlocks when Module N passed. */
+/** §6 unlock chain: Module N+1 unlocks when Module N passed — plus the
+ *  monotonic half of the rule, a module she has already passed is unlocked by
+ *  her own pass. Unlocking is one-way: resetting Module 01 hands Module 01 back
+ *  to her without shutting the door on the checkpoints she already cleared, so
+ *  their concept docs stay readable and their earned photocards keep opening
+ *  them (PhotocardShelf). The chain is untouched for a module never passed:
+ *  that one is locked until the module before it passes. */
 export function moduleUnlocked(
   curriculum: Curriculum,
   moduleId: string,
@@ -38,12 +46,17 @@ export function moduleUnlocked(
   const sequence = flatModules(curriculum);
   const index = sequence.findIndex((module) => module.id === moduleId);
   if (index < 0) return false;
+  if (passedOf(progress, moduleId)) return true;
   if (index === 0) return true;
   return passedOf(progress, sequence[index - 1].id);
 }
 
 /** The three states a module can be in on the Home map. Screens render these;
- *  they never recombine `moduleUnlocked` and `passed` themselves. */
+ *  they never recombine `moduleUnlocked` and `passed` themselves.
+ *
+ *  `'locked'` is exactly `!moduleUnlocked`, which is what keeps the affordance
+ *  honest: a screen that renders `'locked'` as plain text and every other state
+ *  as a link cannot offer a link the route guard would refuse. */
 export type ModuleState = 'locked' | 'available' | 'passed';
 
 export function moduleStateOf(

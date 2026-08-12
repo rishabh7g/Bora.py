@@ -251,7 +251,8 @@ export default function Settings({
         <h2 className="set-h2">Reset a module</h2>
         <p className="set-copy">
           Clears the attempts, hints and checkpoint of one module so it can be worked through
-          again. Every other module keeps its progress; later checkpoints wait for this one again.
+          again. Every other module keeps its progress, and checkpoints already passed stay open —
+          this one simply becomes the one you are on.
         </p>
 
         {started.length === 0 ? (
