@@ -4,7 +4,9 @@
 // Rules (ENGINEERING.md §3, DESIGN.md §3.4 + §4):
 // 1. `expectedOutput` present and deterministic — no `random`, `datetime`,
 //    or `time.` in solutions.
-// 2. Any exercise whose solution uses `input()` defines `inputsToType`.
+// 2. Any exercise whose solution uses `input()` defines `inputsToType`, and
+//    every typed input appears in `expectedOutput` — a real terminal echoes the
+//    keystrokes onto the prompt line, so the transcript must contain them.
 // 3. Exit exercises (`isExit: true`) have zero hints.
 // 4. Formative exercises have exactly 2 hints.
 // 5. No copyrighted song-lyric lines anywhere in content (member names,
@@ -82,10 +84,19 @@ function lintExercise(moduleId: string, exercise: RawExercise): Violation[] {
     }
   }
 
-  // Rule 2: input() exercises define inputsToType.
+  // Rule 2: input() exercises define inputsToType, and the expected transcript
+  // includes each typed input (the terminal echoes it next to the prompt).
   if (exercise.solution.includes('input(')) {
     if (!exercise.inputsToType || exercise.inputsToType.length === 0) {
       violations.push({ ...at, message: 'solution uses input() but inputsToType is missing' });
+    }
+  }
+  for (const typed of exercise.inputsToType ?? []) {
+    if (!exercise.expectedOutput.includes(typed)) {
+      violations.push({
+        ...at,
+        message: `typed input "${typed}" is missing from expectedOutput — the terminal echoes it`,
+      });
     }
   }
 
