@@ -8,6 +8,11 @@
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="apple-touch-icon" href="%BASE_URL%icons/apple-touch-icon-180.png" />
     <meta name="theme-color" content="#ec3013" />
+    <!-- Standalone display on a home-screen launch. The standard tag is what
+         Chrome reads (it deprecated the apple- one and logs a console notice
+         when it is alone); the apple- tag stays for older iOS, which only
+         reads that. Both, on purpose. -->
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="bora.py" />
     <meta
