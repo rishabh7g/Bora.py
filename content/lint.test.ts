@@ -71,13 +71,31 @@ describe('lintCurriculum', () => {
     expect(violations[0].message).toMatch(/inputsToType/);
   });
 
-  it('accepts input() when inputsToType is defined', () => {
+  it('accepts input() when inputsToType is defined and echoed in expectedOutput', () => {
     const violations = lintCurriculum(
       makeCurriculum({
-        exercise: { solution: 'name = input("Name? ")\nprint(name)', inputsToType: ['Riya'] },
+        exercise: {
+          solution: 'name = input("Name? ")\nprint(name)',
+          expectedOutput: 'Name? Riya\nRiya',
+          inputsToType: ['Riya'],
+        },
       }),
     );
     expect(violations).toEqual([]);
+  });
+
+  it('flags a typed input missing from expectedOutput', () => {
+    const violations = lintCurriculum(
+      makeCurriculum({
+        exercise: {
+          solution: 'name = input("Name? ")\nprint("hi")',
+          expectedOutput: 'Name? \nhi',
+          inputsToType: ['Riya'],
+        },
+      }),
+    );
+    expect(violations).toHaveLength(1);
+    expect(violations[0].message).toMatch(/echoes it/);
   });
 
   it('flags exit exercises with hints', () => {

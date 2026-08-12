@@ -9,7 +9,7 @@ them. The captured stdout+stderr is compared byte-for-byte with the authored
 `output` / `expectedOutput` (trailing newlines normalised, since the app
 renders the block without one).
 
-Usage:  python3 scripts/verify-outputs.py [moduleId ...]     # default m1..m8
+Usage:  python3 scripts/verify-outputs.py [moduleId ...]     # default: every module
 Exit code 1 if any drift is found.
 
 Tracebacks print the absolute path of the running file, which is machine
@@ -29,7 +29,6 @@ import time
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CURRICULUM = os.path.join(REPO_ROOT, 'content', 'curriculum.json')
-DEFAULT_MODULES = [f'm{n}' for n in range(1, 9)]
 
 # Worked examples that call input() have no `inputsToType` field of their own
 # (that field belongs to exercises), so the keystrokes they narrate live here.
@@ -118,8 +117,10 @@ def check(run_dir, where, code, expected, inputs):
 
 
 def main():
-    module_ids = sys.argv[1:] or DEFAULT_MODULES
     curriculum = json.load(open(CURRICULUM))
+    # Default to the whole curriculum: a module left out of the default run is a
+    # module whose outputs quietly rot as Python versions move on.
+    module_ids = sys.argv[1:] or list(curriculum['modules'])
     drift = []
     ran = 0
 
