@@ -1,0 +1,37 @@
+/* Wordmark — brand lockup measures from design/brand/BRAND.md ("Wordmark",
+   "Rules") and the prototype header. Radius stays 0 by token; the mark is never
+   tinted, rounded or rotated. */
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  /* Lockup: mark + 8px gap + wordmark. */
+  gap: 8px;
+  margin: 0;
+  /* Clear space around the lockup ≥ the cursor block's width (12/64 of the
+     22px mark ≈ 4px); the host screen owns the rest of the spacing. */
+  padding: 4px 0;
+}
+
+.wordmark-mark {
+  /* Mark height = cap height × 1.2 — 22px mark against the 19px wordmark, and
+     never below the 16px minimum. */
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: none;
+}
+
+.wordmark-text {
+  font-family: var(--font-heading);
+  /* BRAND.md pins the wordmark at Archivo 900 — one step heavier than the
+     --font-heading-weight (800) headings use, so it is a literal here. */
+  font-weight: 900;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  color: var(--color-text);
+}
+
+.wordmark-dot {
+  color: var(--color-accent-700);
+}

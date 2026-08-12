@@ -1,4 +1,7 @@
-# PyLearn — Design Document
+# bora.py — Design Document
+
+> The product name is **bora.py** — always lowercase, always with the dot
+> (design/brand/BRAND.md). Everything below describes that app.
 
 A playful, BTS-themed PWA that teaches Python to one specific learner: an 11th-standard student, beginner level, whose interests are BTS and Korean music.
 

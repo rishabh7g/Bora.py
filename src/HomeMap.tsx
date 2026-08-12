@@ -12,6 +12,7 @@ import { flatModules, moduleNumberOf } from './content/load';
 import type { Curriculum, Module, Tier } from './content/types';
 import { currentModule, moduleStateOf, tier5Unlocked, type ModuleState } from './state/gating';
 import type { Progress } from './state/progress';
+import Wordmark from './Wordmark';
 import './home.css';
 
 // Module 0 is the setup guide, not a concept module — it opens the SetupGuide
@@ -137,6 +138,12 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
 
   return (
     <div className="home-screen">
+      {/* The map is the app's root, so the brand lockup sits here — the one
+          place the product name is set in the UI (src/Wordmark.tsx, per
+          design/brand/BRAND.md). Every other screen carries a "← Map" link
+          back to it instead of repeating the lockup, and the celebration field
+          stays bare: BRAND.md keeps red off red. */}
+      <Wordmark className="home-wordmark" />
       <div className="home-head">
         <p className="home-kicker">Checkpoint path</p>
         <div className="home-headright">
