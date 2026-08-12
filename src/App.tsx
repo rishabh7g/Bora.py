@@ -28,6 +28,9 @@ const curriculum = loadCurriculum();
 //   #/module/<id>                 → ModuleView
 //   #/module/<id>/exercise/<eid>  → ExerciseView (formative)
 //   #/module/<id>/exit            → ExerciseView (exit checkpoint)
+//
+// Module 0 has no #/module/m0 route at all: it is the setup guide, and it lives
+// on #/setup (see canonicalHash below).
 type Route =
   | { screen: 'home' }
   | { screen: 'setup' }
@@ -35,19 +38,39 @@ type Route =
   | { screen: 'settings' }
   | { screen: 'module'; moduleId: string; exerciseId?: string; isExit: boolean };
 
-function routeFromHash(hash: string): Route {
+const MODULE_HASH = /^#\/module\/([^/]+)(?:\/exercise\/([^/]+)|\/(exit))?$/;
+
+export function routeFromHash(hash: string): Route {
   if (hash === SETUP_ROUTE) return { screen: 'setup' };
   if (hash === SHELF_ROUTE) return { screen: 'shelf' };
   if (hash === SETTINGS_ROUTE) return { screen: 'settings' };
-  const match = /^#\/module\/([^/]+)(?:\/exercise\/([^/]+)|\/(exit))?$/.exec(hash);
+  const match = MODULE_HASH.exec(hash);
   // Anything unrecognised falls back to the map — it is the app's root.
   if (!match) return { screen: 'home' };
+  // Module 0 is the setup guide (design/README.md "Gating"): it has no concept
+  // doc, no formative exercises, and its exit checkpoint is rendered inline at
+  // the end of the guide. ModuleView would render empty section headings and a
+  // lone exit row that skips the whole guide, so every #/module/m0… hash is the
+  // setup screen — rendered here, and rewritten in the address bar by
+  // canonicalHash so there is only ever one URL for Module 0.
+  if (match[1] === SETUP_MODULE_ID) return { screen: 'setup' };
   return {
     screen: 'module',
     moduleId: match[1],
     exerciseId: match[2],
     isExit: match[3] === 'exit',
   };
+}
+
+/** The one hash a route may be reached on, so a bookmark, a share or a reload
+ *  never disagrees with the screen. Only Module 0 needs it today: `#/module/m0`,
+ *  `#/module/m0/exit` and `#/module/m0/exercise/<eid>` all name the setup guide,
+ *  which lives at `#/setup`. Everything else is already canonical — an
+ *  unrecognised hash keeps rendering the map without a rewrite, so Back still
+ *  leaves the app the way it arrived. */
+export function canonicalHash(hash: string): string {
+  const match = MODULE_HASH.exec(hash);
+  return match?.[1] === SETUP_MODULE_ID ? SETUP_ROUTE : hash;
 }
 
 export default function App() {
@@ -63,6 +86,14 @@ export default function App() {
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
+
+  // Keep the address bar on the canonical hash for the screen being rendered —
+  // `replace`, not an assignment, so the non-canonical hash is not left in the
+  // history for Back to bounce off.
+  useEffect(() => {
+    const canonical = canonicalHash(hash);
+    if (canonical !== hash) window.location.replace(canonical);
+  }, [hash]);
 
   const route = routeFromHash(hash);
 
