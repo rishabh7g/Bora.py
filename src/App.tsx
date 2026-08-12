@@ -11,6 +11,7 @@ import HomeMap, {
 } from './HomeMap';
 import ModuleView from './ModuleView';
 import PhotocardShelf from './PhotocardShelf';
+import ProgressLoading from './ProgressLoading';
 import Settings from './Settings';
 import SetupGuide from './SetupGuide';
 import { exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './state/gating';
@@ -51,7 +52,7 @@ function routeFromHash(hash: string): Route {
 
 export default function App() {
   const [hash, setHash] = useState(() => window.location.hash || HOME_ROUTE);
-  const { progress, apply, replaceAll, resetModule } = useProgress();
+  const { progress, storageStalled, apply, replaceAll, resetModule } = useProgress();
   // The celebration is transient by design (ENGINEERING.md §11 step 8): it is
   // set on the pass edge only, so a revisit or a reload never replays it.
   const [celebratingModuleId, setCelebratingModuleId] = useState<string | null>(null);
@@ -68,7 +69,16 @@ export default function App() {
   // Wait for the stored progress before rendering any screen, so a click can
   // never act on (and overwrite with) unloaded default state — and so chips,
   // the exit lock and the map's unlock states never flash their defaults.
-  if (!progress) return <main />;
+  // Waiting is not the same as showing nothing though: ProgressLoading says so,
+  // and says it plainly once the read has stalled, so a storage failure can
+  // never present as a permanently empty page.
+  if (!progress) {
+    return (
+      <main>
+        <ProgressLoading stalled={storageStalled} />
+      </main>
+    );
+  }
 
   if (route.screen === 'home') {
     return (

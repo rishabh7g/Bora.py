@@ -10,8 +10,21 @@ export type ApplyTransition = (
   transition: (state: ExerciseState) => ExerciseState,
 ) => void;
 
+/** How long the stored-progress read may run before the app admits to the
+ *  learner that something is wrong (src/ProgressLoading.tsx).
+ *
+ *  It is a report, NOT a cancellation: the read is still awaited afterwards.
+ *  Substituting empty progress on timeout would let the next write-through
+ *  overwrite weeks of real progress, which is exactly what ENGINEERING.md §4
+ *  forbids — losing browser storage must not lose progress. */
+export const PROGRESS_LOAD_TIMEOUT_MS = 5000;
+
 export type UseProgress = {
   progress: Progress | null;
+  /** The load has not settled within PROGRESS_LOAD_TIMEOUT_MS. Storage is
+   *  stalled (a blocked upgrade, a corrupt store) rather than simply absent —
+   *  an absent or throwing IndexedDB resolves to empty progress instead. */
+  storageStalled: boolean;
   apply: ApplyTransition;
   /** Replace the whole stored state — the import half of the backup story
    *  (ENGINEERING.md §4). The caller validates the file first
@@ -24,14 +37,24 @@ export type UseProgress = {
 
 export function useProgress(): UseProgress {
   const [progress, setProgress] = useState<Progress | null>(null);
+  const [storageStalled, setStorageStalled] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
+    const stallTimer = setTimeout(() => {
+      if (!cancelled) setStorageStalled(true);
+    }, PROGRESS_LOAD_TIMEOUT_MS);
     void loadProgress().then((loaded) => {
-      if (!cancelled) setProgress(loaded);
+      if (cancelled) return;
+      clearTimeout(stallTimer);
+      // A late read still wins: the app leaves the stalled screen for the real
+      // progress rather than stranding the learner on it.
+      setStorageStalled(false);
+      setProgress(loaded);
     });
     return () => {
       cancelled = true;
+      clearTimeout(stallTimer);
     };
   }, []);
 
@@ -58,5 +81,5 @@ export function useProgress(): UseProgress {
     });
   }, []);
 
-  return { progress, apply, replaceAll, resetModule: forgetModule };
+  return { progress, storageStalled, apply, replaceAll, resetModule: forgetModule };
 }
