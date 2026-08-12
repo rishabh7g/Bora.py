@@ -28,26 +28,68 @@ export function exerciseChipOf(state: ExerciseState): Chip {
   return { label: 'NOT STARTED', className: 'tag-neutral' };
 }
 
+export type CopyStatus = 'idle' | 'copied' | 'failed';
+
+/** The clipboard write as the button consumes it: a status to show, never a
+ *  rejection. A browser can refuse `writeText` (permission not granted, an
+ *  embedded or permission-policy-restricted context) or not expose the API at
+ *  all — both are things the learner should be told, not unhandled console
+ *  noise. `clipboard` is injectable so both paths are testable. */
+export async function copyStatusOf(
+  code: string,
+  clipboard: Pick<Clipboard, 'writeText'> | undefined = globalThis.navigator?.clipboard,
+): Promise<CopyStatus> {
+  if (!clipboard) return 'failed';
+  try {
+    await clipboard.writeText(code);
+    return 'copied';
+  } catch {
+    return 'failed';
+  }
+}
+
+/** Button label per status — a refused write says so instead of staying on COPY
+ *  as if the code had been copied. */
+export function copyLabelOf(status: CopyStatus): string {
+  if (status === 'copied') return 'COPIED';
+  if (status === 'failed') return 'COPY FAILED';
+  return 'COPY';
+}
+
 /** Copy button for worked-example CODE blocks only — expected-output blocks
  *  never get one (output must be produced, not pasted). */
 function CopyButton({ code }: { code: string }) {
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<CopyStatus>('idle');
   const timer = useRef<number>();
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
+  // Both outcomes are transient and share one timer: the button says what
+  // happened, then goes back to offering the copy.
   const copy = () => {
-    if (!navigator.clipboard) return;
-    void navigator.clipboard.writeText(code).then(() => {
-      setCopied(true);
+    void copyStatusOf(code).then((next) => {
+      setStatus(next);
       window.clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => setCopied(false), 1500);
+      timer.current = window.setTimeout(() => setStatus('idle'), 1500);
     });
   };
 
   return (
-    <button type="button" className="mod-copy" onClick={copy} aria-label="Copy code">
-      {copied ? 'COPIED' : 'COPY'}
-    </button>
+    <>
+      <button
+        type="button"
+        className={status === 'failed' ? 'mod-copy mod-copy--failed' : 'mod-copy'}
+        onClick={copy}
+        aria-label={status === 'idle' ? 'Copy code' : copyLabelOf(status)}
+      >
+        {copyLabelOf(status)}
+      </button>
+      {status === 'failed' && (
+        <p className="mod-copy-note" role="status">
+          This browser blocked the clipboard. Select the code and copy it by hand — or type it out,
+          which is what these examples are for anyway.
+        </p>
+      )}
+    </>
   );
 }
 

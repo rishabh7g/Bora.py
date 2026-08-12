@@ -112,6 +112,19 @@
   letter-spacing: 0.1em;
   padding: 0 12px;
 }
+/* Copy refused (#44). Narrower type so the longer label still clears the code's
+   reserved right gutter, plus a note under the block saying what to do instead.
+   Both are transient — 1.5 s, same as COPIED. */
+.mod-copy--failed {
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  padding: 0 8px;
+}
+.mod-copy-note {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--color-neutral-700);
+}
 .mod-copy:hover {
   background: color-mix(in srgb, var(--color-bg) 12%, transparent);
 }
