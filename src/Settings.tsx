@@ -12,7 +12,7 @@
 //
 // Tone (DESIGN.md §2: no guilt mechanics): reset is a safety net, so it is
 // described plainly — what it clears, what it leaves — and never dramatised.
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { flatModules, moduleNumberOf } from './content/load';
 import type { Curriculum } from './content/types';
 import { HOME_ROUTE } from './HomeMap';
@@ -49,6 +49,20 @@ export function backupSummary(curriculum: Curriculum, progress: Progress): strin
     : `${checkpoints}, ${started} modules with saved work.`;
 }
 
+// Confirming is a swap: the control that was clicked is replaced by the pair
+// that confirms it (and, on cancel or completion, swapped back). The clicked
+// element leaves the DOM, so the browser drops focus to the document and the
+// next Tab starts the screen again. Every swap therefore names what focus should
+// move to; the handler that caused the change sets it, so nothing here guesses.
+// `null` means the control that was clicked is still there — leave focus alone
+// (which is why plain Export, whose button survives, sets nothing).
+type FocusAfter =
+  | { kind: 'confirmReset' }
+  | { kind: 'confirmImport' }
+  | { kind: 'resetButton'; moduleId: string }
+  | { kind: 'notice' }
+  | null;
+
 export type SettingsProps = {
   curriculum: Curriculum;
   progress: Progress;
@@ -68,6 +82,27 @@ export default function Settings({
   // only written once this is accepted.
   const [pending, setPending] = useState<{ progress: Progress; fileName: string } | null>(null);
   const [confirmingResetOf, setConfirmingResetOf] = useState<string | null>(null);
+  const [focusAfter, setFocusAfter] = useState<FocusAfter>(null);
+
+  const noticeRef = useRef<HTMLParagraphElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const confirmImportRef = useRef<HTMLButtonElement>(null);
+  const confirmResetRef = useRef<HTMLButtonElement>(null);
+  const resetButtons = useRef(new Map<string, HTMLButtonElement | null>());
+
+  useEffect(() => {
+    if (!focusAfter) return;
+    const target =
+      focusAfter.kind === 'confirmReset'
+        ? confirmResetRef.current
+        : focusAfter.kind === 'confirmImport'
+          ? confirmImportRef.current
+          : focusAfter.kind === 'notice'
+            ? noticeRef.current
+            : resetButtons.current.get(focusAfter.moduleId);
+    target?.focus();
+    setFocusAfter(null); // one move per swap
+  }, [focusAfter]);
 
   const modules = flatModules(curriculum);
   const started = modules.filter((module) => hasModuleProgress(progress, module.id));
@@ -97,6 +132,7 @@ export default function Settings({
       return;
     }
     setPending({ progress: result.progress, fileName: file.name });
+    setFocusAfter({ kind: 'confirmImport' });
   }
 
   function onConfirmImport() {
@@ -104,6 +140,7 @@ export default function Settings({
     onImport(pending.progress);
     setPending(null);
     setNotice('Progress replaced from the backup.');
+    setFocusAfter({ kind: 'notice' });
   }
 
   function onConfirmReset(moduleId: string) {
@@ -111,6 +148,9 @@ export default function Settings({
     onResetModule(moduleId);
     setConfirmingResetOf(null);
     setNotice(`Module ${moduleNumberOf(curriculum, moduleId)} reset.`);
+    // The row itself goes with the progress it held, so the fact of the reset is
+    // what focus lands on.
+    setFocusAfter({ kind: 'notice' });
   }
 
   return (
@@ -126,7 +166,7 @@ export default function Settings({
       </p>
 
       {notice && (
-        <p className="set-notice" role="status">
+        <p className="set-notice" role="status" tabIndex={-1} ref={noticeRef}>
           {notice}
         </p>
       )}
@@ -158,6 +198,7 @@ export default function Settings({
         </label>
         <input
           id="set-file"
+          ref={fileInputRef}
           className="input set-input"
           type="file"
           accept="application/json,.json"
@@ -179,13 +220,23 @@ export default function Settings({
               Importing replaces the progress saved in this browser with the file&apos;s.
             </p>
             <div className="set-actions">
-              <button type="button" className="btn btn-primary set-btn" onClick={onConfirmImport}>
+              <button
+                type="button"
+                ref={confirmImportRef}
+                className="btn btn-primary set-btn"
+                onClick={onConfirmImport}
+              >
                 Replace saved progress
               </button>
               <button
                 type="button"
                 className="btn btn-secondary set-btn"
-                onClick={() => setPending(null)}
+                onClick={() => {
+                  setPending(null);
+                  // The file field is still on screen, so cancelling goes back
+                  // to it rather than to the top of the page.
+                  fileInputRef.current?.focus();
+                }}
               >
                 Cancel
               </button>
@@ -221,6 +272,7 @@ export default function Settings({
                     <span className="set-actions">
                       <button
                         type="button"
+                        ref={confirmResetRef}
                         className="btn btn-primary set-btn"
                         onClick={() => onConfirmReset(module.id)}
                       >
@@ -229,7 +281,10 @@ export default function Settings({
                       <button
                         type="button"
                         className="btn btn-secondary set-btn"
-                        onClick={() => setConfirmingResetOf(null)}
+                        onClick={() => {
+                          setConfirmingResetOf(null);
+                          setFocusAfter({ kind: 'resetButton', moduleId: module.id });
+                        }}
                       >
                         Cancel
                       </button>
@@ -237,10 +292,14 @@ export default function Settings({
                   ) : (
                     <button
                       type="button"
+                      ref={(node) => {
+                        resetButtons.current.set(module.id, node);
+                      }}
                       className="btn btn-secondary set-btn"
                       onClick={() => {
                         clearMessages();
                         setConfirmingResetOf(module.id);
+                        setFocusAfter({ kind: 'confirmReset' });
                       }}
                     >
                       Reset

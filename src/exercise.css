@@ -258,9 +258,11 @@
   line-height: 1.55;
 }
 
-/* Back link — ghost button as anchor, flush left. */
+/* Back link — ghost button as anchor, flush left, ≥44px in both directions. */
 .ex-back {
   padding-inline: 0;
   white-space: nowrap;
   min-height: 44px;
+  min-width: 44px;
+  justify-content: flex-start;
 }
