@@ -55,6 +55,27 @@ structure), `browser_take_screenshot` (`fullPage`), `browser_console_messages`,
 `browser_resize` (e.g. 390×844 for mobile). Artefacts land in `.playwright-mcp/`
 under the cwd: move them out and `rm -rf .playwright-mcp` so the repo stays clean.
 
+MCP tools only exist in a session that started with them registered. In a session
+without them, drive the same bundled Playwright from a Node script instead — the
+capability is the same (navigate, evaluate, screenshot, console, CDP a11y tree,
+`setOffline`, `setInputFiles`, downloads) and nothing lands in the repo. Two
+gotchas worth knowing before you write one:
+
+- The design system's `.seg-opt` / `.radio` inputs are `opacity: 0; width: 0;
+  height: 0; pointer-events: none` — click the `<label>`, never the `<input>`, or
+  the click waits forever for a visible target.
+- `.celebrate-field` is `position: fixed; inset: 0`, so a `fullPage` screenshot
+  taller than the viewport shows the screen underneath it. Capture the
+  celebration viewport-sized.
+
+## Reports
+
+Dated passes live in `docs/qa/`:
+
+- [`docs/qa/2026-08-13-live-qa.md`](qa/2026-08-13-live-qa.md) — first full live pass
+  (#28): every screen at 390px and 1280px, effort gate, persistence, offline,
+  PWA metadata; 8 findings filed as #40–#47.
+
 ## What does NOT work
 
 **Do not drive Chrome directly with `--virtual-time-budget` and `--dump-dom`.**
