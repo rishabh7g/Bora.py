@@ -4,6 +4,7 @@
 // Every gating decision is read from src/state/effortGate.ts — the one owner
 // of the state machine. This component only renders and forwards transitions.
 import type { Exercise, Module } from './content/types';
+import ExpectedOutput from './ExpectedOutput';
 import PythonCode from './PythonCode';
 import {
   declareAttempt,
@@ -97,13 +98,7 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
       {isExit && <p className="ex-exit-note">EXIT CHECKPOINT — UNSCAFFOLDED. NO HINTS ON THIS ONE.</p>}
       <p className="ex-prompt">{exercise.prompt}</p>
 
-      <div className="ex-expected">
-        <div className="ex-expected-head">
-          <span className="ex-expected-label">EXPECTED OUTPUT</span>
-          <span className="ex-expected-sub">your terminal should print this</span>
-        </div>
-        <pre>{exercise.expectedOutput}</pre>
-      </div>
+      <ExpectedOutput output={exercise.expectedOutput} />
 
       {matched ? (
         <div className="ex-matched-banner">

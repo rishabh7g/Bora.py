@@ -64,14 +64,14 @@
         "art": "card-m0.svg"
       },
       "concept": {
-        "intro": "",
+        "intro": "Get Python onto your machine and run one file from the terminal. Follow each step on your own screen — the app just guides. This is the only module with no code to read: it is plumbing, and once it works it stays working.",
         "examples": []
       },
       "exercises": [],
       "exitExercise": {
         "id": "exit",
         "title": "Exit — hello.py",
-        "prompt": "",
+        "prompt": "Create hello.py yourself, in a folder you can find again. Put one line in it that prints your chosen member's name, then run it from the terminal. Typed by you, run by you — that is the whole checkpoint.",
         "expectedOutput": "Jimin",
         "hints": [],
         "solution": "print(\"Jimin\")",

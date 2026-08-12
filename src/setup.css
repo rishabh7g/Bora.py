@@ -1,0 +1,230 @@
+/* SetupGuide — Modernist system. Every value is a design token or a
+   prototype-specified structural measure; radius is 0 everywhere by token.
+   Structure mirrors design/PyLearn Prototype.dc.html → Setup guide screen.
+   Interactive chrome (.btn, .seg, .tag) comes from the design system, so the
+   themed hover / pressed / :focus-visible states are the shared ones. */
+
+.setup-screen {
+  width: min(780px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 64px;
+}
+
+/* Back link — ghost button as anchor, flush left, ≥44px tall. */
+.setup-back {
+  padding-inline: 0;
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.setup-kicker {
+  margin: 18px 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.setup-title {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 40px);
+  line-height: 1.05;
+}
+
+.setup-intro {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 62ch;
+  color: var(--color-neutral-800);
+}
+
+/* — OS picker — */
+.setup-os {
+  margin: 26px 0 0;
+  padding: 0;
+  border: 0;
+}
+.setup-os-legend {
+  padding: 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.setup-os .seg {
+  margin-top: 10px;
+}
+/* ≥44px hit targets — the design system's default segment is denser. */
+.setup-os .seg-opt {
+  min-height: 44px;
+  padding-inline: 20px;
+  font-weight: 700;
+}
+.setup-os-note {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: var(--color-neutral-600);
+}
+
+/* — stepper — */
+.setup-steps {
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.setup-step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  padding: 22px 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+.setup-step-num {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--color-accent);
+}
+.setup-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.setup-step-title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.25;
+}
+.setup-step-text {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--color-neutral-800);
+}
+
+/* Terminal lines — the exact thing to type, and what it prints. */
+.setup-term {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--color-divider);
+  padding: 12px 14px;
+}
+.setup-term-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--color-neutral-600);
+}
+.setup-term-command,
+.setup-term-output {
+  margin: 0;
+  font: 600 14px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.setup-term-output {
+  color: var(--color-accent-800);
+}
+.setup-term-label + .setup-term-label,
+.setup-term-command + .setup-term-label {
+  margin-top: 6px;
+}
+
+/* Screenshots — local files only, full width of the step column. */
+.setup-shot {
+  margin: 2px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.setup-shot-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--color-divider);
+}
+.setup-shot-scroll:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.setup-shot img {
+  display: block;
+  /* Never narrower than this: below it the text in a screenshot stops being
+     readable, so the box scrolls instead of shrinking the image. */
+  min-width: 520px;
+  width: 100%;
+  height: auto;
+}
+.setup-shot figcaption {
+  font-size: 12px;
+  color: var(--color-neutral-600);
+}
+/* A step whose screenshot has not been captured yet says so plainly. */
+.setup-shot-pending {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--color-divider);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--color-neutral-600);
+}
+.setup-shot-pending-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--color-neutral-800);
+  margin-right: 6px;
+}
+
+/* — exit checkpoint — */
+.setup-exit {
+  margin-top: 20px;
+  border: 2px solid var(--color-text);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.setup-exit-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+.setup-exit-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.setup-exit-prompt {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 60ch;
+}
+.setup-exit .ex-expected {
+  margin-top: 0;
+}
+.setup-exit-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.setup-exit-note {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--color-neutral-600);
+}
+.setup-exit-passed {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14.5px;
+  font-weight: 700;
+}

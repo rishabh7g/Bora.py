@@ -2,10 +2,17 @@ import { useEffect, useState } from 'react';
 import CelebrationScreen, { celebrationTriggered } from './CelebrationScreen';
 import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
 import ExerciseView from './ExerciseView';
-import HomeMap, { HOME_ROUTE, SETTINGS_ROUTE, SETUP_ROUTE, SHELF_ROUTE } from './HomeMap';
+import HomeMap, {
+  HOME_ROUTE,
+  SETTINGS_ROUTE,
+  SETUP_MODULE_ID,
+  SETUP_ROUTE,
+  SHELF_ROUTE,
+} from './HomeMap';
 import ModuleView from './ModuleView';
 import PhotocardShelf from './PhotocardShelf';
 import Settings from './Settings';
+import SetupGuide from './SetupGuide';
 import { exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './state/gating';
 import { exerciseStateOf } from './state/progress';
 import { useProgress } from './state/useProgress';
@@ -14,7 +21,7 @@ const curriculum = loadCurriculum();
 
 // Minimal hash routing:
 //   #/                            → HomeMap (root)
-//   #/setup                       → SetupGuide (placeholder until its issue)
+//   #/setup                       → SetupGuide (Module 0: OS picker + stepper)
 //   #/shelf                       → PhotocardShelf
 //   #/settings                    → Settings (export / import / reset)
 //   #/module/<id>                 → ModuleView
@@ -40,24 +47,6 @@ function routeFromHash(hash: string): Route {
     exerciseId: match[2],
     isExit: match[3] === 'exit',
   };
-}
-
-/** Placeholder for the SetupGuide screen (ENGINEERING.md §7) — Module 0's
- *  route exists so the map can open it; the real guide ships separately. */
-function SetupPlaceholder() {
-  return (
-    <div className="mod-screen">
-      <a className="btn btn-ghost mod-back" href={HOME_ROUTE}>
-        ← Map
-      </a>
-      <p className="mod-kicker">Module 00 — Tier 0 — Setup</p>
-      <h1 className="mod-title">Hello, Python</h1>
-      <p className="mod-intro">
-        The setup guide — install Python and run your first <code>.py</code> file — is being
-        written. It arrives with its own checkpoint.
-      </p>
-    </div>
-  );
 }
 
 export default function App() {
@@ -110,10 +99,45 @@ export default function App() {
     );
   }
 
+  // Module 0 lives on the setup screen, not on ModuleView (design/README.md
+  // "Gating"): its exit checkpoint is rendered inline by SetupGuide, and it
+  // celebrates on the pass edge exactly like every other checkpoint.
   if (route.screen === 'setup') {
+    const setupModule = findModule(curriculum, SETUP_MODULE_ID);
+    if (!setupModule) {
+      return (
+        <main>
+          <p>Unknown module: {SETUP_MODULE_ID}</p>
+        </main>
+      );
+    }
+    const exit = setupModule.exitExercise;
+    const alreadyPassed = moduleStateOf(curriculum, setupModule.id, progress) === 'passed';
     return (
       <main>
-        <SetupPlaceholder />
+        <SetupGuide
+          curriculum={curriculum}
+          module={setupModule}
+          progress={progress}
+          onTransition={(transition) => {
+            apply(setupModule.id, exit.id, true, transition);
+            const before = exerciseStateOf(progress, setupModule.id, exit.id);
+            if (celebrationTriggered(true, alreadyPassed, transition(before))) {
+              setCelebratingModuleId(setupModule.id);
+            }
+          }}
+        />
+        {celebratingModuleId === setupModule.id && (
+          <CelebrationScreen
+            module={setupModule}
+            moduleNumber={moduleNumberOf(curriculum, setupModule.id)}
+            tier5Unlocked={tier5Unlocked(curriculum, progress)}
+            onContinue={() => {
+              setCelebratingModuleId(null);
+              window.location.hash = HOME_ROUTE; // on to the map, Module 01 open
+            }}
+          />
+        )}
       </main>
     );
   }
