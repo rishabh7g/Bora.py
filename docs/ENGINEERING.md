@@ -1,4 +1,7 @@
-# PyLearn — Engineering Document
+# bora.py — Engineering Document
+
+> The product name is **bora.py** — always lowercase, always with the dot
+> (design/brand/BRAND.md). Everything below describes that app.
 
 Implements DESIGN.md. Audience: single developer building for a single user.
 

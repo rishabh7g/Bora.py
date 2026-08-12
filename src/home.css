@@ -9,6 +9,12 @@
   padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 40px) 48px;
 }
 
+/* The lockup sits above the head row, clear of the kicker (BRAND.md clear
+   space) — it labels the app, it is not part of the checkpoint header. */
+.home-wordmark {
+  margin-bottom: 20px;
+}
+
 .home-head {
   display: flex;
   align-items: baseline;

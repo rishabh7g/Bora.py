@@ -38,10 +38,19 @@ Design package complete. Implementation in progress.
 
 ## Naming
 
-The design and engineering docs and the prototype file still carry the working
-title **PyLearn**; the brand doc settles on **bora.py**. This is a known
-inconsistency to be cleaned up in a later pass — the handoff files are kept
-exactly as delivered for now.
+The product name is **bora.py** — always lowercase, always with the dot
+(`design/brand/BRAND.md`). The cleanup is **done for app code and docs**: the
+app UI, the PWA manifest, `index.html`, `package.json` and the doc titles all
+say bora.py, and `src/Wordmark.tsx` is the one place the name is set in the UI.
+
+Two deliberate exceptions, both about provenance:
+
+- The design handoff files are kept **exactly as delivered**, so the prototype
+  is still named `design/PyLearn Prototype.dc.html` and `design/` keeps its
+  original wording. Renaming it would break the handoff and lose the history.
+- Source comments that cite that prototype (`design/PyLearn Prototype.dc.html →
+  Home map`) keep the real filename, because the path has to resolve. They are
+  path citations, not the product name.
 
 ## How work happens
 
