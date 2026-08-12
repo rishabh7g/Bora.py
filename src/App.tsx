@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import CelebrationScreen, { celebrationTriggered } from './CelebrationScreen';
 import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
+import type { Curriculum, Exercise, Module } from './content/types';
 import ExerciseView from './ExerciseView';
 import HomeMap, {
   HOME_ROUTE,
@@ -31,35 +32,58 @@ const curriculum = loadCurriculum();
 //
 // Module 0 has no #/module/m0 route at all: it is the setup guide, and it lives
 // on #/setup (see canonicalHash below).
+//
+// One fallback rule, for every hash this app cannot honour: render the map. It
+// is the app's root and it always offers a way on, so a hash the router does not
+// recognise, and a hash naming content that does not exist, land in the same
+// place. That is why a Route carries the resolved Module / Exercise rather than
+// their ids: a screen can only be reached with real content behind it, so no
+// screen can render an "Unknown …" dead end (issue #42).
 type Route =
   | { screen: 'home' }
-  | { screen: 'setup' }
+  | { screen: 'setup'; module: Module }
   | { screen: 'shelf' }
   | { screen: 'settings' }
-  | { screen: 'module'; moduleId: string; exerciseId?: string; isExit: boolean };
+  | { screen: 'module'; module: Module; exercise?: Exercise; isExit: boolean };
 
 const MODULE_HASH = /^#\/module\/([^/]+)(?:\/exercise\/([^/]+)|\/(exit))?$/;
 
-export function routeFromHash(hash: string): Route {
-  if (hash === SETUP_ROUTE) return { screen: 'setup' };
+const HOME: Route = { screen: 'home' };
+
+function setupRoute(curriculum: Curriculum): Route {
+  const module = findModule(curriculum, SETUP_MODULE_ID);
+  return module ? { screen: 'setup', module } : HOME;
+}
+
+export function routeFromHash(hash: string, curriculum: Curriculum): Route {
+  if (hash === SETUP_ROUTE) return setupRoute(curriculum);
   if (hash === SHELF_ROUTE) return { screen: 'shelf' };
   if (hash === SETTINGS_ROUTE) return { screen: 'settings' };
   const match = MODULE_HASH.exec(hash);
   // Anything unrecognised falls back to the map — it is the app's root.
-  if (!match) return { screen: 'home' };
+  if (!match) return HOME;
+  const [, moduleId, exerciseId, exit] = match;
   // Module 0 is the setup guide (design/README.md "Gating"): it has no concept
   // doc, no formative exercises, and its exit checkpoint is rendered inline at
   // the end of the guide. ModuleView would render empty section headings and a
   // lone exit row that skips the whole guide, so every #/module/m0… hash is the
   // setup screen — rendered here, and rewritten in the address bar by
   // canonicalHash so there is only ever one URL for Module 0.
-  if (match[1] === SETUP_MODULE_ID) return { screen: 'setup' };
-  return {
-    screen: 'module',
-    moduleId: match[1],
-    exerciseId: match[2],
-    isExit: match[3] === 'exit',
-  };
+  if (moduleId === SETUP_MODULE_ID) return setupRoute(curriculum);
+  const module = findModule(curriculum, moduleId);
+  // A well-shaped hash naming a module that does not exist is still just an
+  // unrecognised hash — the map, same as #/nonsense/route.
+  if (!module) return HOME;
+  const isExit = exit === 'exit';
+  const exercise = isExit
+    ? module.exitExercise
+    : exerciseId
+      ? module.exercises.find((candidate) => candidate.id === exerciseId)
+      : undefined;
+  // …and so is a hash naming an exercise the module does not have. (An
+  // exercise-less #/module/<id> is a real route: the module screen.)
+  if (exerciseId && !exercise) return HOME;
+  return { screen: 'module', module, exercise, isExit };
 }
 
 /** The one hash a route may be reached on, so a bookmark, a share or a reload
@@ -95,7 +119,7 @@ export default function App() {
     if (canonical !== hash) window.location.replace(canonical);
   }, [hash]);
 
-  const route = routeFromHash(hash);
+  const route = routeFromHash(hash, curriculum);
 
   // Wait for the stored progress before rendering any screen, so a click can
   // never act on (and overwrite with) unloaded default state — and so chips,
@@ -144,14 +168,7 @@ export default function App() {
   // "Gating"): its exit checkpoint is rendered inline by SetupGuide, and it
   // celebrates on the pass edge exactly like every other checkpoint.
   if (route.screen === 'setup') {
-    const setupModule = findModule(curriculum, SETUP_MODULE_ID);
-    if (!setupModule) {
-      return (
-        <main>
-          <p>Unknown module: {SETUP_MODULE_ID}</p>
-        </main>
-      );
-    }
+    const setupModule = route.module;
     const exit = setupModule.exitExercise;
     const alreadyPassed = moduleStateOf(curriculum, setupModule.id, progress) === 'passed';
     return (
@@ -183,14 +200,9 @@ export default function App() {
     );
   }
 
-  const module = findModule(curriculum, route.moduleId);
-  if (!module) {
-    return (
-      <main>
-        <p>Unknown module: {route.moduleId}</p>
-      </main>
-    );
-  }
+  // Resolved by routeFromHash — an id the curriculum does not have never gets
+  // this far, it is a home route.
+  const module = route.module;
 
   // §6 module chain (state/gating.ts): a locked module is not reachable by URL
   // either — fall back to the map, whose row shows why it is locked.
@@ -202,20 +214,12 @@ export default function App() {
     );
   }
 
-  const exercise = route.isExit
-    ? module.exitExercise
-    : route.exerciseId
-      ? module.exercises.find((candidate) => candidate.id === route.exerciseId)
-      : undefined;
+  // Resolved by routeFromHash too: an exercise id the module does not have is a
+  // home route, so an exercise here is always a real one. No exercise means the
+  // bare #/module/<id> hash — the module screen, at the bottom of this function.
+  const exercise = route.exercise;
 
-  if (route.isExit || route.exerciseId) {
-    if (!exercise) {
-      return (
-        <main>
-          <p>Unknown exercise: {route.exerciseId}</p>
-        </main>
-      );
-    }
+  if (exercise) {
     // §6 exit lock (state/gating.ts): a direct URL cannot bypass the gate —
     // fall back to the module screen, whose locked row explains the rule.
     if (route.isExit && !exitUnlocked(module, progress)) {

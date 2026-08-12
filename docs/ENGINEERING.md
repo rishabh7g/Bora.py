@@ -133,6 +133,8 @@ Rules:
 - `SetupGuide` — OS picker (Windows/Mac), stepper with screenshots (bundled images). Module 0 is the setup guide and nothing else: it has no concept doc and no formative exercises, so it has **no `ModuleView` route** — its exit checkpoint is rendered inline at the end of the guide, and every `#/module/m0…` hash is canonicalised to `#/setup`
 - `Settings` — export/import progress, reset module
 
+**Route fallbacks (`src/App.tsx`):** there is exactly one fallback for a hash the app cannot honour — the Home map, the app's root, which always offers a way on. A hash the router does not recognise, a module id the curriculum does not have and an exercise id the module does not have all land there; a `Route` therefore carries the resolved `Module`/`Exercise`, not their ids, so no screen can be reached without real content behind it and no screen renders an "Unknown …" dead end. Gated-but-real routes are different, and fall back to the nearest screen that explains the gate: a locked module → the map (its row says why), a locked exit checkpoint → its module screen (its exit row says why).
+
 **Expected-output block detail:** render with a "show whitespace" toggle (·  for spaces, ⏎ for newlines). The #1 beginner frustration with output matching is invisible trailing spaces/newlines — surface it, and the concept doc for Module 1 explicitly teaches "outputs must match exactly, here's how to check."
 
 ## 8. Syntax Highlighting
