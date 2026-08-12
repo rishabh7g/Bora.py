@@ -97,8 +97,16 @@
   padding: 18px 0;
   margin-bottom: 0;
 }
+/* Locked reads as locked through quieter ink, never through opacity: fading the
+   whole section multiplied every colour inside it down to 1.81–3.16:1 (#45).
+   --color-neutral-700 is the quietest step that still clears 4.5:1 on the page
+   ground (5.83:1), and it is far lighter than an open tier's ink (14.86:1), so
+   the section still recedes. */
 .home-tier5--locked {
-  opacity: 0.5;
+  color: var(--color-neutral-700);
+}
+.home-tier5--locked .home-tierera {
+  color: inherit;
 }
 
 /* — module rows — */
@@ -141,16 +149,28 @@
 .home-row--current:active {
   background: color-mix(in srgb, var(--color-accent) 14%, transparent);
 }
+/* Same rule as the locked tier above: the row steps back in ink, not in
+   opacity. `opacity: 0.45` here put the number at 1.28:1 and the anchor at
+   1.70:1 — the map's whole information, unreadable (#45). The row keeps its
+   non-interactive affordance from the markup (a <div aria-disabled>, no href)
+   and from the LOCKED chip, so legible ink cannot make it look clickable. */
 .home-row--locked {
-  opacity: 0.45;
+  color: var(--color-neutral-700);
   cursor: default;
 }
+.home-row--locked .home-rowanchor {
+  color: inherit;
+}
 
+/* The default is the locked row's number — open rows and the current one
+   override it below. At 20–24px/900 it is large text, so 3:1 is the bar and
+   --color-neutral-600 clears it at 3.85:1 while staying the lightest thing in
+   the row. */
 .home-num {
   font-family: var(--font-heading);
   font-weight: 900;
   font-size: 24px;
-  color: var(--color-neutral-400);
+  color: var(--color-neutral-600);
 }
 .home-row--open .home-num {
   color: var(--color-text);

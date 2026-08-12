@@ -88,10 +88,15 @@
   outline-offset: -4px;
 }
 
+/* An unearned card is a placeholder, not a disabled control: its number, era
+   title and foot are the only preview of what the checkpoint pays out, so they
+   have to be readable. --color-neutral-400 measured 1.80:1 (#45); the ink is
+   now the same quiet step the rest of the app uses for secondary text, and the
+   card still reads as empty from its transparent ground and hairline border. */
 .shelf-card--locked {
   background: transparent;
   border: 1px solid var(--color-divider);
-  color: var(--color-neutral-400);
+  color: var(--color-neutral-700);
 }
 
 .shelf-num {
@@ -113,6 +118,12 @@
   font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+/* On the earned card the red ground carries the hierarchy, so the caption can
+   sit back off it. On an unearned card there is nothing to sit back from —
+   0.75 opacity over --color-neutral-400 was 1.53:1, the worst text in the app
+   (#45) — so the locked card's quieter ink is the whole treatment. */
+.shelf-card--earned .shelf-foot {
   opacity: 0.75;
 }
 

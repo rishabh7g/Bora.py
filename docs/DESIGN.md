@@ -154,6 +154,26 @@ One shared dataset evolves across all modules. By the capstone she is intimate w
 
 ---
 
+## 7a. Legibility floor
+
+The learner is a beginner on a phone, often at reduced brightness. Text she must read is
+never dimmed below **WCAG 2.2 AA**: 4.5:1 on the page ground, or 3:1 where the type is
+large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
+
+- **Locked and unearned states step back in ink, never in `opacity`.** A dimmed ancestor
+  multiplies every colour inside it — that is how the map's locked module numbers reached
+  1.28:1 (#45). A locked row is quiet because its ink is a quieter token, and it reads as
+  locked from its chip, its cursor and its markup (a non-focusable `aria-disabled` element
+  with no `href`), never from being hard to see.
+- **The locked copy is the app explaining its own rules** ("Unlocks when every practice
+  exercise is matched or its solution seen"), so it is held to the same floor as any other
+  sentence, whatever the letter of the spec allows for disabled controls.
+- The floor is measured, not eyeballed: `node scripts/contrast-audit.mjs` reports the real
+  rendered ratio for every quiet and dimmed style, with ancestor opacity folded in
+  (docs/QA.md).
+
+---
+
 ## 8. Success Criteria
 
 - She completes the capstone and demos it to someone

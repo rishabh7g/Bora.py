@@ -198,12 +198,15 @@
   padding: 14px 0;
   border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
 }
+/* A rung she has not reached yet is quiet, not invisible: --color-neutral-500
+   measured 2.59:1 at 11.5px (#45). The active rung stays accent-red, so the
+   ladder's position still reads at a glance. */
 .ex-rung-label {
   font-size: 11.5px;
   letter-spacing: 0.1em;
   font-weight: 800;
   padding-top: 4px;
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-700);
 }
 .ex-rung-label--active {
   color: var(--color-accent-700);
@@ -216,10 +219,13 @@
   font-size: 14.5px;
   line-height: 1.6;
 }
+/* The lock note is the app stating its own rule ("Locked. Mark 'I tried and got
+   stuck' after a real attempt."), so it is copy she must be able to read — it
+   measured 2.59:1 (#45). */
 .ex-lock-note {
   margin: 0;
   font-size: 13px;
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-700);
   padding-top: 6px;
 }
 

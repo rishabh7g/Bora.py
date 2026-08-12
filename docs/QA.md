@@ -39,6 +39,28 @@ npm run preview          # serves dist/ at http://localhost:4173/Bora.py/
 `vite preview` binds `localhost` only — use `http://localhost:4173/…`, not
 `127.0.0.1`, or add `--host`.
 
+## The contrast audit
+
+```bash
+node scripts/contrast-audit.mjs                                  # local preview, 390px
+node scripts/contrast-audit.mjs https://rishabh7g.github.io/Bora.py/ --width 1280
+```
+
+Measures the **real rendered** contrast of the app's quiet and dimmed text: it reads
+computed styles in the page, folds every ancestor `opacity` into the ink, composites that
+over the backdrop actually behind it, and picks the AA threshold from the measured size and
+weight (3:1 for large text, else 4.5:1). One line per style, `RESULT ok` / `RESULT FAIL`
+(exit 0 / 1).
+
+This exists because the failures in #45 are invisible to a static read of the CSS — the
+tokens look fine on their own and only fail once a `0.45` ancestor opacity multiplies them.
+It builds its own state the real way (passes Module 00 through the setup guide, since
+Module 01 is locked from a fresh profile).
+
+**Add a row to `ROWS` whenever a screen gains a quiet or dimmed text style**, the same way
+a new endpoint earns a smoke check: the audit's coverage then grows with the app instead of
+going stale.
+
 ## Full interactive QA (clicking through screens)
 
 Use the Playwright MCP server, which drives the same browser but gives

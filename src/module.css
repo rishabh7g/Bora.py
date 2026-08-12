@@ -208,8 +208,16 @@
 .mod-exitrow--open:active {
   background: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
+/* The locked exit row explains the app's own gate ("Unlocks when every practice
+   exercise is matched…"), so it is the last thing that should be hard to read:
+   `opacity: 0.55` folded it to 1.62–2.83:1 (#45). Quieter ink instead, on the
+   row and on the number it contains. */
 .mod-exitrow--locked {
-  opacity: 0.55;
+  color: var(--color-neutral-700);
+}
+.mod-exitrow--locked .mod-num,
+.mod-exitrow--locked .mod-exitrow-sub {
+  color: inherit;
 }
 .mod-exitrow-text {
   display: flex;
