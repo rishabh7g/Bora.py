@@ -51,7 +51,12 @@ export type SetupStep = {
   /** What the window looks like, in words: the landmarks a beginner needs to
    *  find the right button — its wording, roughly where it sits, what to click
    *  next. This is what replaced the unpairable screenshots (rule 2), so it has
-   *  to be specific enough to follow with no picture at all. */
+   *  to be specific enough to follow with no picture at all.
+   *
+   *  `look` describes the WINDOW, never the command, so a step may carry both
+   *  this and `command`: step 3 is the first terminal the learner has ever
+   *  opened, and a bare rectangle with a blinking cursor needs describing even
+   *  though the thing she types is text right below it (rule 3, #67). */
   look?: string[];
   /** A GUI window worth showing, paired across both OS paths. Absent where the
    *  step's subject is a command and its output — that belongs on the page as
@@ -108,6 +113,12 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       title: 'Open PowerShell and check it worked',
       body:
         'Open the Start menu, type "powershell", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python.',
+      look: [
+        'Start typing "powershell" and "Windows PowerShell" comes up at the top of the Start menu. That is the one — press Enter on it.',
+        'The window that opens is almost empty: a dark rectangle with a line or two of small text at the top, no buttons and no menus. That bareness is correct. A terminal is meant to look like this.',
+        'The bottom line ends with a > and a blinking block or bar. That is the prompt, waiting for you, and whatever you type appears right there.',
+        'Nothing in this window is clickable. You type one line, press Enter, and the answer prints on the next line down.',
+      ],
       command: 'python --version',
     },
     {
@@ -156,6 +167,12 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       title: 'Open Terminal and check it worked',
       body:
         'Press ⌘ Space, type "Terminal", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python. On a Mac the command is python3, with the 3.',
+      look: [
+        '⌘ Space drops a search box into the middle of the screen. Type "Terminal" and the app comes up as the top hit — press Enter on it.',
+        'The window that opens is almost empty: a plain white or black rectangle with one line of small text about when you last logged in, no buttons and no menus. That bareness is correct. A terminal is meant to look like this.',
+        'The line under it ends with your Mac name and a % (older Macs show a $), then a blinking block. That is the prompt, waiting for you.',
+        'Nothing in this window is clickable. You type one line, press Return, and the answer prints on the next line down.',
+      ],
       command: 'python3 --version',
     },
     {

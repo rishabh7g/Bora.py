@@ -173,6 +173,15 @@ restore a placeholder or a one-sided screenshot as a "fix".
   on-screen landmarks in words (the exact button wording, roughly where it sits, what to click
   next, and what to do if it went wrong). `SetupShot` has no "pending" variant, so a one-sided
   placeholder is not expressible in the content model.
+- **`look` describes the window, so a command step gets one too** (#67). The two rules above
+  govern what a step may *show*; this one governs what it must *say*. `look` and `command` are
+  not alternatives — `look` is the window, `command` is the line typed into it — so a step that
+  runs something still describes its window wherever the window itself is unfamiliar. Step 3 on
+  both paths is the first terminal the learner has ever opened, and the screenshot rule 3
+  removed there was quietly doing a second job: showing a first-timer that a terminal *is* a
+  near-empty rectangle with a blinking cursor, and that this is not a page that failed to load.
+  So step 3 says where the window appears, how bare it looks, what the prompt and cursor are,
+  and that there is nothing to click.
 
 The pair that does exist and stays: `src/art/setup/python-downloads-windows.png` and
 `python-downloads-mac.png` — the python.org download page as each OS sees it.
