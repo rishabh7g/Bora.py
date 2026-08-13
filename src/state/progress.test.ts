@@ -4,6 +4,9 @@
 // reload" at the storage boundary).
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { declareAttempt, declareMatch, viewHint } from './effortGate';
+// Type-only: erased at compile time, so it does not import the module under
+// test ahead of the idb-keyval mock below.
+import type { Progress } from './progress';
 
 const memory = new Map<string, unknown>();
 vi.mock('idb-keyval', () => ({
@@ -104,6 +107,14 @@ describe('resetModule (pure) — Settings\' per-module reset', () => {
     expect(resetModule(p, 'm1')).toBe(p);
   });
 
+  it('forgets ONLY the named module, never a later one it opened', () => {
+    let p = updateExerciseState(emptyProgress(), 'm0', 'exit', true, declareMatch);
+    p = updateExerciseState(p, 'm1', 'e1', false, (s) => declareAttempt(s, false));
+    const after = resetModule(p, 'm0');
+    expect(hasModuleProgress(after, 'm0')).toBe(false);
+    expect(exerciseStateOf(after, 'm1', 'e1').attempts).toBe(1);
+  });
+
   it('a reset module is written through and survives a reload', async () => {
     let p = updateExerciseState(emptyProgress(), 'm1', 'exit', true, declareMatch);
     p = updateExerciseState(p, 'm2', 'e1', false, (s) => declareAttempt(s, false));
@@ -112,5 +123,31 @@ describe('resetModule (pure) — Settings\' per-module reset', () => {
     const reloaded = await loadProgress();
     expect(hasModuleProgress(reloaded, 'm1')).toBe(false);
     expect(hasModuleProgress(reloaded, 'm2')).toBe(true);
+  });
+});
+
+// The predicate Settings' reset list and the §6 unlock rule both read (#87), so
+// what counts as "worked in" is pinned here rather than at each call site.
+describe('hasModuleProgress — saved work, not a key', () => {
+  it('is false for a module she has never opened', () => {
+    expect(hasModuleProgress(emptyProgress(), 'm1')).toBe(false);
+  });
+
+  it('is true from the first declared attempt', () => {
+    const p = updateExerciseState(emptyProgress(), 'm1', 'e1', false, (s) => declareAttempt(s, false));
+    expect(hasModuleProgress(p, 'm1')).toBe(true);
+  });
+
+  it('is true for a passed module', () => {
+    const p = updateExerciseState(emptyProgress(), 'm1', 'exit', true, declareMatch);
+    expect(hasModuleProgress(p, 'm1')).toBe(true);
+  });
+
+  it('is false for an empty entry — a key alone is not work she did', () => {
+    const p: Progress = {
+      version: 1,
+      modules: { m1: { exercises: {}, passed: false, cardCracks: 0 } },
+    };
+    expect(hasModuleProgress(p, 'm1')).toBe(false);
   });
 });

@@ -8,14 +8,15 @@
 //   engagement — no dead ends.
 // - Module N+1 unlocks when Module N `passed === true` (curriculum order,
 //   flat across tiers). The first module is always unlocked. A module she has
-//   already passed stays unlocked whatever happens in front of it — access is
-//   never taken back (no decay, no guilt).
+//   already worked in — passed, or with any saved exercise state — stays
+//   unlocked whatever happens in front of it: access is never taken back (no
+//   decay, no guilt) and saved work is never stranded behind a lock.
 // - Tier 5 (Advanced) unlocks on capstone pass. The capstone is the last
 //   module of the curriculum (Tier 4).
 import { flatModules } from '../content/load';
 import type { Curriculum, Module } from '../content/types';
 import { isSolutionVisible } from './effortGate';
-import { exerciseStateOf, type Progress } from './progress';
+import { exerciseStateOf, hasModuleProgress, type Progress } from './progress';
 
 /** §6 exit lock: unlocked when every formative exercise is engaged.
  *  "Engaged" is exactly `matched || solutionRevealed` — the same predicate
@@ -31,13 +32,30 @@ function passedOf(progress: Progress, moduleId: string): boolean {
   return progress.modules[moduleId]?.passed ?? false;
 }
 
+/** The monotonic half of §6, stated once: a module is HERS the moment she has
+ *  worked in it — a pass, or any saved exercise state — and what is hers is
+ *  never taken back. Both halves are the same fact (saved work), so this reads
+ *  it from the one owner of the stored shape (progress.hasModuleProgress)
+ *  rather than re-deriving `passed` here.
+ *
+ *  Issue #40 gave this escape hatch to a passed module; issue #87 extends it to
+ *  a module she is midway through, which had none: resetting Module 00 dropped
+ *  `m0.passed`, the chain re-locked Module 01, and the attempts, hints and
+ *  revealed solution saved there became unreachable — no row link, no route in
+ *  — while Settings still listed them and offered to clear them. */
+function earnedOf(progress: Progress, moduleId: string): boolean {
+  return hasModuleProgress(progress, moduleId);
+}
+
 /** §6 unlock chain: Module N+1 unlocks when Module N passed — plus the
- *  monotonic half of the rule, a module she has already passed is unlocked by
- *  her own pass. Unlocking is one-way: resetting Module 01 hands Module 01 back
- *  to her without shutting the door on the checkpoints she already cleared, so
- *  their concept docs stay readable and their earned photocards keep opening
- *  them (PhotocardShelf). The chain is untouched for a module never passed:
- *  that one is locked until the module before it passes. */
+ *  monotonic half of the rule above, a module she has already worked in is
+ *  unlocked by that work. Unlocking is one-way: resetting Module 01 hands
+ *  Module 01 back to her without shutting the door on the checkpoints she
+ *  already cleared (their concept docs stay readable and their earned
+ *  photocards keep opening them, PhotocardShelf) and without stranding the
+ *  work she has saved in the modules after it. The chain is untouched for a
+ *  module she has never opened: that one is locked until the module before it
+ *  passes. */
 export function moduleUnlocked(
   curriculum: Curriculum,
   moduleId: string,
@@ -46,7 +64,7 @@ export function moduleUnlocked(
   const sequence = flatModules(curriculum);
   const index = sequence.findIndex((module) => module.id === moduleId);
   if (index < 0) return false;
-  if (passedOf(progress, moduleId)) return true;
+  if (earnedOf(progress, moduleId)) return true;
   if (index === 0) return true;
   return passedOf(progress, sequence[index - 1].id);
 }

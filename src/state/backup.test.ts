@@ -4,7 +4,12 @@
 import { describe, expect, it } from 'vitest';
 import { declareAttempt, declareMatch, viewHint } from './effortGate';
 import { BACKUP_FILENAME, parseBackup, serializeProgress } from './backup';
-import { emptyProgress, updateExerciseState, type Progress } from './progress';
+import {
+  emptyProgress,
+  hasModuleProgress,
+  updateExerciseState,
+  type Progress,
+} from './progress';
 
 function workedProgress(): Progress {
   let p = emptyProgress();
@@ -124,4 +129,38 @@ it('accepts a file without the ladder bookkeeping field, defaulting it', () => {
     }),
   );
   expect(progress.modules.m1.exercises.e1.stuck).toBe(false);
+});
+
+// #87 changed no stored field, so a file exported before it still imports —
+// and the state it describes (Module 00 reset away, Module 01 midway) now reads
+// back as reachable rather than stranded.
+describe('a file exported by an earlier build', () => {
+  const exported = JSON.stringify({
+    version: 1,
+    modules: {
+      m1: {
+        exercises: { e1: { attempts: 3, hintsUnlocked: 2, matched: false, solutionRevealed: true } },
+        passed: false,
+        cardCracks: 2,
+      },
+    },
+  });
+
+  it('imports whole, with the work intact', () => {
+    const progress = accepted(exported);
+    expect(progress.modules.m1.exercises.e1.solutionRevealed).toBe(true);
+    expect(progress.modules.m1.cardCracks).toBe(2);
+  });
+
+  it('reads back as a module with saved work', () => {
+    expect(hasModuleProgress(accepted(exported), 'm1')).toBe(true);
+  });
+
+  it('takes an empty module entry without throwing, and calls it no work', () => {
+    const progress = accepted(
+      JSON.stringify({ version: 1, modules: { m1: { exercises: {}, passed: false, cardCracks: 0 } } }),
+    );
+    expect(progress.modules.m1).toEqual({ exercises: {}, passed: false, cardCracks: 0 });
+    expect(hasModuleProgress(progress, 'm1')).toBe(false);
+  });
 });

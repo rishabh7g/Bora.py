@@ -59,10 +59,20 @@ export function updateExerciseState(
   };
 }
 
-/** Whether anything is stored for a module. Screens ask this instead of
- *  reaching into the persisted shape themselves. */
+/** Whether the learner has saved work in a module: any exercise state stored
+ *  for it, or a recorded pass. Screens ask this instead of reaching into the
+ *  persisted shape themselves, and state/gating.ts asks it too — one predicate,
+ *  so Settings' reset list and the §6 unlock rule can never disagree about
+ *  which modules she has worked in (issue #87).
+ *
+ *  Key existence alone is deliberately not enough: an imported backup may carry
+ *  an empty `{ exercises: {}, passed: false, cardCracks: 0 }` entry, and an
+ *  empty entry is not work she did — it must not offer a reset, and it must not
+ *  open a module the chain has never opened. */
 export function hasModuleProgress(progress: Progress, moduleId: string): boolean {
-  return moduleId in progress.modules;
+  const module = progress.modules[moduleId];
+  if (!module) return false;
+  return module.passed || Object.keys(module.exercises).length > 0;
 }
 
 /** Pure update: forget one module's progress, leaving every other module

@@ -121,7 +121,7 @@ Rules:
 ## 6. Module Gating
 
 - Module N+1 unlocks when Module N `passed === true`
-- Unlocking is one-way: a module whose own `passed === true` stays unlocked whatever happens in front of it, so resetting Module N never shuts a checkpoint she already cleared (its concept stays readable, its earned photocard keeps opening it)
+- Unlocking is one-way: a module she has **worked in** — `passed === true`, or any saved `ExerciseState` — stays unlocked whatever happens in front of it, so resetting Module N never shuts a checkpoint she already cleared (its concept stays readable, its earned photocard keeps opening it) and never strands the attempts, hints and revealed solutions saved in a module she is midway through (#40, #87). "Worked in" is one predicate, `progress.hasModuleProgress`, shared with Settings' reset list — the list of modules offering a reset and the set of modules that are reachable are the same set, by construction
 - Within a module: exit exercise unlocks when every formative exercise is `matched || solutionRevealed` (she must engage with each, but a revealed solution still counts as engagement — no dead ends)
 - Tier 5 (Advanced) unlocks on capstone pass
 
