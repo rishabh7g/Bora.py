@@ -78,3 +78,35 @@ a,
 .tag-outline {
   color: var(--color-text-accent);
 }
+
+/* The checked segment (#86) — the OS picker on the setup guide and the "Show
+ * whitespace" toggle on every expected-output block, the two places the design
+ * system's .seg is used.
+ *
+ * The system paints the checked option `background: var(--color-accent); color:
+ * var(--color-bg)`, which is the same brand red the links took (#55) with the
+ * roles swapped: red behind ground-coloured ink instead of red as ink. The
+ * ratio is the same either way — 3.76:1 — and the labels are 13px/700 (setup)
+ * and 12px/700 (whitespace toggle), both under the 18.66px that would buy them
+ * the 3:1 large-text floor, so both fail the 4.5:1 normal text needs.
+ *
+ * Only the background moves, to --color-accent-700: the ground-on-accent-700
+ * pair is the same 6.41:1 as the accent-700-on-ground of --color-text-accent,
+ * so the checked segment lands in the family the kickers, the links and the
+ * wordmark's ".py" are already in. The ink stays --color-bg, the system's.
+ *
+ * Selection stays unmistakable: a solid dark-red cell against an unfilled one,
+ * 6.41:1 between the two backdrops, and the ink flips from --color-text to the
+ * ground. The state was never carried by the *brightness* of the red. Hover on
+ * the unchecked option and the inset :focus-visible ring keep the system's
+ * accent, untouched — and the ring, which used to sit at 1:1 inside an
+ * identically-red fill, now reads against the fill it is drawn on.
+ *
+ * A rule rather than a token, alongside the links and .tag-outline above: the
+ * decision is which step of the ramp this system component paints in, and it is
+ * made once here so a third .seg cannot reintroduce 3.76:1. Rows for both
+ * states live in scripts/contrast-audit.mjs.
+ */
+.seg-opt:has(input:checked) {
+  background: var(--color-accent-700);
+}

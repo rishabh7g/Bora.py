@@ -74,6 +74,46 @@ it('measures the icon-only nav items at the non-text threshold (#76)', () => {
   expect(audit).toContain("basis: nonText ? 'icon(1.4.11)'");
 });
 
+it('darkens the checked segment’s ground to the accessible accent step (#86)', () => {
+  // The design system paints the checked option `background: var(--color-accent);
+  // color: var(--color-bg)` — brand red as a backdrop instead of as ink, and the
+  // same 3.76:1 either way, at 13px/700 and 12px/700. Only the background moves,
+  // to --color-accent-700: ground-on-accent-700 is the same 6.41:1 as the
+  // accent-700-on-ground of --color-text-accent, and leaving `color` alone keeps
+  // the system's own ink. The ramp step, never a hex.
+  expect(tokens).toMatch(
+    /\.seg-opt:has\(input:checked\)\s*\{\s*background:\s*var\(--color-accent-700\);\s*\}/,
+  );
+});
+
+it('measures both segment states, as text, in the audit (#86)', () => {
+  // Two rows, because the states paint different ink on different backdrops:
+  // the unchecked option is 14.86:1 and would mask the checked one's failure.
+  const segRows = (audit.match(/^\s*\[.*\.seg-opt.*$/gm) ?? []).map((row) => row.trim());
+  const unchecked = segRows.filter((row) => row.includes(':not(:has(input:checked))'));
+  const checked = segRows.filter(
+    (row) => row.includes(':has(input:checked)') && !unchecked.includes(row),
+  );
+  expect(checked).toHaveLength(2);
+  expect(unchecked).toHaveLength(1);
+  // Both places the app uses a segment: the setup guide's OS picker and the
+  // expected-output whitespace toggle the audit already drives (#46).
+  expect(audit).toContain(".setup-os .seg-opt:has(input:checked)'");
+  expect(audit).toContain(".ex-ws-toggle .seg-opt:has(input:checked)'");
+  // A segment label is text, so no row may take the 3:1 non-text path (#76).
+  expect(segRows.every((row) => !row.includes('NON_TEXT'))).toBe(true);
+});
+
+it('states the audit’s real row count in docs/QA.md', () => {
+  // The prose is the only place the count lives, so it goes stale silently:
+  // #86 found ".seg-opt is not one of the 54 rows" by reading ROWS, not the doc.
+  const rows = audit.match(/const ROWS = \[([\s\S]*?)\n\];/)?.[1] ?? '';
+  const count = rows.split('\n').filter((line) => line.trim().startsWith('[')).length;
+  const qa = readFileSync(join(repoRoot, 'docs/QA.md'), 'utf8');
+  expect(count).toBeGreaterThan(0);
+  expect(qa).toContain(`**${count} rows** today`);
+});
+
 it('routes the UP NEXT chip label through the accent text role, border unmoved (#59)', () => {
   // The design system paints .tag-outline's label and border in --color-accent
   // (3.76:1). The label is 11px/400 and needs the 4.5:1 text floor, so it joins
