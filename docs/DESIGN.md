@@ -207,6 +207,48 @@ restore a placeholder or a one-sided screenshot as a "fix".
 The pair that does exist and stays: `src/art/setup/python-downloads-windows.png` and
 `python-downloads-mac.png` — the python.org download page as each OS sees it.
 
+### 7c. How the learner moves between screens
+
+§7 above describes the screens purely by **content** — what the map shows, what a module screen
+shows — and says nothing at all about how the learner gets from one to the next. That was
+accurate while there was no navigation: the map linked to the shelf and to settings, and
+nothing linked back except a per-screen back link. The bottom nav (#75) filled that gap, so
+these are the rules it shipped with; the silence above was a hole, not a deliberate omission
+being overwritten here.
+
+- **There are three destinations, and there is no fourth** (#75). Map, Shelf, Settings — in
+  that order, and nothing else. The setup guide is a *module* reached from the map, not a
+  place: putting Module 0 in the nav would make it look like a wing of the app rather than the
+  first rung of the ladder, and a learner who has finished it would keep being offered it
+  forever. Module and Exercise screens are deep screens — somewhere you go *into*, from a
+  destination — and a destination you can be inside of is exactly how a three-item nav becomes
+  a five-item one. Anything genuinely new belongs behind one of the three that already exist.
+- **Nav items are icon-only, so every one carries an explicit `aria-label`** (#75). With no
+  visible text there is no accessible name unless one is written down: an icon-only link
+  without a label is announced as "link" and nothing more, and the icon itself is `aria-hidden`
+  so the name is announced once rather than twice. The current item also carries
+  `aria-current="page"`, and `src/bottomnav.css` selects the active ink off that same attribute
+  — so what a screen reader announces and what the learner sees are one state, not two that can
+  drift apart. On `#/setup`, `#/module/…` and the exercise routes none of the three is showing,
+  so nothing is current; that is the honest answer, not a gap to paper over by highlighting Map.
+- **The nav is a flex child of the shell — never `position: fixed`** (#75, #73). The app column
+  is `100dvh` with `overflow: hidden` and only `<main>` scrolls, so the nav simply ends where
+  the content ends and cannot overlap it. That single fact is why the nav needs no `z-index`
+  (there is nothing to out-stack, and `CelebrationScreen`'s fixed field at `z-index: 60` stays
+  uncontested), no scroll-under or backdrop handling, and no compensating bottom padding in any
+  screen stylesheet. The moment someone converts it to `position: fixed`, all three of those
+  costs come back at once and get paid on every screen that exists from then on — and that is
+  precisely the "fix" a future reader will reach for the first time a layout looks off. Fix the
+  column instead.
+- **A safe-area inset is always written `max(token, env(…))`, never a bare `env()`** (#75, #74).
+  Every inset resolves to `0` where there is no notch or home indicator — every desktop browser,
+  and any iPhone at all if `viewport-fit=cover` is ever dropped from `index.html` (#74). So a
+  bare `env(safe-area-inset-bottom)` reads as *no padding whatsoever* on most of the surfaces
+  the app is actually looked at on, while looking perfectly correct on the one device that has
+  an inset — a bug that hides from the person most likely to introduce it. The `max()` form
+  gives the phone its real inset and everywhere else the design's gap: the bar's
+  `padding-bottom: max(var(--space-8), env(safe-area-inset-bottom))`.
+
 ---
 
 ## 7a. Legibility floor
