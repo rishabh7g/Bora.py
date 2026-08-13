@@ -176,6 +176,14 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
   on the ground: enough for the 3:1 that large type needs, so the big accent numerals keep
   it, and not enough for an 11px kicker, which uses `--color-text-accent`
   (`--color-accent-700`) — the step BRAND.md already sets the wordmark's ".py" in.
+- **Links and ghost buttons are text, so they take the text step.** The design system paints
+  `a` and `.btn-ghost` in `--color-accent`, and this app renders every one of them at
+  13px/800 — the `← Map` back links, `Photocard shelf →`, `Settings →` — where 3.76:1 fails
+  (#55). `src/tokens.css` routes both to `--color-text-accent` (6.41:1). The line to hold is
+  the one above: small interactive text moves, display red does not. `.home-num--current`
+  (24px/900), `.setup-step-num` (22px/900), the filled `.btn-primary` and the
+  `:focus-visible` ring all keep `--color-accent` — and a bright ring around darker-red ink
+  is easier to tell apart than a bright ring around bright-red ink was.
 - The floor is measured, not eyeballed: `node scripts/contrast-audit.mjs` reports the real
   rendered ratio for every quiet and dimmed style, with ancestor opacity folded in
   (docs/QA.md).

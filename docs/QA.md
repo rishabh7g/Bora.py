@@ -46,20 +46,21 @@ node scripts/contrast-audit.mjs                                  # local preview
 node scripts/contrast-audit.mjs https://rishabh7g.github.io/Bora.py/ --width 1280
 ```
 
-Measures the **real rendered** contrast of the app's quiet and dimmed text: it reads
-computed styles in the page, folds every ancestor `opacity` into the ink, composites that
-over the backdrop actually behind it, and picks the AA threshold from the measured size and
-weight (3:1 for large text, else 4.5:1). One line per style, `RESULT ok` / `RESULT FAIL`
-(exit 0 / 1).
+Measures the **real rendered** contrast of the app's quiet, dimmed and interactive text: it
+reads computed styles in the page, folds every ancestor `opacity` into the ink, composites
+that over the backdrop actually behind it, and picks the AA threshold from the measured size
+and weight (3:1 for large text, else 4.5:1). One line per style, `RESULT ok` / `RESULT FAIL`
+(exit 0 / 1). **52 rows** today, green at 390px and 1280px.
 
 This exists because the failures in #45 are invisible to a static read of the CSS — the
 tokens look fine on their own and only fail once a `0.45` ancestor opacity multiplies them.
 It builds its own state the real way (passes Module 00 through the setup guide, since
 Module 01 is locked from a fresh profile).
 
-**Add a row to `ROWS` whenever a screen gains a quiet or dimmed text style**, the same way
-a new endpoint earns a smoke check: the audit's coverage then grows with the app instead of
-going stale.
+**Add a row to `ROWS` whenever a screen gains a quiet, dimmed or interactive text style**,
+the same way a new endpoint earns a smoke check: the audit's coverage then grows with the app
+instead of going stale. Links and ghost buttons are in there because they were *not* — every
+one of them sat at 3.76:1 for as long as nothing measured them (#55).
 
 ## Full interactive QA (clicking through screens)
 

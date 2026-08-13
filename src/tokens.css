@@ -35,3 +35,28 @@
      where the poster red belongs. */
   --color-text-accent: var(--color-accent-700);
 }
+
+/* Interactive text — every link and ghost button (#55).
+ *
+ * The design system paints `a` and `.btn-ghost` in --color-accent, and this app
+ * renders all of them at 13px/800 (the "← Map" back links, "Photocard shelf →",
+ * "Settings →"), where 3.76:1 is short of the 4.5:1 AA asks of normal text. They
+ * join --color-text-accent, the same 6.41:1 step the kickers and the wordmark's
+ * ".py" already use, so the chrome reads as one family and the type is legible
+ * at the size it is actually set at.
+ *
+ * Scope is deliberate: only small interactive text moves. --color-accent stays
+ * the display red for large accent numerals (.home-num--current at 24px/900,
+ * .setup-step-num at 22px/900, which clear the 3:1 that applies to them), for
+ * the filled .btn-primary, and for the :focus-visible ring — a bright ring
+ * around darker-red ink stays plainly distinguishable from the label itself.
+ * Hover and active keep the system's accent tints, untouched.
+ *
+ * A rule, not a token, because the decision being made is "which role does this
+ * component take", and the components are the design system's own. Rows for
+ * these selectors live in scripts/contrast-audit.mjs.
+ */
+a,
+.btn-ghost {
+  color: var(--color-text-accent);
+}
