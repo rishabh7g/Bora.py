@@ -39,4 +39,8 @@ body,
   overflow-y: auto;
   /* No pull-to-refresh, no scroll chaining out of the screen. */
   overscroll-behavior: contain;
+  /* No `scroll-behavior: smooth` here, ever. App.tsx resets this element's
+     scrollTop on every route change (#85), and smooth would turn that reset
+     into an animation the learner never asked for — one that would then owe
+     prefers-reduced-motion an answer. Arriving on a screen is not a scroll. */
 }

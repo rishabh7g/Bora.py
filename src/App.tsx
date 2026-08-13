@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import BottomNav from './BottomNav';
 import CelebrationScreen, { celebrationTriggered } from './CelebrationScreen';
 import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
@@ -105,6 +113,14 @@ export function canonicalHash(hash: string): string {
  *  rather than through a prop repeated at every `<Shell>` (#75). */
 const ScreenContext = createContext<Route['screen']>('home');
 
+/** The canonical hash the shell is currently rendering — the app's "which page
+ *  is this" signal, and the only thing that makes a route change a *change*.
+ *  It is the canonical hash, not the raw one, so the `#/module/m0` → `#/setup`
+ *  rewrite (canonicalHash above, a `location.replace` on arrival) reads as the
+ *  one navigation it is rather than two. The screen alone is too coarse: two
+ *  exercises in the same module are the same screen and different pages. */
+const RouteHashContext = createContext<string>(HOME_ROUTE);
+
 /** The one frame every screen renders inside (#73, src/app.css): a full-height
  *  flex column whose only scrolling child is the `<main>` holding the screen.
  *  Everything the app must show on more than one screen becomes another child
@@ -115,9 +131,31 @@ const ScreenContext = createContext<Route['screen']>('home');
  *  `<main>` in this file; every branch below returns `<Shell>…</Shell>`. */
 function Shell({ children }: { children: ReactNode }) {
   const screen = useContext(ScreenContext);
+  const hash = useContext(RouteHashContext);
+  const scroller = useRef<HTMLElement>(null);
+
+  // A route change starts the new screen at the top (#85).
+  //
+  // The browser resets the scroll offset for us when the *document* scrolls,
+  // but since #73 the document does not: the element below does, React reuses
+  // that one node for all nine branches, and its scrollTop survives into the
+  // next screen (clamped to that screen's height). So "Continue →" out of the
+  // celebration landed the learner at the bottom of the map instead of on the
+  // module it had just unlocked. It belongs here, once, in the shell that owns
+  // the scroll container — not repeated in the screens that happen to be tall.
+  //
+  // Layout effect, so the reset lands in the same frame the new screen is
+  // painted in and it never flashes at the old offset. Assigning scrollTop
+  // rather than scrollTo({ behavior }): a route change is not a scroll gesture,
+  // so the jump is instant, with no animation for prefers-reduced-motion to
+  // object to — see the `scroll-behavior` note in src/app.css.
+  useLayoutEffect(() => {
+    if (scroller.current) scroller.current.scrollTop = 0;
+  }, [hash]);
+
   return (
     <div className="app-shell">
-      <main className="app-screen">{children}</main>
+      <main className="app-screen" ref={scroller}>{children}</main>
       <BottomNav screen={screen} />
     </div>
   );
@@ -137,13 +175,14 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
+  const canonical = canonicalHash(hash);
+
   // Keep the address bar on the canonical hash for the screen being rendered —
   // `replace`, not an assignment, so the non-canonical hash is not left in the
   // history for Back to bounce off.
   useEffect(() => {
-    const canonical = canonicalHash(hash);
     if (canonical !== hash) window.location.replace(canonical);
-  }, [hash]);
+  }, [hash, canonical]);
 
   const route = routeFromHash(hash, curriculum);
 
@@ -303,6 +342,8 @@ export default function App() {
   // joins it later) travels as context, so adding a piece of chrome never
   // means editing nine call sites.
   return (
-    <ScreenContext.Provider value={route.screen}>{renderScreen()}</ScreenContext.Provider>
+    <ScreenContext.Provider value={route.screen}>
+      <RouteHashContext.Provider value={canonical}>{renderScreen()}</RouteHashContext.Provider>
+    </ScreenContext.Provider>
   );
 }
