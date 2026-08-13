@@ -174,6 +174,10 @@ const ROWS = [
   ['shelf-fresh', '.shelf-back', 'shelf back link'],
   ['settings', '.set-back', 'settings back link'],
   ['setup', '.setup-back', 'setup back link'],
+  // #59 — the map's UP NEXT chip is the design system's .tag-outline, which
+  // paints its label in --color-accent (3.76:1 at 11px). Only the current
+  // module's row renders it, so home-fresh (no Module 00 pass yet) is reused.
+  ['home-fresh', '.home-row--current .home-chip', 'UP NEXT chip label'],
 ];
 
 const { chromium } = await import(join(resolvePlaywrightDir(), 'index.mjs'));

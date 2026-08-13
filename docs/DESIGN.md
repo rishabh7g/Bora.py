@@ -184,6 +184,15 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
   (24px/900), `.setup-step-num` (22px/900), the filled `.btn-primary` and the
   `:focus-visible` ring all keep `--color-accent` — and a bright ring around darker-red ink
   is easier to tell apart than a bright ring around bright-red ink was.
+- **A label moves with the text step; its border does not, unless the border
+  itself fails.** The map's `UP NEXT` chip (`.tag-outline`) paints both its
+  label and its 1px border in `--color-accent`, and only the label — 11px/400
+  — is held to the 4.5:1 text floor and fails it at 3.76:1 (#59).
+  `src/tokens.css` moves the label to `--color-text-accent`. The border is a
+  non-text UI boundary, held to 3:1, and `--color-accent` already clears that,
+  so it stays: darkening only the label pairs a brighter border with darker
+  ink, the same two-step shape `.tag-accent` and `.tag-neutral` already use
+  (a tinted background with a darker ink a step down the ramp).
 - The floor is measured, not eyeballed: `node scripts/contrast-audit.mjs` reports the real
   rendered ratio for every quiet and dimmed style, with ancestor opacity folded in
   (docs/QA.md).

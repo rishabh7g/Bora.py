@@ -50,7 +50,7 @@ Measures the **real rendered** contrast of the app's quiet, dimmed and interacti
 reads computed styles in the page, folds every ancestor `opacity` into the ink, composites
 that over the backdrop actually behind it, and picks the AA threshold from the measured size
 and weight (3:1 for large text, else 4.5:1). One line per style, `RESULT ok` / `RESULT FAIL`
-(exit 0 / 1). **52 rows** today, green at 390px and 1280px.
+(exit 0 / 1). **53 rows** today, green at 390px and 1280px.
 
 This exists because the failures in #45 are invisible to a static read of the CSS — the
 tokens look fine on their own and only fail once a `0.45` ancestor opacity multiplies them.
