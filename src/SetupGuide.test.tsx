@@ -186,10 +186,11 @@ it('never renders a placeholder — an unpaired step gets instructions instead (
   expect(html).not.toContain('setup-shot-pending');
   // Structurally impossible, not merely absent: there is no placeholder shape.
   for (const shot of allShots) expect(shot).not.toHaveProperty('pending');
-  // The four steps that lost a screenshot carry the landmarks in words, and
-  // enough of them to actually follow: this replaced a picture.
+  // The steps that lost a screenshot carry the landmarks in words, and enough
+  // of them to actually follow: this replaced a picture.
   const withLook = allSteps.filter((step) => step.look);
-  expect(withLook.length).toBe(4); // the installer and the save dialog, per OS
+  // the installer, the terminal window (#67) and the save dialog, per OS
+  expect(withLook.length).toBe(6);
   for (const step of withLook) {
     expect(step.look!.length, `"${step.title}" needs the landmarks, not a sentence`).toBeGreaterThanOrEqual(4);
     for (const line of step.look!) expect(line.length).toBeGreaterThan(30);
@@ -202,6 +203,23 @@ it('never renders a placeholder — an unpaired step gets instructions instead (
     }
   }
   expect(render()).toContain('WHAT YOU’LL SEE');
+});
+
+it('describes the terminal window itself on both paths, not just the command (#67)', () => {
+  for (const os of ['windows', 'mac'] as SetupOs[]) {
+    const step = setupStepsFor(os)[2]; // "Open PowerShell / Terminal and check it worked"
+    expect(step.command).toBe(os === 'mac' ? 'python3 --version' : 'python --version');
+    const look = step.look;
+    expect(look, `step 3 on ${os} must say what the window looks like`).toBeDefined();
+    const said = look!.join(' ');
+    // The window, not the command: how bare it is, and where the prompt is. A
+    // first-timer reads an empty rectangle as a page that failed to load.
+    expect(said).toMatch(/almost empty|near-empty/);
+    expect(said).toContain('prompt');
+    expect(said).toMatch(/blinking/);
+    // …and the command itself stays in the TYPE THIS block, not in the words.
+    expect(said).not.toContain(step.command!);
+  }
 });
 
 it('gives every bundled screenshot descriptive alt text and a provenance caption', () => {
