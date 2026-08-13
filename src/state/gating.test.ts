@@ -10,7 +10,13 @@ import {
   type ExerciseState,
 } from './effortGate';
 import { currentModule, exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './gating';
-import { emptyProgress, resetModule, updateExerciseState, type Progress } from './progress';
+import {
+  emptyProgress,
+  hasModuleProgress,
+  resetModule,
+  updateExerciseState,
+  type Progress,
+} from './progress';
 
 function makeExercise(id: string, isExit = false): Exercise {
   return {
@@ -73,6 +79,23 @@ function revealViaLadder(progress: Progress, moduleId: string, exerciseId: strin
     (acc, transition) => updateExerciseState(acc, moduleId, exerciseId, false, transition),
     progress,
   );
+}
+
+/** Every state the two invariants below are checked against: progress built up
+ *  pass by pass, the same runs with one module left midway through its ladder
+ *  (issue #87's shape), and every single-module reset of each. */
+function everyState(): Progress[] {
+  const ids = ['m0', 'm1', 'm2', 'm12'];
+  const states: Progress[] = [emptyProgress()];
+  let built = emptyProgress();
+  for (const id of ids) {
+    built = passModule(built, id);
+    for (const variant of [built, revealViaLadder(built, 'm2', 'e1'), match(built, 'm12', 'e1')]) {
+      states.push(variant);
+      for (const resetId of ids) states.push(resetModule(variant, resetId));
+    }
+  }
+  return states;
 }
 
 describe('exitUnlocked — exit locked until every formative is matched || solutionRevealed', () => {
@@ -149,23 +172,65 @@ describe('moduleUnlocked — module N+1 unlocks when module N passed', () => {
     expect(currentModule(curriculum, afterReset)?.id).toBe('m1');
   });
 
-  it('resetting a module leaves a never-passed follower locked', () => {
+  it('resetting a module leaves a never-opened follower locked', () => {
     const p = resetModule(passModule(emptyProgress(), 'm1'), 'm1');
     expect(moduleUnlocked(curriculum, 'm2', p)).toBe(false);
     expect(moduleStateOf(curriculum, 'm2', p)).toBe('locked');
   });
 
+  // Regression: issue #87, the in-progress sibling of #40. The exact repro —
+  // Module 00 passed, Module 01 worked to the top of the ladder but its exit
+  // checkpoint not taken, then Module 00 reset from Settings.
+  it('a module she is midway through stays unlocked when the module before it is reset', () => {
+    let p = passModule(emptyProgress(), 'm0');
+    p = revealViaLadder(p, 'm1', 'e1');
+    const worked = p.modules.m1;
+    expect(worked.passed).toBe(false); // never passed: #40's clause cannot help here
+
+    const afterReset = resetModule(p, 'm0');
+    expect(afterReset.modules.m1).toBe(worked); // the saved work is untouched
+    expect(moduleUnlocked(curriculum, 'm1', afterReset)).toBe(true);
+    expect(moduleStateOf(curriculum, 'm1', afterReset)).toBe('available');
+    // Module 00 is the one she is on again — Settings' promise, exactly.
+    expect(currentModule(curriculum, afterReset)?.id).toBe('m0');
+    // …and nothing further opened: m2 was never worked in.
+    expect(moduleStateOf(curriculum, 'm2', afterReset)).toBe('locked');
+  });
+
+  it('a single declared attempt is enough to keep a module hers', () => {
+    let p = passModule(emptyProgress(), 'm0');
+    p = updateExerciseState(p, 'm1', 'e1', false, (s) => declareAttempt(s, false));
+    expect(moduleUnlocked(curriculum, 'm1', resetModule(p, 'm0'))).toBe(true);
+  });
+
+  it('resetting the worked module itself hands it back to the chain', () => {
+    let p = passModule(emptyProgress(), 'm0');
+    p = revealViaLadder(p, 'm1', 'e1');
+    // m0 still passed, so m1 is open on the chain; the reset really did forget
+    // the work rather than leave it holding the door open.
+    const afterReset = resetModule(p, 'm1');
+    expect(moduleStateOf(curriculum, 'm1', afterReset)).toBe('available');
+    expect(moduleStateOf(curriculum, 'm2', resetModule(afterReset, 'm0'))).toBe('locked');
+    expect(moduleUnlocked(curriculum, 'm1', resetModule(afterReset, 'm0'))).toBe(false);
+  });
+
+  // The Settings/map invariant #87 reported broken: every module Settings lists
+  // (and offers to reset) is a module she can still reach. Settings reads
+  // hasModuleProgress; the map reads moduleStateOf. They must agree.
+  it('every module with saved work is reachable, in every state', () => {
+    for (const p of everyState()) {
+      for (const id of ['m0', 'm1', 'm2', 'm12']) {
+        if (hasModuleProgress(p, id)) {
+          expect(moduleStateOf(curriculum, id, p)).not.toBe('locked');
+        }
+      }
+    }
+  });
+
   // The affordance invariant the screens rely on: `'locked'` is exactly
   // `!moduleUnlocked`, so a rendered link is never a route the guard refuses.
   it("'locked' and !moduleUnlocked agree for every module in every state", () => {
-    const states: Progress[] = [emptyProgress()];
-    let built = emptyProgress();
-    for (const id of ['m0', 'm1', 'm2', 'm12']) {
-      built = passModule(built, id);
-      states.push(built);
-      for (const resetId of ['m0', 'm1', 'm2', 'm12']) states.push(resetModule(built, resetId));
-    }
-    for (const p of states) {
+    for (const p of everyState()) {
       for (const id of ['m0', 'm1', 'm2', 'm12']) {
         expect(moduleStateOf(curriculum, id, p) === 'locked').toBe(
           !moduleUnlocked(curriculum, id, p),
