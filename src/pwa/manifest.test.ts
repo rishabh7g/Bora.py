@@ -1,7 +1,7 @@
 // PWA contract (ENGINEERING.md §9): silent auto-update, a manifest that
 // survives a subpath deploy, brand icons that exist on disk, and a precache
 // wide enough to hold the whole app offline.
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, it } from 'vitest';
@@ -28,6 +28,19 @@ it('installs standalone and portrait in the brand colours', () => {
   expect(manifest.orientation).toBe('portrait');
   expect(manifest.theme_color).toBe('#ec3013');
   expect(manifest.background_color).toBe('#f3f2f2');
+});
+
+it('opts the viewport into the safe area, so an inset is real on a notched phone (#74)', () => {
+  // Without `viewport-fit=cover`, every `env(safe-area-inset-*)` resolves to a
+  // valid `0` on iPhone — nothing errors and nothing warns, so a clearance
+  // written as `max(token, env(…))` silently collapses to its floor and the
+  // bottom row of chrome sits under the home indicator. The bug is invisible on
+  // this repo's dev host and on every desktop browser, which is why it is
+  // pinned here rather than left to a visual check.
+  const html = readFileSync(join(repoRoot, 'index.html'), 'utf8');
+  expect(html).toContain(
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />',
+  );
 });
 
 it('keeps every manifest URL relative so a subpath deploy still works', () => {
