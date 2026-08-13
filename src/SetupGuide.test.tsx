@@ -64,6 +64,20 @@ it('renders Module 00 with its authored title, tier and intro', () => {
   expect(html).toContain('run one file from the terminal');
 });
 
+it('has a heading outline that descends without a gap (#88)', () => {
+  const html = render();
+  const levels = [...html.matchAll(/<h([1-6])\b/g)].map((match) => Number(match[1]));
+  // H1 title → H2 "Install steps" → one H3 per install step → H2 exit
+  // checkpoint. The step titles used to be H3s hanging straight off the H1,
+  // which told a screen reader there was a section here that was not.
+  expect(levels).toEqual([1, 2, ...setupStepsFor(DEFAULT_SETUP_OS).map(() => 3), 2]);
+  for (let index = 1; index < levels.length; index += 1) {
+    expect(levels[index] - levels[index - 1]).toBeLessThanOrEqual(1);
+  }
+  // Same shape as the other content screen: an H2 section over H3 items.
+  expect(html).toContain('<h2 class="setup-section-title">Install steps</h2>');
+});
+
 it('is what the map opens for Module 0 — never ModuleView', () => {
   const html = renderToString(<HomeMap curriculum={curriculum} progress={emptyProgress()} />);
   expect(html).toContain(`href="${SETUP_ROUTE}"`);
