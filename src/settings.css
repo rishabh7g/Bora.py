@@ -9,19 +9,11 @@
   padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 0;
 }
 
-.set-back {
-  padding-inline: 0;
-  white-space: nowrap;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 44px;
-  min-width: 44px;
-}
-
+/* The kicker opens the screen now, so it takes no top margin: the 14px used to
+   clear a back link, and left behind it would read as a stray indent under the
+   screen's own padding (matches .home-kicker). */
 .set-kicker {
-  margin: 14px 0 8px;
+  margin: 0 0 8px;
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;

@@ -18,11 +18,10 @@ const audit = readFileSync(join(repoRoot, 'scripts/contrast-audit.mjs'), 'utf8')
 
 // Every link and ghost button in the app, by the class its screen gives it.
 const linkClasses = [
-  'home-shelflink',
+  // Only the deep screens keep a back link: the three nav destinations reach
+  // each other from the bar, never from a body link (#83).
   'mod-back',
   'ex-back',
-  'shelf-back',
-  'set-back',
   'setup-back',
   // The bottom nav's three destinations are links too (#75), on every screen —
   // measured as icons rather than as text, see below (#76).

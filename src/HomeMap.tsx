@@ -140,30 +140,13 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
     <div className="home-screen">
       {/* The map is the app's root, so the brand lockup sits here — the one
           place the product name is set in the UI (src/Wordmark.tsx, per
-          design/brand/BRAND.md). Every other screen carries a "← Map" link
-          back to it instead of repeating the lockup, and the celebration field
-          stays bare: BRAND.md keeps red off red. */}
+          design/brand/BRAND.md). No other screen repeats it: the lockup names
+          the app once, where the app starts, and the celebration field stays
+          bare because BRAND.md keeps red off red. */}
       <Wordmark className="home-wordmark" />
       <div className="home-head">
         <p className="home-kicker">Checkpoint path</p>
-        <div className="home-headright">
-          <span className="tag tag-neutral home-count">{`${passedCount} / ${modules.length} CHECKPOINTS`}</span>
-          {/* The two links are peers, so they travel as one block: a phone width
-              wraps them together onto their own row instead of leaving one
-              beside the counter and orphaning the other underneath it (#47). */}
-          <div className="home-headlinks">
-            {/* The shelf is reached from the map — the collection is a reward to
-                browse, never a task to chase. */}
-            <a className="btn btn-ghost home-shelflink" href={SHELF_ROUTE}>
-              Photocard shelf →
-            </a>
-            {/* Settings hangs off the map too: export/import is the backup story
-                (ENGINEERING.md §4), reachable without hunting for it. */}
-            <a className="btn btn-ghost home-shelflink" href={SETTINGS_ROUTE}>
-              Settings →
-            </a>
-          </div>
-        </div>
+        <span className="tag tag-neutral home-count">{`${passedCount} / ${modules.length} CHECKPOINTS`}</span>
       </div>
       <h1 className="home-title">{`Annyeong, ${LEARNER_NAME}.`}</h1>
       <p className="home-lede">{`Progress is checkpoints passed — never days or streaks. ${progressLine}`}</p>

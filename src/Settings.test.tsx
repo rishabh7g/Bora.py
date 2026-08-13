@@ -4,6 +4,7 @@
 import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import Settings, { backupSummary } from './Settings';
+import BottomNav from './BottomNav';
 import HomeMap, { SETTINGS_ROUTE } from './HomeMap';
 import { flatModules, loadCurriculum } from './content/load';
 import { declareAttempt, declareMatch } from './state/effortGate';
@@ -37,9 +38,14 @@ it('offers export and import of the file named in the design handoff', () => {
   expect(html).toContain('type="file"');
 });
 
-it('is reachable from the map', () => {
-  const html = renderToString(<HomeMap curriculum={curriculum} progress={emptyProgress()} />);
-  expect(html).toContain(`href="${SETTINGS_ROUTE}"`);
+// #83: settings is a bottom-nav destination (#75), so the bar is the one way in
+// — the map's header no longer offers a second route to the same place.
+it('is reached from the bottom nav, not from the map', () => {
+  const nav = renderToString(<BottomNav screen="settings" />);
+  expect(nav).toContain(`href="${SETTINGS_ROUTE}"`);
+
+  const map = renderToString(<HomeMap curriculum={curriculum} progress={emptyProgress()} />);
+  expect(map).not.toContain(`href="${SETTINGS_ROUTE}"`);
 });
 
 it('lists only the modules that have saved progress, for reset', () => {
