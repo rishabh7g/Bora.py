@@ -6,7 +6,7 @@
   width: min(1020px, 100%);
   box-sizing: border-box;
   margin: 0 auto;
-  padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 40px) 48px;
+  padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 40px) 0;
 }
 
 /* The lockup sits above the head row, clear of the kicker (BRAND.md clear

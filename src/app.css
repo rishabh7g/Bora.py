@@ -1,0 +1,42 @@
+/* The app shell — the one frame every screen renders inside (#73).
+ *
+ * A full-height flex column in which only <main> scrolls. Everything the app
+ * ever has to show on more than one screen becomes another flex child of this
+ * column, so it sits *beside* the content rather than on top of it: no
+ * position: fixed, no z-index argument with CelebrationScreen, and no
+ * per-screen padding to compensate for an overlap that never happens.
+ *
+ * Layout only — no colour, no type. Those stay with the design system and
+ * src/tokens.css.
+ */
+
+/* The chain the shell's height: 100% fallback is measured against. Without it
+   a percentage height has no containing block to resolve to and collapses. */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.app-shell {
+  /* Fallback first, for engines with no dvh. */
+  height: 100%;
+  /* Never 100vh: a mobile URL bar shrinks the visual viewport and 100vh does
+     not notice, so the last row of the column would sit under the bar. */
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  /* The column itself never scrolls; the screen inside it does. */
+  overflow: hidden;
+}
+
+/* The one scroll area in the app: the <main> the shell wraps every screen in. */
+.app-screen {
+  flex: 1;
+  /* Without this a long screen refuses to shrink below its content and the
+     column grows past the viewport — the double-scrollbar bug. */
+  min-height: 0;
+  overflow-y: auto;
+  /* No pull-to-refresh, no scroll chaining out of the screen. */
+  overscroll-behavior: contain;
+}

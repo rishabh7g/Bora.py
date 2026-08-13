@@ -1,13 +1,21 @@
 // Routing contract for src/App.tsx — which hash resolves to which screen, and
 // which hash the address bar is allowed to sit on.
 //
-// Two rules are pinned here:
+// Three rules are pinned here:
 // - Module 0 is the setup guide: it has no concept doc and no formative
 //   exercises, so it has no ModuleView route. Every `#/module/m0…` hash resolves
 //   to the setup screen and is rewritten to `#/setup` (issue #41).
 // - Any hash this app cannot honour resolves to the map, the app's root — an
 //   unrecognised hash and a hash naming content that does not exist behave the
 //   same, so no screen can be an "Unknown …" dead end (issue #42).
+// - Every screen renders inside one shell: a 100dvh flex column whose only
+//   scrolling child is the single `<main>` (issue #73). That last one is a
+//   file-level guard, like src/tokens.test.ts — the values under test are CSS
+//   declarations, which neither `renderToString` nor this suite's jsdom-free
+//   setup can resolve; what a unit test can protect is the decision.
+import { readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { expect, it } from 'vitest';
 import { canonicalHash, routeFromHash } from './App';
 import { findModule, flatModules, loadCurriculum } from './content/load';
@@ -192,5 +200,65 @@ it('locked modules stay unreachable: the router resolves them, the §6 guard ref
       expect(route(hash).screen).toBe('module');
       expect(route(hash).moduleId).toBe(moduleId);
     }
+  }
+});
+
+// The app shell (#73) — the frame the bottom nav will hang off. Only <main>
+// scrolls, so a later flex child of the column sits beside the content instead
+// of over it, and no screen has to pad for an overlap that cannot happen.
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const read = (path: string) => readFileSync(join(repoRoot, path), 'utf8');
+
+it('renders every screen inside one shell — exactly one <main> in the source', () => {
+  const source = read('src/App.tsx').replace(/\/\*[\s\S]*?\*\//g, '');
+  expect(source.match(/<main\b/g)).toHaveLength(1);
+  expect(source).toContain('<main className="app-screen">');
+  expect(source).toContain('<div className="app-shell">');
+  // Nine branches, one wrapper: every return goes through the shell.
+  expect(source.match(/<Shell>/g)).toHaveLength(9);
+  expect(source.match(/return \(\s*<main/g)).toBeNull();
+});
+
+it('makes the shell a full-height column and the <main> its only scroller', () => {
+  // Comments explain why 100vh is wrong; declarations may not use it.
+  const css = read('src/app.css').replace(/\/\*[\s\S]*?\*\//g, '');
+  const shell = /\.app-shell\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+  const screen = /\.app-screen\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+  // The 100% fallback comes first, for engines with no dvh; the chain it
+  // resolves against is declared here too.
+  expect(shell.indexOf('height: 100%')).toBeGreaterThanOrEqual(0);
+  expect(shell.indexOf('height: 100%')).toBeLessThan(shell.indexOf('height: 100dvh'));
+  expect(css).toMatch(/html,\s*body,\s*#root\s*\{[^}]*height:\s*100%/);
+  // A mobile URL bar shrinks the viewport and 100vh does not notice.
+  expect(css).not.toMatch(/\b100vh\b/);
+  for (const declaration of ['display: flex', 'flex-direction: column', 'overflow: hidden']) {
+    expect(shell).toContain(declaration);
+  }
+  for (const declaration of [
+    'flex: 1',
+    'min-height: 0',
+    'overflow-y: auto',
+    'overscroll-behavior: contain',
+  ]) {
+    expect(screen).toContain(declaration);
+  }
+});
+
+it('leaves the bottom edge to the shell — no screen pads for it', () => {
+  // The padding was there to keep the last row off the bezel; the shell (and,
+  // next, the nav) does that job, and a second stopper below the real end of
+  // the content is just dead scroll.
+  const screens = [
+    ['src/home.css', '.home-screen'],
+    ['src/shelf.css', '.shelf-screen'],
+    ['src/settings.css', '.set-screen'],
+    ['src/setup.css', '.setup-screen'],
+    ['src/module.css', '.mod-screen'],
+    ['src/exercise.css', '.ex-screen'],
+    ['src/loading.css', '.load-screen'],
+  ] as const;
+  for (const [path, selector] of screens) {
+    const rule = new RegExp(`\\${selector}\\s*\\{([^}]*)\\}`).exec(read(path))?.[1] ?? '';
+    expect(rule).toMatch(/padding:[^;]*\s0;/);
   }
 });
