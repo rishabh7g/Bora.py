@@ -194,12 +194,8 @@ const ROWS = [
   // text taking its colour from the design system's `a` / `.btn-ghost`, so they
   // stand or fall together; they are listed per screen anyway, because that is
   // what a regression here would look like (one screen quietly opting out).
-  ['home-fresh', '.home-headlinks .home-shelflink:nth-of-type(1)', 'Photocard shelf → link'],
-  ['home-fresh', '.home-headlinks .home-shelflink:nth-of-type(2)', 'Settings → link'],
   ['module-m1', '.mod-back', '← Map back link'],
   ['exercise-e1', '.ex-back', 'exercise back link'],
-  ['shelf-fresh', '.shelf-back', 'shelf back link'],
-  ['settings', '.set-back', 'settings back link'],
   ['setup', '.setup-back', 'setup back link'],
   // #59 — the map's UP NEXT chip is the design system's .tag-outline, which
   // paints its label in --color-accent (3.76:1 at 11px). Only the current

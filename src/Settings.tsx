@@ -15,7 +15,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { flatModules, moduleNumberOf } from './content/load';
 import type { Curriculum } from './content/types';
-import { HOME_ROUTE } from './HomeMap';
 import { BACKUP_FILENAME, parseBackup, serializeProgress } from './state/backup';
 import { moduleStateOf } from './state/gating';
 import { hasModuleProgress, type Progress } from './state/progress';
@@ -155,9 +154,6 @@ export default function Settings({
 
   return (
     <div className="set-screen">
-      <a className="btn btn-ghost set-back" href={HOME_ROUTE}>
-        ← Map
-      </a>
       <p className="set-kicker">Settings</p>
       <h1 className="set-title">Your progress, your file.</h1>
       <p className="set-lede">

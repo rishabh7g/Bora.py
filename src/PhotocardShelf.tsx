@@ -13,7 +13,7 @@
 // src/art/photocards and are wired through content/load.
 import { flatModules, moduleNumberOf } from './content/load';
 import type { Curriculum, Module } from './content/types';
-import { HOME_ROUTE, moduleHref } from './HomeMap';
+import { moduleHref } from './HomeMap';
 import PhotocardArt from './PhotocardArt';
 import { moduleStateOf } from './state/gating';
 import { moduleCracksOf, type Progress } from './state/progress';
@@ -94,9 +94,6 @@ export default function PhotocardShelf({ curriculum, progress }: PhotocardShelfP
 
   return (
     <div className="shelf-screen">
-      <a className="btn btn-ghost shelf-back" href={HOME_ROUTE}>
-        ← Map
-      </a>
       <p className="shelf-kicker">Photocard shelf</p>
       <h1 className="shelf-title">{headline}</h1>
       <p className="shelf-lede">

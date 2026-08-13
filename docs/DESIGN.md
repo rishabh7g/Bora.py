@@ -248,6 +248,19 @@ being overwritten here.
   an inset — a bug that hides from the person most likely to introduce it. The `max()` form
   gives the phone its real inset and everywhere else the design's gap: the bar's
   `padding-bottom: max(var(--space-8), env(safe-area-inset-bottom))`.
+- **A destination that is in the nav is never repeated as a link in a screen body** (#83). The
+  nav shipped without anything being taken away, so for a while every one of the three
+  destinations was reachable twice on the same screen: "Photocard shelf →" and "Settings →" sat
+  in the map's header while the same two sat in the bar two inches below it, and the shelf and
+  settings each carried a "← Map" link pointing at the bar's own first item. Two controls for
+  one destination is not read as convenience, it is read as a question — *do these do different
+  things?* — and the answer being "no" is a worse outcome than the question never being asked.
+  The bar is the single top-level affordance for Map, Shelf and Settings; a second route to any
+  of them makes it one of two navigations rather than the navigation. The boundary, so this is
+  not misread as "delete the back links": a back link survives exactly where its parent is
+  **not** a nav destination. `.mod-back`, `.ex-back` (which goes back to the parent *module*,
+  not to the map) and `.setup-back` are the only way up out of a deep screen, the nav cannot
+  return the learner to a place it does not list, and deleting them would strand her.
 
 ---
 
