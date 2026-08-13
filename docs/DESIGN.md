@@ -182,6 +182,12 @@ restore a placeholder or a one-sided screenshot as a "fix".
   near-empty rectangle with a blinking cursor, and that this is not a page that failed to load.
   So step 3 says where the window appears, how bare it looks, what the prompt and cursor are,
   and that there is nothing to click.
+- **A recovery line lives in the step where the error appears** (#68), as the closing line of
+  that step's `look` — quoting the words the learner will actually read, then the fix in order.
+  Not only in the step that caused it: a missed "Add python.exe to PATH" tick in step 2 prints
+  nothing at all until `python --version` fails in step 3, and a beginner who has to scroll back
+  up to find the repair concludes she broke her computer instead. Same no-guilt phrasing as the
+  line it copies — "Nothing is broken" first, instructions after.
 
 The pair that does exist and stays: `src/art/setup/python-downloads-windows.png` and
 `python-downloads-mac.png` — the python.org download page as each OS sees it.

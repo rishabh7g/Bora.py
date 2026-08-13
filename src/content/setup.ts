@@ -56,7 +56,12 @@ export type SetupStep = {
    *  `look` describes the WINDOW, never the command, so a step may carry both
    *  this and `command`: step 3 is the first terminal the learner has ever
    *  opened, and a bare rectangle with a blinking cursor needs describing even
-   *  though the thing she types is text right below it (rule 3, #67). */
+   *  though the thing she types is text right below it (rule 3, #67).
+   *
+   *  The last line is the RECOVERY line, and it lives in the step where the
+   *  error actually shows up — not only in the step that caused it (#68). A
+   *  missed PATH tick in step 2 prints nothing until step 3, and a beginner who
+   *  has to scroll back to find the fix concludes she broke her computer. */
   look?: string[];
   /** A GUI window worth showing, paired across both OS paths. Absent where the
    *  step's subject is a command and its output — that belongs on the page as
@@ -118,6 +123,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
         'The window that opens is almost empty: a dark rectangle with a line or two of small text at the top, no buttons and no menus. That bareness is correct. A terminal is meant to look like this.',
         'The bottom line ends with a > and a blinking block or bar. That is the prompt, waiting for you, and whatever you type appears right there.',
         'Nothing in this window is clickable. You type one line, press Enter, and the answer prints on the next line down.',
+        'Says "python is not recognized" instead? Nothing is broken. Close PowerShell and open it again — a window opened before the install has not heard about Python yet — and retype the line. Still not recognized: the "Add python.exe to PATH" tick from step 2 was missed, so run the same .exe again, choose Repair or Modify, tick it, then reopen PowerShell.',
       ],
       command: 'python --version',
     },
@@ -172,6 +178,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
         'The window that opens is almost empty: a plain white or black rectangle with one line of small text about when you last logged in, no buttons and no menus. That bareness is correct. A terminal is meant to look like this.',
         'The line under it ends with your Mac name and a % (older Macs show a $), then a blinking block. That is the prompt, waiting for you.',
         'Nothing in this window is clickable. You type one line, press Return, and the answer prints on the next line down.',
+        'Says "command not found: python3" instead? Nothing is broken. Check the 3 is there, then quit Terminal with ⌘ Q and open it again — a window opened before the install has not heard about Python yet. Still nothing: run the .pkg from step 2 once more and let it finish.',
       ],
       command: 'python3 --version',
     },

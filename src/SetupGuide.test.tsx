@@ -222,6 +222,20 @@ it('describes the terminal window itself on both paths, not just the command (#6
   }
 });
 
+it('puts the "Python not found" fix in step 3, where the error appears (#68)', () => {
+  for (const os of ['windows', 'mac'] as SetupOs[]) {
+    const recovery = setupStepsFor(os)[2].look!.slice(-1)[0];
+    // The error in the learner's own words, then the fix — reopen the terminal,
+    // and if that fails, redo step 2. Not a scroll back up to step 2 to find it.
+    expect(recovery).toContain(os === 'mac' ? 'command not found' : 'not recognized');
+    expect(recovery).toContain('Nothing is broken'); // no guilt, same as step 2
+    expect(recovery).toMatch(/open it again/); // the window predates the install
+    expect(recovery).toMatch(os === 'mac' ? /\.pkg/ : /Repair or Modify/);
+  }
+  const html = render(); // and it is on the page, not only in the data
+  expect(html).toContain(escaped('Nothing is broken. Close PowerShell and open it again'));
+});
+
 it('gives every bundled screenshot descriptive alt text and a provenance caption', () => {
   for (const shot of allShots) {
     expect(shot.alt.length).toBeGreaterThan(40);
