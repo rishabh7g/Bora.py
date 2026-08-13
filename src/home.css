@@ -32,7 +32,22 @@
   color: var(--color-text-accent);
 }
 
+/* Counter + links. On a wide screen the three sit on one line, flush right; on a
+   phone the row wraps, and what wraps is what matters: the counter keeps the
+   first line and the two links drop to the next one together (see
+   .home-headlinks). The row gap is smaller than the column gap because a wrap
+   here is a stack of related things, not two separate blocks. */
 .home-headright {
+  display: flex;
+  align-items: center;
+  gap: 6px 12px;
+  flex-wrap: wrap;
+}
+/* The links are one flex item, so `flex-wrap` can never break between them:
+   before this, 156px of counter + 125px of "Photocard shelf →" fitted a 390px
+   screen and "Settings →" did not, so it landed alone on the next line under
+   the counter, at a different x from its own peer (#47). */
+.home-headlinks {
   display: flex;
   align-items: center;
   gap: 12px;
