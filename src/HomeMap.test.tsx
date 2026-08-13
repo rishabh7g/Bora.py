@@ -4,7 +4,7 @@
 // language (DESIGN.md §3.1 — never days, streaks, XP or percentages).
 import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
-import HomeMap, { SHELF_ROUTE } from './HomeMap';
+import HomeMap, { SETTINGS_ROUTE, SHELF_ROUTE } from './HomeMap';
 import { flatModules, loadCurriculum } from './content/load';
 import { declareMatch } from './state/effortGate';
 import { emptyProgress, updateExerciseState, type Progress } from './state/progress';
@@ -92,4 +92,16 @@ it('unlocks the Tier 5 section once the capstone passes', () => {
 
 it('links to the photocard shelf', () => {
   expect(render()).toContain(`href="${SHELF_ROUTE}"`);
+});
+
+// #47: the two header links wrap as one block, which is what stops a phone width
+// putting one beside the counter and the other alone underneath it. Layout is not
+// measurable here, but the markup contract that makes it possible is: both links
+// live inside .home-headlinks, and nothing else does.
+it('keeps both header links inside one wrapping block', () => {
+  const links = /<div class="home-headlinks">(.*?)<\/div>/s.exec(render());
+  expect(links).not.toBeNull();
+  expect(links![1]).toContain(`href="${SHELF_ROUTE}"`);
+  expect(links![1]).toContain(`href="${SETTINGS_ROUTE}"`);
+  expect((links![1].match(/<a /g) ?? []).length).toBe(2);
 });

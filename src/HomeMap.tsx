@@ -148,16 +148,21 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
         <p className="home-kicker">Checkpoint path</p>
         <div className="home-headright">
           <span className="tag tag-neutral home-count">{`${passedCount} / ${modules.length} CHECKPOINTS`}</span>
-          {/* The shelf is reached from the map — the collection is a reward to
-              browse, never a task to chase. */}
-          <a className="btn btn-ghost home-shelflink" href={SHELF_ROUTE}>
-            Photocard shelf →
-          </a>
-          {/* Settings hangs off the map too: export/import is the backup story
-              (ENGINEERING.md §4), reachable without hunting for it. */}
-          <a className="btn btn-ghost home-shelflink" href={SETTINGS_ROUTE}>
-            Settings →
-          </a>
+          {/* The two links are peers, so they travel as one block: a phone width
+              wraps them together onto their own row instead of leaving one
+              beside the counter and orphaning the other underneath it (#47). */}
+          <div className="home-headlinks">
+            {/* The shelf is reached from the map — the collection is a reward to
+                browse, never a task to chase. */}
+            <a className="btn btn-ghost home-shelflink" href={SHELF_ROUTE}>
+              Photocard shelf →
+            </a>
+            {/* Settings hangs off the map too: export/import is the backup story
+                (ENGINEERING.md §4), reachable without hunting for it. */}
+            <a className="btn btn-ghost home-shelflink" href={SETTINGS_ROUTE}>
+              Settings →
+            </a>
+          </div>
         </div>
       </div>
       <h1 className="home-title">{`Annyeong, ${LEARNER_NAME}.`}</h1>
