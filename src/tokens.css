@@ -60,3 +60,21 @@ a,
 .btn-ghost {
   color: var(--color-text-accent);
 }
+
+/* .tag-outline's label (#59) — the map's UP NEXT chip, the only place this
+ * system tag renders. The design system paints its label and its border in
+ * --color-accent; the label is 11px/400, where 3.76:1 is short of the 4.5:1
+ * normal text needs, so it joins --color-text-accent alongside the links (#55).
+ *
+ * The border stays --color-accent: a border is a non-text UI boundary, held to
+ * 3:1, and --color-accent already clears that at 3.76:1, so there is no
+ * legibility reason to move it too. Keeping it also matches how the sibling
+ * tags already read — .tag-accent (background --color-accent-100, ink
+ * --color-accent-800) and .tag-neutral pair a brighter fill with a darker ink
+ * a step down the same ramp. .tag-outline has no fill, so its border stands in
+ * for that brighter step; darkening only the label keeps the same two-step
+ * shape the other tags use instead of flattening the chip to one flat red.
+ */
+.tag-outline {
+  color: var(--color-text-accent);
+}

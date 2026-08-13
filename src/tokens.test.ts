@@ -53,3 +53,12 @@ it('keeps every link covered by the contrast audit', () => {
     expect(audit).toContain(`.${className}`);
   }
 });
+
+it('routes the UP NEXT chip label through the accent text role, border unmoved (#59)', () => {
+  // The design system paints .tag-outline's label and border in --color-accent
+  // (3.76:1). The label is 11px/400 and needs the 4.5:1 text floor, so it joins
+  // --color-text-accent. The border is a non-text UI boundary held to 3:1,
+  // which --color-accent already clears, so only `color` moves here.
+  expect(tokens).toMatch(/\.tag-outline\s*\{\s*color:\s*var\(--color-text-accent\);\s*\}/);
+  expect(audit).toContain('.home-row--current .home-chip');
+});
