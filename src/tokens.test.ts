@@ -24,6 +24,9 @@ const linkClasses = [
   'shelf-back',
   'set-back',
   'setup-back',
+  // The bottom nav's three destinations are links too (#75), on every screen —
+  // measured as icons rather than as text, see below (#76).
+  'bottomnav-item',
 ];
 
 it('pins each text role to a ramp step, never a raw hex', () => {
@@ -52,6 +55,24 @@ it('keeps every link covered by the contrast audit', () => {
   for (const className of linkClasses) {
     expect(audit).toContain(`.${className}`);
   }
+});
+
+it('measures the icon-only nav items at the non-text threshold (#76)', () => {
+  // A nav item paints no text at all, so the audit's size/weight rule must not
+  // be the thing that picks its threshold: an inherited font-size it never
+  // paints would silently buy it 4.5:1. Both ink states are marked NON_TEXT and
+  // held to the 3:1 of SC 1.4.11, sourced from the icon's own stroke — the same
+  // text/non-text line DESIGN.md §7a already draws for .tag-outline's border.
+  expect(audit).toContain("const NON_TEXT = 'non-text'");
+  const navRows = (audit.match(/^\s*\[.*\.bottomnav-item.*$/gm) ?? []).map((row) => row.trim());
+  expect(navRows).toHaveLength(2);
+  expect(navRows.every((row) => row.endsWith('NON_TEXT],'))).toBe(true);
+  expect(navRows[0]).toContain('[aria-current="page"]');
+  expect(navRows[1]).toContain(':not([aria-current="page"])');
+  // The ink measured is SVG paint (lucide's stroke="currentColor"), and the row
+  // says which threshold it applied.
+  expect(audit).toContain('nonText ? [style.stroke, style.fill, style.color] : [style.color]');
+  expect(audit).toContain("basis: nonText ? 'icon(1.4.11)'");
 });
 
 it('routes the UP NEXT chip label through the accent text role, border unmoved (#59)', () => {

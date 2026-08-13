@@ -14,6 +14,14 @@
 // Thresholds are WCAG 2.2 AA: 4.5:1 for normal text, 3:1 for large text
 // (>= 24px, or >= 18.66px at weight >= 700). Every row prints the size and
 // weight it used to pick the threshold. Exit 0 = every row passed.
+//
+// A row may also be marked NON_TEXT (#76), for a meaningful icon that paints no
+// text at all — the bottom nav's items. Such an element still inherits a
+// font-size and weight it never paints, so the text rule would silently pick
+// 4.5:1 from a measurement of ink that is not text. SC 1.4.11 Non-text Contrast
+// governs it instead: 3:1, measured from the icon's own resolved stroke. Those
+// rows print `icon(1.4.11)` where a text row prints its size and weight, so a
+// 3:1 pass is never mistaken for a 4.5:1 one.
 import { createRequire } from 'node:module';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
@@ -47,7 +55,7 @@ const BASE =
   'http://localhost:4173/Bora.py/';
 
 // ── the measurement, run in the page ──────────────────────────────────────────
-const MEASURE = (selector) => {
+const MEASURE = ([selector, nonText]) => {
   const el = document.querySelector(selector);
   if (!el) return { error: 'not found' };
   const parse = (value) => {
@@ -87,7 +95,12 @@ const MEASURE = (selector) => {
   }
 
   const style = getComputedStyle(el);
-  const own = parse(style.color);
+  // A no-text row paints its ink as SVG paint, not as text colour: lucide sets
+  // `stroke="currentColor"`, which computes to the item's own resolved colour.
+  // `fill` and `color` follow as fallbacks, so an icon-only row always has a
+  // measured ink and can never quietly report nothing.
+  const paints = nonText ? [style.stroke, style.fill, style.color] : [style.color];
+  const own = parse(paints.find((paint) => paint.startsWith('rgb')) ?? style.color);
   const ink = over({ ...own, a: own.a * inkOpacity }, backdrop);
   const l1 = lum(ink);
   const l2 = lum(backdrop);
@@ -98,9 +111,10 @@ const MEASURE = (selector) => {
   const round = (c) => `rgb(${Math.round(c.r)},${Math.round(c.g)},${Math.round(c.b)})`;
   return {
     ratio: Math.round(ratio * 100) / 100,
-    need: large ? 3 : 4.5,
-    size,
-    weight,
+    // SC 1.4.11 for a meaningful icon (3:1), SC 1.4.3 for text — and a no-text
+    // element's inherited size and weight are never allowed to choose.
+    need: nonText || large ? 3 : 4.5,
+    basis: nonText ? 'icon(1.4.11)' : `${size}px/${weight}`,
     opacity: Math.round(inkOpacity * 100) / 100,
     ink: round(ink),
     backdrop: round(backdrop),
@@ -113,6 +127,10 @@ const MEASURE = (selector) => {
 // Add a row here whenever a screen gains a quiet, dimmed or interactive text
 // style, the way smoke checks grow with an API — the audit's coverage then grows
 // with the app.
+//
+// `[fixture, selector, description]`, plus an optional fourth element NON_TEXT
+// for a row that paints an icon rather than text (#76).
+const NON_TEXT = 'non-text';
 const ROWS = [
   // #45 — locked / dimmed states
   ['home-fresh', '.home-row--locked .home-num', 'locked module number'],
@@ -187,6 +205,13 @@ const ROWS = [
   // paints its label in --color-accent (3.76:1 at 11px). Only the current
   // module's row renders it, so home-fresh (no Module 00 pass yet) is reused.
   ['home-fresh', '.home-row--current .home-chip', 'UP NEXT chip label'],
+  // #76 — the bottom nav's two ink states (#75). The bar is on every screen, so
+  // any fixture would do; home-fresh shows the current item (Map) and two
+  // inactive ones in the same shot. Each item is an icon and an aria-label with
+  // no text of its own, so both rows are NON_TEXT: the ink measured is the
+  // glyph's stroke, against the bar's own background, at 3:1.
+  ['home-fresh', '.bottomnav-item[aria-current="page"] .bottomnav-icon', 'current nav item icon', NON_TEXT],
+  ['home-fresh', '.bottomnav-item:not([aria-current="page"]) .bottomnav-icon', 'inactive nav item icon', NON_TEXT],
 ];
 
 const { chromium } = await import(join(resolvePlaywrightDir(), 'index.mjs'));
@@ -259,8 +284,8 @@ for (const fixture of Object.keys(FIXTURES)) {
   const rows = ROWS.filter(([f]) => f === fixture);
   if (rows.length === 0) continue;
   const { ctx, page } = await FIXTURES[fixture]();
-  for (const [, selector, label] of rows) {
-    const r = await page.evaluate(MEASURE, selector);
+  for (const [, selector, label, kind] of rows) {
+    const r = await page.evaluate(MEASURE, [selector, kind === NON_TEXT]);
     if (r.error) {
       console.log(`  MISSING  ${selector} — ${r.error}`);
       failed += 1;
@@ -270,7 +295,7 @@ for (const fixture of Object.keys(FIXTURES)) {
     if (verdict === 'FAIL') failed += 1;
     console.log(
       `  ${verdict}  ${String(r.ratio).padStart(5)}:1  need ${r.need}  ` +
-        `${r.size}px/${r.weight}${r.opacity < 1 ? ` op${r.opacity}` : ''}  ` +
+        `${r.basis}${r.opacity < 1 ? ` op${r.opacity}` : ''}  ` +
         `${r.ink} on ${r.backdrop}  ${selector}  — ${label}`,
     );
   }

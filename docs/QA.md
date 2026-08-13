@@ -50,7 +50,7 @@ Measures the **real rendered** contrast of the app's quiet, dimmed and interacti
 reads computed styles in the page, folds every ancestor `opacity` into the ink, composites
 that over the backdrop actually behind it, and picks the AA threshold from the measured size
 and weight (3:1 for large text, else 4.5:1). One line per style, `RESULT ok` / `RESULT FAIL`
-(exit 0 / 1). **56 rows** today, green at 390px and 1280px.
+(exit 0 / 1). **58 rows** today, green at 390px and 1280px.
 
 This exists because the failures in #45 are invisible to a static read of the CSS — the
 tokens look fine on their own and only fail once a `0.45` ancestor opacity multiplies them.
@@ -61,6 +61,13 @@ Module 01 is locked from a fresh profile).
 the same way a new endpoint earns a smoke check: the audit's coverage then grows with the app
 instead of going stale. Links and ghost buttons are in there because they were *not* — every
 one of them sat at 3.76:1 for as long as nothing measured them (#55).
+
+**A row that paints an icon rather than text gets a fourth element, `NON_TEXT`** (#76) — the
+bottom nav's two ink states are the first. Such an element still inherits a `font-size` and
+`font-weight` it never paints, so the size rule would quietly hold it to 4.5:1; instead the
+row is measured from the icon's own resolved `stroke` and judged at the 3:1 of WCAG 2.2
+SC 1.4.11 (non-text UI component). Those rows print `icon(1.4.11)` where a text row prints
+`11px/400`, so a 3:1 pass is never read as a 4.5:1 one.
 
 ## Full interactive QA (clicking through screens)
 
