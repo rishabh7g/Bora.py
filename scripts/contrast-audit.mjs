@@ -159,6 +159,9 @@ const ROWS = [
   ['setup', '.setup-kicker', 'setup kicker'],
   ['setup', '.setup-os-note', 'setup OS note'],
   ['setup', '.setup-term-label', 'terminal label'],
+  // #61 — a step's printed output is the shared expected-output block, so the
+  // stepper gains that block's quiet sub-label too.
+  ['setup', '.setup-step .ex-expected-sub', 'step output sub'],
   ['setup', '.setup-shot figcaption', 'screenshot caption'],
   ['setup', '.setup-shot-pending', 'screenshot-pending note'],
   ['setup', '.setup-step-num', 'step numeral (accent, large)'],

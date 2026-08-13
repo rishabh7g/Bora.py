@@ -26,6 +26,9 @@ const curriculum = loadCurriculum();
 const m0 = findModule(curriculum, SETUP_MODULE_ID)!;
 const shotDir = resolve(dirname(fileURLToPath(import.meta.url)), 'art/setup');
 const allSteps: SetupStep[] = (['windows', 'mac'] as SetupOs[]).flatMap(setupStepsFor);
+/** Every shot actually declared — a step may have none, because a step whose
+ *  subject is a command and its output shows text instead (#61). */
+const allShots = allSteps.flatMap((step) => (step.shot ? [step.shot] : []));
 
 /** Authored copy carries quotes and apostrophes; React escapes them in the
  *  rendered HTML, so assertions compare against the escaped form. */
@@ -103,10 +106,44 @@ it('renders each step numbered, with its terminal command and printed output', (
   const steps = setupStepsFor(DEFAULT_SETUP_OS);
   for (const step of steps) {
     expect(html).toContain(escaped(step.title));
-    if (step.command) expect(html).toContain(step.command);
+    // Every command is real text in a <pre>, so it can be selected and copied.
+    if (step.command) expect(html).toContain(`<pre class="setup-term-command">${step.command}</pre>`);
   }
   expect(html).toContain('python hello.py'); // Windows is the default path
   expect(html).toContain('IT PRINTS');
+});
+
+it('renders a step’s output with the shared block, not a second implementation (#61)', () => {
+  const html = render();
+  // One owner: src/ExpectedOutput.tsx. No local markup for an output block.
+  expect(html).not.toContain('setup-term-output');
+  // The stepper's IT PRINTS and the checkpoint's EXPECTED OUTPUT are the same
+  // component, so the whitespace toggle (#14) renders in both.
+  expect(html).toContain('IT PRINTS');
+  expect(html).toContain('EXPECTED OUTPUT');
+  expect(html.match(/Show whitespace/g)?.length).toBe(2);
+  expect(html.match(/class="ex-expected"/g)?.length).toBe(2);
+  // …and the printed name is text in the block, machine-verifiable and copyable.
+  const last = setupStepsFor(DEFAULT_SETUP_OS).slice(-1)[0];
+  expect(html).toContain(`<pre>${last.output}</pre>`);
+});
+
+it('never points at a screenshot of a terminal, a command or its output (#61)', () => {
+  // A terminal window, or a shell command / its printed result, described as the
+  // subject of an image. "Download Python 3.14.7" on the python.org page is a
+  // GUI button, not a command, so the pattern is deliberately narrow.
+  const TERMINAL =
+    /\bpowershell\b|\bterminal\b|command prompt|\bpython3?\s+(--version|hello\.py)|\bprint(s|ed)\b|printed output/i;
+  for (const shot of allShots) {
+    const subject = isBundledShot(shot) ? `${shot.alt} ${shot.caption}` : shot.pending;
+    expect(subject, `a shot must not depict terminal content: ${subject}`).not.toMatch(TERMINAL);
+  }
+  // A step whose subject IS printed output carries that output as text and no
+  // image at all. (A step may still have both a command and a GUI shot — "Create
+  // hello.py" shows a save dialog and then a `cd`; the dialog is a window.)
+  for (const step of allSteps.filter((step) => step.output)) {
+    expect(step.shot, `step "${step.title}" prints output, so it takes no screenshot`).toBeUndefined();
+  }
 });
 
 it('bundles every screenshot locally — no remote images anywhere', () => {
@@ -126,7 +163,7 @@ it('precaches the screenshots so setup works offline', () => {
 });
 
 it('says plainly what an uncaptured screenshot has to show, instead of faking one', () => {
-  const pending = allSteps.map((step) => step.shot).filter((shot) => !isBundledShot(shot));
+  const pending = allShots.filter((shot) => !isBundledShot(shot));
   // Windows/macOS installer dialogs cannot be captured from this repo's CI or
   // dev box; the slot is data-driven so the file drops in without code changes.
   expect(pending.length).toBeGreaterThan(0);
@@ -135,7 +172,7 @@ it('says plainly what an uncaptured screenshot has to show, instead of faking on
 });
 
 it('gives every bundled screenshot descriptive alt text and a provenance caption', () => {
-  for (const shot of allSteps.map((step) => step.shot).filter(isBundledShot)) {
+  for (const shot of allShots.filter(isBundledShot)) {
     expect(shot.alt.length).toBeGreaterThan(40);
     expect(shot.caption).toMatch(/captured \d{4}-\d{2}-\d{2}/);
   }

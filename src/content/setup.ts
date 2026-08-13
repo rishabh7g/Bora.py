@@ -4,14 +4,21 @@
 // Data-driven on purpose: SetupGuide renders whatever is listed here, so a new
 // screenshot or a reworded step is a content edit, never a component edit.
 //
-// Two rules this file carries:
+// Three rules this file carries:
 // 1. Screenshots are LOCAL FILES in src/art/setup — never remote URLs. The
 //    bundler owns the emitted URL (hashed, base-path aware) and the service
 //    worker precaches every png, so setup works offline (ENGINEERING.md §9).
 // 2. A step with no screenshot yet says what its screenshot must show
 //    (`{ pending }`). The gap is visible in the UI and in this file rather than
 //    being papered over with a fake image: capturing a Windows installer dialog
-//    or a macOS Terminal window needs those machines.
+//    or a macOS .pkg wizard needs those machines.
+// 3. A command, or the output a command prints, is NEVER a screenshot (#61).
+//    It is authored text here and rendered as text: the learner can select and
+//    copy it, a screen reader can read it, and scripts/verify-outputs.py can
+//    machine-verify it — a picture of a terminal can do none of those, and goes
+//    stale the moment a prompt or a version number changes. So a step that runs
+//    something carries `command`/`output` and NO `shot` at all; this supersedes
+//    the "screenshot per step" part of issue #13 for terminal content.
 //
 // Terminal commands and outputs below were run in a real terminal
 // (`python3 scripts/verify-outputs.py m0`, plus the hello.py transcript).
@@ -36,7 +43,10 @@ export type SetupStep = {
   command?: string;
   /** Exact output that command prints — verified in a real terminal. */
   output?: string;
-  shot: SetupShot;
+  /** A GUI window worth showing. Absent on purpose where the step's subject is
+   *  a command and its output: that belongs on the page as text, not as an
+   *  image of a terminal (rule 3 above). */
+  shot?: SetupShot;
 };
 
 export function isBundledShot(shot: SetupShot): shot is { file: string; alt: string; caption: string } {
@@ -59,7 +69,7 @@ export function setupShotUrl(fileName: string): string {
 export function bundledShotFiles(): string[] {
   return Object.values(SETUP_STEPS)
     .flat()
-    .map((step) => step.shot)
+    .flatMap((step) => (step.shot ? [step.shot] : []))
     .filter(isBundledShot)
     .map((shot) => shot.file);
 }
@@ -91,10 +101,6 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       body:
         'Open the Start menu, type "powershell", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python.',
       command: 'python --version',
-      shot: {
-        pending:
-          'A PowerShell window right after `python --version`, showing the printed version line.',
-      },
     },
     {
       title: 'Create hello.py',
@@ -112,10 +118,6 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
         'Still in PowerShell, in the folder that holds hello.py, run the file. Your terminal prints the name you chose. That is you running Python.',
       command: 'python hello.py',
       output: 'Jimin',
-      shot: {
-        pending:
-          'A PowerShell window showing `python hello.py` and the printed name on the next line.',
-      },
     },
   ],
   mac: [
@@ -141,9 +143,6 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       body:
         'Press ⌘ Space, type "Terminal", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python. On a Mac the command is python3, with the 3.',
       command: 'python3 --version',
-      shot: {
-        pending: 'A macOS Terminal window right after `python3 --version`, showing the version line.',
-      },
     },
     {
       title: 'Create hello.py',
@@ -161,9 +160,6 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
         'Still in Terminal, in the folder that holds hello.py, run the file. Your terminal prints the name you chose. That is you running Python.',
       command: 'python3 hello.py',
       output: 'Jimin',
-      shot: {
-        pending: 'A macOS Terminal window showing `python3 hello.py` and the printed name below it.',
-      },
     },
   ],
 };
