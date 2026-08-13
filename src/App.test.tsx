@@ -212,7 +212,7 @@ const read = (path: string) => readFileSync(join(repoRoot, path), 'utf8');
 it('renders every screen inside one shell — exactly one <main> in the source', () => {
   const source = read('src/App.tsx').replace(/\/\*[\s\S]*?\*\//g, '');
   expect(source.match(/<main\b/g)).toHaveLength(1);
-  expect(source).toContain('<main className="app-screen">');
+  expect(source).toMatch(/<main className="app-screen" ref=\{\w+\}>/);
   expect(source).toContain('<div className="app-shell">');
   // Nine branches, one wrapper: every return goes through the shell.
   expect(source.match(/<Shell>/g)).toHaveLength(9);
@@ -260,5 +260,77 @@ it('leaves the bottom edge to the shell — no screen pads for it', () => {
   for (const [path, selector] of screens) {
     const rule = new RegExp(`\\${selector}\\s*\\{([^}]*)\\}`).exec(read(path))?.[1] ?? '';
     expect(rule).toMatch(/padding:[^;]*\s0;/);
+  }
+});
+
+// A route change starts the new screen at the top (#85). Since #73 the document
+// does not scroll — one reused <main> does — so nothing resets its scrollTop and
+// every screen inherited the last one's offset ("Continue →" landed the learner
+// at Tier 5 instead of the module it had just unlocked). The fix is a DOM side
+// effect on that node, which neither renderToString nor this jsdom-free suite
+// can observe, so these are file-level guards like the shell rules above: what
+// they protect is the decision.
+const noComments = (source: string) =>
+  source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
+
+/** The body of the Shell component, comments removed. */
+function shellBody() {
+  const source = noComments(read('src/App.tsx'));
+  return /function Shell\([\s\S]*?\n\}/.exec(source)?.[0] ?? '';
+}
+
+it('resets the one scroll container on a route change — in the shell, keyed to the route', () => {
+  const shell = shellBody();
+  // The shell holds the ref to its own <main> and does the reset itself…
+  expect(shell).toMatch(/const (\w+) = useRef<HTMLElement>\(null\)/);
+  expect(shell).toMatch(/<main className="app-screen" ref=\{(\w+)\}>/);
+  expect(shell).toMatch(/\w+\.current\.scrollTop = 0/);
+  // …once, before the paint, so the new screen never flashes at the old offset.
+  expect(shell.match(/useLayoutEffect\(/g)).toHaveLength(1);
+  // Keyed to the route, not to a render: the effect only fires on a new page.
+  expect(shell).toMatch(/const hash = useContext\(RouteHashContext\)/);
+  expect(shell).toMatch(/\}, \[hash\]\)/);
+});
+
+it('drives the reset off the canonical hash, so the #/module/m0 rewrite is one navigation', () => {
+  // canonicalHash rewrites #/module/m0… to #/setup with a location.replace on
+  // arrival. Off the raw hash that lands as a second route change; off the
+  // canonical one it is what it is — the same page, spelled correctly.
+  for (const hash of M0_HASHES) {
+    expect(canonicalHash(hash)).toBe(canonicalHash(SETUP_ROUTE));
+  }
+  const source = noComments(read('src/App.tsx'));
+  expect(source).toContain('<RouteHashContext.Provider value={canonical}>');
+  expect(source).not.toContain('<RouteHashContext.Provider value={hash}>');
+});
+
+it('keys the reset on the hash, not the screen — two exercises are one screen, two pages', () => {
+  const [a, b] = ['#/module/m1/exercise/e1', '#/module/m1/exercise/e2'];
+  expect(route(a).screen).toBe(route(b).screen);
+  expect(canonicalHash(a)).not.toBe(canonicalHash(b));
+  // And the celebration hop the bug was reported through is a route change too.
+  expect(canonicalHash(SETUP_ROUTE)).not.toBe(canonicalHash('#/'));
+});
+
+it('keeps the reset instant — no smooth scrolling for reduced motion to argue with', () => {
+  expect(noComments(read('src/App.tsx'))).not.toMatch(/behavior:\s*'smooth'/);
+  for (const path of ['src/app.css', 'src/home.css', 'src/shelf.css', 'src/tokens.css']) {
+    expect(noComments(read(path))).not.toMatch(/scroll-behavior:\s*smooth/);
+  }
+});
+
+it('leaves scrolling to the shell — no screen resets or restores its own offset', () => {
+  const screens = [
+    'src/HomeMap.tsx',
+    'src/PhotocardShelf.tsx',
+    'src/Settings.tsx',
+    'src/SetupGuide.tsx',
+    'src/ModuleView.tsx',
+    'src/ExerciseView.tsx',
+    'src/CelebrationScreen.tsx',
+    'src/BottomNav.tsx',
+  ];
+  for (const path of screens) {
+    expect(noComments(read(path))).not.toMatch(/scrollTop|scrollTo\(|scrollIntoView/);
   }
 });
