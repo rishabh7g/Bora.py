@@ -72,6 +72,19 @@
   color: var(--color-text-quiet);
 }
 
+/* Checked-against line (#69) — the prose's provenance date, sitting between the
+   OS picker and the stepper it dates. Quiet supporting text, so it takes the
+   same ink and size as .setup-os-note: --color-text-quiet is a §7a role token
+   that clears AA at this size, and no ancestor opacity multiplies it. Measured
+   by its own contrast-audit row (docs/QA.md). */
+.setup-checked {
+  margin: 22px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  max-width: 62ch;
+  color: var(--color-text-quiet);
+}
+
 /* — stepper — */
 .setup-steps {
   margin: 26px 0 0;

@@ -158,6 +158,9 @@ const ROWS = [
   ['settings', '.set-rowstate', 'settings row state'],
   ['setup', '.setup-kicker', 'setup kicker'],
   ['setup', '.setup-os-note', 'setup OS note'],
+  // #69 — the dated "checked against python.org" line above the stepper: quiet
+  // supporting text the learner must be able to read.
+  ['setup', '.setup-checked', 'checked-against line'],
   ['setup', '.setup-term-label', 'terminal label'],
   // #61 — a step's printed output is the shared expected-output block, so the
   // stepper gains that block's quiet sub-label too.
