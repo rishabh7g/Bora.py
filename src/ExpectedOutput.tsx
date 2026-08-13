@@ -22,6 +22,10 @@ export type ExpectedOutputProps = {
   output: string;
   /** Aside next to the label — the caller's framing of the same block. */
   sub?: string;
+  /** The block's own heading. Only the wording changes per caller: the setup
+   *  stepper says IT PRINTS where a checkpoint says EXPECTED OUTPUT, and both
+   *  get the same markup, toggle and copy-safety from this one component. */
+  label?: string;
 };
 
 export type OutputChunkKind = 'text' | 'space' | 'tab';
@@ -106,6 +110,7 @@ export function OutputText({
 export default function ExpectedOutput({
   output,
   sub = 'your terminal should print this',
+  label = 'EXPECTED OUTPUT',
 }: ExpectedOutputProps) {
   // Read synchronously on first render, and write through, so the choice holds
   // across exercises and reloads (state/whitespaceVisible.ts — never Progress).
@@ -120,7 +125,7 @@ export default function ExpectedOutput({
   return (
     <div className="ex-expected">
       <div className="ex-expected-head">
-        <span className="ex-expected-label">EXPECTED OUTPUT</span>
+        <span className="ex-expected-label">{label}</span>
         <span className="ex-expected-sub">{sub}</span>
         {/* Design system segment, so hover / pressed / :focus-visible are the
             shared themed ones; Space toggles it from the keyboard. */}

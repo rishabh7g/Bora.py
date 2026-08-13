@@ -11,6 +11,9 @@
 // - exit checkpoint behaviour: src/state/effortGate.ts, exit variant — no hint
 //   ladder, only "My output matches" or leaving and coming back
 // - the expected-output block: src/ExpectedOutput.tsx, shared with ExerciseView
+//   AND with the stepper's own "IT PRINTS" — a command's output is text on the
+//   page, never an image of a terminal, and there is one block that renders it
+//   (#61).
 import { useState } from 'react';
 import { findTierOf, moduleNumberOf } from './content/load';
 import {
@@ -76,16 +79,22 @@ function StepRow({ step, number }: { step: SetupStep; number: number }) {
         {step.command && (
           <div className="setup-term">
             <span className="setup-term-label">TYPE THIS</span>
+            {/* Real text in a <pre>, so it can be selected and copied. A picture
+                of a terminal could not be (#61). */}
             <pre className="setup-term-command">{step.command}</pre>
-            {step.output && (
-              <>
-                <span className="setup-term-label">IT PRINTS</span>
-                <pre className="setup-term-output">{step.output}</pre>
-              </>
-            )}
           </div>
         )}
-        <ShotFigure shot={step.shot} />
+        {/* What it prints is an expected output like any other, so it is the
+            shared block — same markup, same whitespace toggle (#14), no second
+            implementation to drift (#61). */}
+        {step.output && (
+          <ExpectedOutput
+            label="IT PRINTS"
+            output={step.output}
+            sub="your chosen member's name, on its own line"
+          />
+        )}
+        {step.shot && <ShotFigure shot={step.shot} />}
       </div>
     </li>
   );

@@ -110,7 +110,10 @@
   color: var(--color-neutral-800);
 }
 
-/* Terminal lines — the exact thing to type, and what it prints. */
+/* The exact thing to type. Text, not an image — selectable and copyable (#61).
+   What the command *prints* is not styled here at all: it is the shared
+   expected-output block (src/ExpectedOutput.tsx, styles in exercise.css), so the
+   stepper and the checkpoint below it cannot drift apart. */
 .setup-term {
   display: flex;
   flex-direction: column;
@@ -124,19 +127,11 @@
   font-weight: 800;
   color: var(--color-text-quiet);
 }
-.setup-term-command,
-.setup-term-output {
+.setup-term-command {
   margin: 0;
   font: 600 14px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
   white-space: pre-wrap;
   overflow-wrap: break-word;
-}
-.setup-term-output {
-  color: var(--color-accent-800);
-}
-.setup-term-label + .setup-term-label,
-.setup-term-command + .setup-term-label {
-  margin-top: 6px;
 }
 
 /* Screenshots — local files only, full width of the step column. */
@@ -209,7 +204,10 @@
   line-height: 1.6;
   max-width: 60ch;
 }
-.setup-exit .ex-expected {
+/* The shared block brings its own top margin for the exercise screen's flow; in
+   both of this screen's stacks the gap comes from the flex container instead. */
+.setup-exit .ex-expected,
+.setup-step .ex-expected {
   margin-top: 0;
 }
 .setup-exit-actions {
