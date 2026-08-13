@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import CelebrationScreen, { celebrationTriggered } from './CelebrationScreen';
 import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
 import type { Curriculum, Exercise, Module } from './content/types';
@@ -18,6 +18,7 @@ import SetupGuide from './SetupGuide';
 import { exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './state/gating';
 import { exerciseStateOf } from './state/progress';
 import { useProgress } from './state/useProgress';
+import './app.css';
 
 const curriculum = loadCurriculum();
 
@@ -97,6 +98,20 @@ export function canonicalHash(hash: string): string {
   return match?.[1] === SETUP_MODULE_ID ? SETUP_ROUTE : hash;
 }
 
+/** The one frame every screen renders inside (#73, src/app.css): a full-height
+ *  flex column whose only scrolling child is the `<main>` holding the screen.
+ *  Everything the app must show on more than one screen becomes another child
+ *  of that column, beside the content rather than over it — so nothing overlaps
+ *  and no screen has to pad for it. There is exactly one `<main>` in this file;
+ *  every branch below returns `<Shell>…</Shell>`. */
+function Shell({ children }: { children: ReactNode }) {
+  return (
+    <div className="app-shell">
+      <main className="app-screen">{children}</main>
+    </div>
+  );
+}
+
 export default function App() {
   const [hash, setHash] = useState(() => window.location.hash || HOME_ROUTE);
   const { progress, storageStalled, apply, replaceAll, resetModule } = useProgress();
@@ -129,38 +144,38 @@ export default function App() {
   // never present as a permanently empty page.
   if (!progress) {
     return (
-      <main>
+      <Shell>
         <ProgressLoading stalled={storageStalled} />
-      </main>
+      </Shell>
     );
   }
 
   if (route.screen === 'home') {
     return (
-      <main>
+      <Shell>
         <HomeMap curriculum={curriculum} progress={progress} />
-      </main>
+      </Shell>
     );
   }
 
   if (route.screen === 'shelf') {
     return (
-      <main>
+      <Shell>
         <PhotocardShelf curriculum={curriculum} progress={progress} />
-      </main>
+      </Shell>
     );
   }
 
   if (route.screen === 'settings') {
     return (
-      <main>
+      <Shell>
         <Settings
           curriculum={curriculum}
           progress={progress}
           onImport={replaceAll}
           onResetModule={resetModule}
         />
-      </main>
+      </Shell>
     );
   }
 
@@ -172,7 +187,7 @@ export default function App() {
     const exit = setupModule.exitExercise;
     const alreadyPassed = moduleStateOf(curriculum, setupModule.id, progress) === 'passed';
     return (
-      <main>
+      <Shell>
         <SetupGuide
           curriculum={curriculum}
           module={setupModule}
@@ -196,7 +211,7 @@ export default function App() {
             }}
           />
         )}
-      </main>
+      </Shell>
     );
   }
 
@@ -208,9 +223,9 @@ export default function App() {
   // either — fall back to the map, whose row shows why it is locked.
   if (!moduleUnlocked(curriculum, module.id, progress)) {
     return (
-      <main>
+      <Shell>
         <HomeMap curriculum={curriculum} progress={progress} />
-      </main>
+      </Shell>
     );
   }
 
@@ -224,15 +239,15 @@ export default function App() {
     // fall back to the module screen, whose locked row explains the rule.
     if (route.isExit && !exitUnlocked(module, progress)) {
       return (
-        <main>
+        <Shell>
           <ModuleView curriculum={curriculum} module={module} progress={progress} />
-        </main>
+        </Shell>
       );
     }
     const state = exerciseStateOf(progress, module.id, exercise.id);
     const alreadyPassed = moduleStateOf(curriculum, module.id, progress) === 'passed';
     return (
-      <main>
+      <Shell>
         <ExerciseView
           module={module}
           exercise={exercise}
@@ -258,13 +273,13 @@ export default function App() {
             }}
           />
         )}
-      </main>
+      </Shell>
     );
   }
 
   return (
-    <main>
+    <Shell>
       <ModuleView curriculum={curriculum} module={module} progress={progress} />
-    </main>
+    </Shell>
   );
 }
