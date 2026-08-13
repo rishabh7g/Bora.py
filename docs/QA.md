@@ -50,7 +50,7 @@ Measures the **real rendered** contrast of the app's quiet, dimmed and interacti
 reads computed styles in the page, folds every ancestor `opacity` into the ink, composites
 that over the backdrop actually behind it, and picks the AA threshold from the measured size
 and weight (3:1 for large text, else 4.5:1). One line per style, `RESULT ok` / `RESULT FAIL`
-(exit 0 / 1). **54 rows** today, green at 390px and 1280px.
+(exit 0 / 1). **57 rows** today, green at 390px and 1280px.
 
 This exists because the failures in #45 are invisible to a static read of the CSS — the
 tokens look fine on their own and only fail once a `0.45` ancestor opacity multiplies them.
@@ -61,6 +61,14 @@ Module 01 is locked from a fresh profile).
 the same way a new endpoint earns a smoke check: the audit's coverage then grows with the app
 instead of going stale. Links and ghost buttons are in there because they were *not* — every
 one of them sat at 3.76:1 for as long as nothing measured them (#55).
+
+**A control with states earns a row per state** (#86) — the design system's segment paints
+its *checked* option as brand-red ground under ground-coloured ink and its unchecked one as
+plain text on the page, so `.seg-opt` is two rows (`:has(input:checked)` and
+`:not(:has(input:checked))`), not one. The unchecked state measures 14.86:1 and would have
+masked the checked state's 3.76:1 — the audit had been *clicking* that toggle since #46 to
+turn the whitespace legend on, and measuring only the legend. A segment label is text, so
+both rows take the 4.5:1 path.
 
 **A row that paints an icon rather than text gets a fourth element, `NON_TEXT`** (#76) — the
 bottom nav's two ink states are the first. Such an element still inherits a `font-size` and

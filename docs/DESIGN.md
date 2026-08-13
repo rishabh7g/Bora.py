@@ -303,6 +303,13 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
   so it stays: darkening only the label pairs a brighter border with darker
   ink, the same two-step shape `.tag-accent` and `.tag-neutral` already use
   (a tinted background with a darker ink a step down the ramp).
+- **Red behind text is the same rule as red as text.** The design system's checked segment
+  (`.seg-opt:has(input:checked)`) paints `--color-accent` as the *background* under
+  ground-coloured ink — 3.76:1 again, at 13px/700 on the setup guide's OS picker and 12px/700
+  on the `Show whitespace` toggle (#86). `src/tokens.css` moves only the background, to
+  `--color-accent-700`, so the pair is the same 6.41:1 as the accent text step. Selection is
+  carried by *whether* the cell is filled and by the ink flipping to the ground, never by how
+  bright the red is, so a darker fill reads as selected exactly as clearly.
 - The floor is measured, not eyeballed: `node scripts/contrast-audit.mjs` reports the real
   rendered ratio for every quiet and dimmed style, with ancestor opacity folded in
   (docs/QA.md).

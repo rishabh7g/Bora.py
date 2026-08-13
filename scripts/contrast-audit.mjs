@@ -167,6 +167,10 @@ const ROWS = [
   ['exercise-e1', '.ex-expected-sub', 'expected-output sub'],
   ['exercise-e1', '.ex-section-sub', 'ladder section sub'],
   ['exercise-e1-ws', '.ex-ws-legend', 'whitespace legend'],
+  // #86 — the other .seg in the app. This fixture already clicks the toggle on
+  // to render the legend, so the checked option is right there: the audit used
+  // to drive this exact control and then measure past it.
+  ['exercise-e1-ws', '.ex-ws-toggle .seg-opt:has(input:checked)', 'checked whitespace toggle'],
   ['exercise-e1-tried', '.ex-note', 'attempts note'],
   ['exercise-e1-tried', '.ex-rung-label--active', 'active rung label (accent)'],
   ['exit-m1', '.ex-exit-note', 'exit-checkpoint note (accent)'],
@@ -189,6 +193,16 @@ const ROWS = [
   ['setup', '.setup-look-label', 'what-you’ll-see label'],
   ['setup', '.setup-look-list li', 'what-you’ll-see instruction'],
   ['setup', '.setup-step-num', 'step numeral (accent, large)'],
+  // #86 — the design system's segment paints its CHECKED option as accent-red
+  // ground under ground-coloured ink (3.76:1 before the fix in src/tokens.css).
+  // Both states are measured, because they paint different ink on different
+  // backdrops and the unchecked one passes comfortably enough to hide the
+  // failure: an audit that measured only "the .seg-opt" would report a pass.
+  // The OS picker is checked from first paint (DEFAULT_SETUP_OS), so no click
+  // is needed. A segment label is text, so it takes the 4.5:1 text path — never
+  // NON_TEXT.
+  ['setup', '.setup-os .seg-opt:has(input:checked)', 'checked OS option'],
+  ['setup', '.setup-os .seg-opt:not(:has(input:checked))', 'unchecked OS option'],
   ['setup', '.setup-exit-label', 'setup exit label (accent)'],
   // #55 — links and ghost buttons. Every one of these is 13px/800 interactive
   // text taking its colour from the design system's `a` / `.btn-ghost`, so they
