@@ -1,6 +1,7 @@
-// Contrast audit — measures the real rendered contrast of the app's quiet and
-// locked text in a real browser, with every ancestor `opacity` folded into the
-// colour and composited against the backdrop that is actually behind it.
+// Contrast audit — measures the real rendered contrast of the app's quiet,
+// locked and interactive text in a real browser, with every ancestor `opacity`
+// folded into the colour and composited against the backdrop that is actually
+// behind it.
 //
 //   node scripts/contrast-audit.mjs [url] [--width 390]
 //
@@ -109,8 +110,9 @@ const MEASURE = (selector) => {
 
 // ── what to measure, and the state each row needs ─────────────────────────────
 // First column names a fixture below; rows sharing one fixture share one page.
-// Add a row here whenever a screen gains a quiet or dimmed text style, the way
-// smoke checks grow with an API — the audit's coverage then grows with the app.
+// Add a row here whenever a screen gains a quiet, dimmed or interactive text
+// style, the way smoke checks grow with an API — the audit's coverage then grows
+// with the app.
 const ROWS = [
   // #45 — locked / dimmed states
   ['home-fresh', '.home-row--locked .home-num', 'locked module number'],
@@ -161,6 +163,17 @@ const ROWS = [
   ['setup', '.setup-shot-pending', 'screenshot-pending note'],
   ['setup', '.setup-step-num', 'step numeral (accent, large)'],
   ['setup', '.setup-exit-label', 'setup exit label (accent)'],
+  // #55 — links and ghost buttons. Every one of these is 13px/800 interactive
+  // text taking its colour from the design system's `a` / `.btn-ghost`, so they
+  // stand or fall together; they are listed per screen anyway, because that is
+  // what a regression here would look like (one screen quietly opting out).
+  ['home-fresh', '.home-headlinks .home-shelflink:nth-of-type(1)', 'Photocard shelf → link'],
+  ['home-fresh', '.home-headlinks .home-shelflink:nth-of-type(2)', 'Settings → link'],
+  ['module-m1', '.mod-back', '← Map back link'],
+  ['exercise-e1', '.ex-back', 'exercise back link'],
+  ['shelf-fresh', '.shelf-back', 'shelf back link'],
+  ['settings', '.set-back', 'settings back link'],
+  ['setup', '.setup-back', 'setup back link'],
 ];
 
 const { chromium } = await import(join(resolvePlaywrightDir(), 'index.mjs'));
