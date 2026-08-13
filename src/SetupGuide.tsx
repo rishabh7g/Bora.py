@@ -156,6 +156,13 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
         </p>
       </fieldset>
 
+      {/* The stepper's own section heading (#88). Without it the five step
+          titles were <h3>s hanging directly off the <h1>, so a screen reader
+          navigating by heading level saw a gap where a section should be. Same
+          shape as ModuleView's "Worked examples" / "Exercises": an H2 section
+          over H3 items, so the two content screens read alike. */}
+      <h2 className="setup-section-title">Install steps</h2>
+
       {/* The prose's staleness signal (#69): the screenshots carry a `captured
           <date>` caption, this line is the same honesty for the words — plus
           what to do when python.org shows a different 3.x. Data lives in

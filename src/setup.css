@@ -72,8 +72,23 @@
   color: var(--color-text-quiet);
 }
 
-/* Checked-against line (#69) — the prose's provenance date, sitting between the
-   OS picker and the stepper it dates. Quiet supporting text, so it takes the
+/* Section heading over the stepper (#88) — the H2 the five step H3s hang off,
+   so the screen's outline descends without a gap. Same treatment as the other
+   two content screens' section headings (.mod-section-title, .ex-section-title):
+   small uppercase heading over a 2px rule. Full-strength heading ink from the
+   design system, so it needs no contrast-audit row of its own — the audited
+   rows are the quiet, dimmed and interactive styles. */
+.setup-section-title {
+  margin: 36px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-top: 2px solid var(--color-divider);
+  padding-top: 16px;
+}
+
+/* Checked-against line (#69) — the prose's provenance date, opening the steps
+   section it dates (#88 put a heading above it). Quiet supporting text, so it takes the
    same ink and size as .setup-os-note: --color-text-quiet is a §7a role token
    that clears AA at this size, and no ancestor opacity multiplies it. Measured
    by its own contrast-audit row (docs/QA.md). */
