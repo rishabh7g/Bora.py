@@ -26,7 +26,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-text-accent);
 }
 
 .shelf-title {
@@ -39,7 +39,7 @@
 .shelf-lede {
   margin: 10px 0 0;
   font-size: 15px;
-  color: var(--color-neutral-700);
+  color: var(--color-text-quiet);
   max-width: 60ch;
 }
 
@@ -91,12 +91,12 @@
 /* An unearned card is a placeholder, not a disabled control: its number, era
    title and foot are the only preview of what the checkpoint pays out, so they
    have to be readable. --color-neutral-400 measured 1.80:1 (#45); the ink is
-   now the same quiet step the rest of the app uses for secondary text, and the
-   card still reads as empty from its transparent ground and hairline border. */
+   now the locked role (src/tokens.css) at 5.83:1, and the card still reads as
+   empty from its transparent ground and hairline border. */
 .shelf-card--locked {
   background: transparent;
   border: 1px solid var(--color-divider);
-  color: var(--color-neutral-700);
+  color: var(--color-text-locked);
 }
 
 .shelf-num {
@@ -175,7 +175,7 @@
 
 .shelf-note {
   font-size: 12px;
-  color: var(--color-neutral-600);
+  color: var(--color-text-quiet);
 }
 
 /* At phone width two cards per row still fit the prototype's proportions. */

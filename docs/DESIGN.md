@@ -168,6 +168,14 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
 - **The locked copy is the app explaining its own rules** ("Unlocks when every practice
   exercise is matched or its solution seen"), so it is held to the same floor as any other
   sentence, whatever the letter of the spec allows for disabled controls.
+- **Quiet text is a role, not a colour.** `src/tokens.css` names the roles the app uses —
+  `--color-text-quiet`, `--color-text-locked`, `--color-text-accent` — each pinned to a step
+  of the design system's ramps that clears AA at the sizes it is used at. Screens use the
+  role, so the decision is made once instead of drifting across fifteen stylesheets (#46).
+- **Brand red is a display colour, not a text colour.** `--color-accent` (#ec3013) is 3.76:1
+  on the ground: enough for the 3:1 that large type needs, so the big accent numerals keep
+  it, and not enough for an 11px kicker, which uses `--color-text-accent`
+  (`--color-accent-700`) — the step BRAND.md already sets the wordmark's ".py" in.
 - The floor is measured, not eyeballed: `node scripts/contrast-audit.mjs` reports the real
   rendered ratio for every quiet and dimmed style, with ancestor opacity folded in
   (docs/QA.md).

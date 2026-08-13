@@ -26,7 +26,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-text-accent);
 }
 
 .set-title {
@@ -41,7 +41,7 @@
   font-size: 15px;
   line-height: 1.6;
   max-width: 62ch;
-  color: var(--color-neutral-700);
+  color: var(--color-text-quiet);
 }
 
 /* Status line for the last thing that happened — a fact, stated once. */
@@ -74,7 +74,7 @@
   color: var(--color-neutral-800);
 }
 .set-copy--quiet {
-  color: var(--color-neutral-600);
+  color: var(--color-text-quiet);
   font-size: 13px;
 }
 
@@ -98,7 +98,7 @@
 .set-label {
   margin: 16px 0 5px;
   font-size: 12px;
-  color: var(--color-neutral-700);
+  color: var(--color-text-quiet);
 }
 
 .set-input {
@@ -198,7 +198,7 @@
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-neutral-600);
+  color: var(--color-text-quiet);
 }
 
 /* In a row the buttons sit on the row's own baseline, not below it. */

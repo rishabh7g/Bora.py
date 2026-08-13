@@ -1,0 +1,37 @@
+/* App-level text roles, layered on the design system's ramps.
+ *
+ * design/_ds/…/styles.css stays the source of truth for the *system* (its ramps
+ * are generated in OKLCH on one shared lightness scale, so a step is never
+ * retuned here). What lives here is one step up: which step of a ramp each job
+ * in this app uses. A role is named after the job, so the decision is made once
+ * and every screen inherits it — the alternative is fifteen screens each
+ * spelling out a ramp step and drifting apart (#46).
+ *
+ * Every role below is chosen against the page ground (--color-bg, #f3f2f2) and
+ * has to clear WCAG 2.2 AA at the sizes the app actually uses it at: 4.5:1 for
+ * normal text, 3:1 only where the type is large (>= 24px, or >= 18.66px at
+ * weight >= 700). `node scripts/contrast-audit.mjs` measures it.
+ */
+:root {
+  /* Quiet supporting text — era labels, anchor lines, captions, notes, ledes.
+     Used at 10.5–13px all over the app, so the "large text only" steps are not
+     available to it: --color-neutral-600 is 3.85:1 and fails, --color-neutral-700
+     is 5.83:1 and clears it with room to spare. */
+  --color-text-quiet: var(--color-neutral-700);
+
+  /* Locked and unearned states (#45). The same step as quiet text today, and
+     deliberately a separate role: "this is gated" and "this is secondary" are
+     different jobs and may not always want the same ink. Locked reads as locked
+     through this ink plus its chip and its markup — never through opacity, which
+     multiplies every colour inside the element (DESIGN.md §7a). */
+  --color-text-locked: var(--color-neutral-700);
+
+  /* Accent-red type below the large-text threshold — kickers, small labels.
+     Brand red itself (--color-accent, #ec3013) is 3.76:1 on the ground, which is
+     enough for a big numeral and not for an 11px kicker. --color-accent-700 is
+     6.41:1 and is the step brand/BRAND.md already sets type in (the wordmark's
+     ".py"), so the mark and the chrome stay in one family. Large accent numerals
+     keep --color-accent: they clear the 3:1 that applies to them, and that is
+     where the poster red belongs. */
+  --color-text-accent: var(--color-accent-700);
+}

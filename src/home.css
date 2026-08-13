@@ -29,7 +29,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-text-accent);
 }
 
 .home-headright {
@@ -63,7 +63,7 @@
 .home-lede {
   margin: 10px 0 0;
   font-size: 15px;
-  color: var(--color-neutral-700);
+  color: var(--color-text-quiet);
   max-width: 60ch;
 }
 
@@ -91,7 +91,7 @@
 }
 .home-tierera {
   font-size: 12px;
-  color: var(--color-neutral-600);
+  color: var(--color-text-quiet);
 }
 .home-tier5 {
   padding: 18px 0;
@@ -99,11 +99,11 @@
 }
 /* Locked reads as locked through quieter ink, never through opacity: fading the
    whole section multiplied every colour inside it down to 1.81–3.16:1 (#45).
-   --color-neutral-700 is the quietest step that still clears 4.5:1 on the page
-   ground (5.83:1), and it is far lighter than an open tier's ink (14.86:1), so
-   the section still recedes. */
+   --color-text-locked (src/tokens.css) clears 4.5:1 on the page ground at
+   5.83:1 and is far lighter than an open tier's ink at 14.86:1, so the section
+   still recedes. */
 .home-tier5--locked {
-  color: var(--color-neutral-700);
+  color: var(--color-text-locked);
 }
 .home-tier5--locked .home-tierera {
   color: inherit;
@@ -155,7 +155,7 @@
    non-interactive affordance from the markup (a <div aria-disabled>, no href)
    and from the LOCKED chip, so legible ink cannot make it look clickable. */
 .home-row--locked {
-  color: var(--color-neutral-700);
+  color: var(--color-text-locked);
   cursor: default;
 }
 .home-row--locked .home-rowanchor {
@@ -192,7 +192,7 @@
 }
 .home-rowanchor {
   font-size: 13px;
-  color: var(--color-neutral-600);
+  color: var(--color-text-quiet);
 }
 .home-chip {
   flex: none;
