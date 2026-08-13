@@ -1,0 +1,48 @@
+/* Bottom navigation — Modernist system. Tokens and the prototype's structural
+   measures only (design/README.md): radius 0 by token, 2px rules between major
+   sections, accent used sparingly (exactly one item is accent-coloured at a
+   time), hit targets ≥ 44px. */
+
+.bottomnav {
+  /* The shell's last flex child (#73, src/app.css) — never position: fixed.
+     Sitting in the column means it cannot overlap the screen above it, and
+     CelebrationScreen's fixed red field still covers it without an argument
+     about z-index. */
+  flex: none;
+  display: flex;
+  background: var(--color-bg);
+  border-top: 2px solid var(--color-divider);
+  padding: var(--space-2) var(--space-3);
+  /* The home indicator: the device's own inset when there is one, the design's
+     gap when there isn't. Never a bare env() — a desktop inset is 0 and the
+     padding would vanish. index.html opts in with viewport-fit=cover (#74). */
+  padding-bottom: max(var(--space-8), env(safe-area-inset-bottom));
+}
+
+.bottomnav-item {
+  flex: 1;
+  min-width: 0;
+  /* Above the app's 44px floor: a bottom nav is thumb territory. */
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-quiet);
+  text-decoration: none;
+  /* Kills the 300ms double-tap-zoom delay. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The current destination, selected off the same attribute a screen reader
+   announces — what the learner sees and what is announced are one state, not
+   two that can disagree. --color-text-accent is the 6.41:1 accent step
+   (DESIGN.md §7a), not the display red. */
+.bottomnav-item[aria-current='page'] {
+  color: var(--color-text-accent);
+}
+
+.bottomnav-icon {
+  width: 20px;
+  height: 20px;
+}
