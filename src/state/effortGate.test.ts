@@ -178,6 +178,16 @@ describe('cracks: one per hint viewed, visual only', () => {
   it('matching never adds cracks', () => {
     expect(cardCracksOf({ e1: declareMatch(initialExerciseState()) })).toBe(0);
   });
+
+  // #89 — the ladder's summary sentence used to say "each reveal cracks this
+  // module's photocard"; the solution is a reveal and costs nothing. The price
+  // is per HINT (DESIGN.md §4), and this pins that so the copy stays true.
+  it('revealing the solution adds no crack', () => {
+    const twoHints = climbTo('HINT2_SEEN');
+    expect(cardCracksOf({ e1: climbTo('SOLUTION_REVEALED') })).toBe(cardCracksOf({ e1: twoHints }));
+    // Three reveals on the full ladder, two of them hints — so, two cracks.
+    expect(cardCracksOf({ e1: climbTo('SOLUTION_REVEALED') })).toBe(2);
+  });
 });
 
 describe('idempotence / safety', () => {

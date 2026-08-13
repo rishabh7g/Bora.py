@@ -5,7 +5,14 @@ import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import ExerciseView from './ExerciseView';
 import { findModule, loadCurriculum } from './content/load';
-import { declareAttempt, declareMatch, initialExerciseState, revealSolution, viewHint } from './state/effortGate';
+import {
+  cardCracksOf,
+  declareAttempt,
+  declareMatch,
+  initialExerciseState,
+  revealSolution,
+  viewHint,
+} from './state/effortGate';
 
 const m1 = findModule(loadCurriculum(), 'm1')!;
 const exercise = m1.exercises[0];
@@ -106,6 +113,28 @@ it('one rung down the note still promises the rung that does exist', () => {
   // HINT2_SEEN: the solution rung needs one more declared attempt.
   const spentOnHint2 = render(viewHint(declareAttempt(initialExerciseState(), false), 1, false));
   expect(spentOnHint2).toContain('1 attempt declared. Try again to unlock the next rung.');
+});
+
+// #89 — the ladder's summary sentence priced every reveal, but a crack is one
+// hint viewed: the solution, the biggest reveal on the ladder, is free. The
+// sentence is checked against the state it describes, so neither can drift.
+it('prices the ladder the way the state actually charges it (#89)', () => {
+  const html = render(declareAttempt(initialExerciseState(), false));
+  expect(html).toContain('Each hint cracks this module&#x27;s photocard');
+  expect(html).not.toContain('Each reveal cracks');
+  // The two buttons the sentence summarises: hints carry the price, the
+  // solution does not claim one.
+  expect(html).toContain('Reveal hint 1 — cracks the card');
+  let s = initialExerciseState();
+  for (const hint of [1, 2] as const) s = viewHint(declareAttempt(s, false), hint, false);
+  const atSolution = render(declareAttempt(s, false)); // SOLUTION_AVAILABLE
+  expect(atSolution).toContain('Reveal solution<');
+  expect(atSolution).not.toContain('Reveal solution — cracks');
+  // …and the state agrees: a full ladder is three reveals and two cracks.
+  const spent = ladderSpent();
+  expect(spent.solutionRevealed).toBe(true);
+  expect(cardCracksOf({ [exercise.id]: spent })).toBe(spent.hintsUnlocked);
+  expect(cardCracksOf({ [exercise.id]: spent })).toBe(2);
 });
 
 it('exit variant: no hint ladder, only match or come back later', () => {
