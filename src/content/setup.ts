@@ -8,10 +8,16 @@
 // 1. Screenshots are LOCAL FILES in src/art/setup — never remote URLs. The
 //    bundler owns the emitted URL (hashed, base-path aware) and the service
 //    worker precaches every png, so setup works offline (ENGINEERING.md §9).
-// 2. A step with no screenshot yet says what its screenshot must show
-//    (`{ pending }`). The gap is visible in the UI and in this file rather than
-//    being papered over with a fake image: capturing a Windows installer dialog
-//    or a macOS .pkg wizard needs those machines.
+// 2. A GUI screenshot ships only as a COMPLETE Windows + Mac PAIR, at the same
+//    step index on both paths (#62). A step that showed a picture on one path
+//    and a placeholder on the other told the other learner she got the lesser
+//    version of the lesson — at Module 0, which is exactly where beginners quit.
+//    Where no pair exists (a Windows installer dialog, a macOS .pkg wizard, a
+//    save dialog — none of them capturable from this repo's only dev host, a
+//    headless Raspberry Pi), the step carries `look`: the on-screen landmarks a
+//    beginner needs to find the thing, in words. There is no placeholder type,
+//    so a one-sided screenshot is not expressible. This supersedes the
+//    "screenshot per step" part of issue #13.
 // 3. A command, or the output a command prints, is NEVER a screenshot (#61).
 //    It is authored text here and rendered as text: the learner can select and
 //    copy it, a screen reader can read it, and scripts/verify-outputs.py can
@@ -30,11 +36,10 @@ export const SETUP_OS_LABELS: Record<SetupOs, string> = {
   mac: 'Mac',
 };
 
-export type SetupShot =
-  /** A real screenshot bundled in this repo. `file` is a name in src/art/setup. */
-  | { file: string; alt: string; caption: string }
-  /** Not captured yet — what the screenshot has to show, verbatim in the UI. */
-  | { pending: string };
+/** A real screenshot bundled in this repo. `file` is a name in src/art/setup.
+ *  There is deliberately no "pending" variant: an image either exists for both
+ *  Windows and Mac at this step, or the step uses `look` instead (rule 2). */
+export type SetupShot = { file: string; alt: string; caption: string };
 
 export type SetupStep = {
   title: string;
@@ -43,15 +48,16 @@ export type SetupStep = {
   command?: string;
   /** Exact output that command prints — verified in a real terminal. */
   output?: string;
-  /** A GUI window worth showing. Absent on purpose where the step's subject is
-   *  a command and its output: that belongs on the page as text, not as an
-   *  image of a terminal (rule 3 above). */
+  /** What the window looks like, in words: the landmarks a beginner needs to
+   *  find the right button — its wording, roughly where it sits, what to click
+   *  next. This is what replaced the unpairable screenshots (rule 2), so it has
+   *  to be specific enough to follow with no picture at all. */
+  look?: string[];
+  /** A GUI window worth showing, paired across both OS paths. Absent where the
+   *  step's subject is a command and its output — that belongs on the page as
+   *  text, not as an image of a terminal (rule 3). */
   shot?: SetupShot;
 };
-
-export function isBundledShot(shot: SetupShot): shot is { file: string; alt: string; caption: string } {
-  return 'file' in shot;
-}
 
 // Screenshot URLs: same pattern as the photocard art (content/load.ts) — the
 // bundler resolves the local file, so nothing here is a remote image.
@@ -69,9 +75,7 @@ export function setupShotUrl(fileName: string): string {
 export function bundledShotFiles(): string[] {
   return Object.values(SETUP_STEPS)
     .flat()
-    .flatMap((step) => (step.shot ? [step.shot] : []))
-    .filter(isBundledShot)
-    .map((shot) => shot.file);
+    .flatMap((step) => (step.shot ? [step.shot.file] : []));
 }
 
 const DOWNLOADS_PAGE = 'python.org/downloads';
@@ -91,10 +95,14 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       title: 'Run the installer — tick "Add python.exe to PATH"',
       body:
         'Open the downloaded .exe. On the very first screen, tick "Add python.exe to PATH" at the bottom, then click "Install Now". That one checkbox is what lets the terminal find Python later.',
-      shot: {
-        pending:
-          'The Windows installer\'s first screen, with the "Add python.exe to PATH" checkbox at the bottom circled.',
-      },
+      look: [
+        'A small window whose title starts "Install Python 3.14" — it opens with everything you need on one screen.',
+        'In the middle, two wide buttons stacked: "Install Now" on top, "Customize installation" below it. You want the top one, but not yet.',
+        'Along the bottom, under a thin line, a couple of checkboxes. The one that matters reads "Add python.exe to PATH". Tick it first — it is easy to miss, and it is the whole reason this step exists.',
+        'Now "Install Now". If Windows asks whether to let the app make changes, choose Yes.',
+        'Wait for the green progress bar, then a screen saying "Setup was successful". Close it — that is Python installed.',
+        'Missed the checkbox? Nothing is broken. Run the same .exe again, choose Repair or Modify, tick it, and finish.',
+      ],
     },
     {
       title: 'Open PowerShell and check it worked',
@@ -106,11 +114,14 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       title: 'Create hello.py',
       body:
         'Open Notepad, type one line: print("Jimin") — your chosen member, your choice. Save it as hello.py (not hello.py.txt: pick "All Files" in the Save-as-type box) somewhere you can find again, like your Desktop. Then, in PowerShell, move to that folder.',
+      look: [
+        'Notepad opens blank. Type the one line and nothing else — no heading, no quotes around the whole thing.',
+        'Then File → Save as… The save window has a "File name" box near the bottom, and right under it a dropdown labelled "Save as type".',
+        '"Save as type" starts on "Text Documents (*.txt)". Change it to "All Files (*.*)". Everyone forgets this one, so you are in good company.',
+        'Type hello.py in the "File name" box, pick Desktop on the left, and Save.',
+        'Check it landed right: the file on your Desktop is hello.py, not hello.py.txt. If you cannot tell, the icon is the giveaway — a .py file no longer looks like a Notepad page.',
+      ],
       command: 'cd Desktop',
-      shot: {
-        pending:
-          'Notepad\'s Save-as dialog with the file name hello.py and "All Files" selected — the .txt trap.',
-      },
     },
     {
       title: 'Run it',
@@ -134,9 +145,12 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       title: 'Run the .pkg installer',
       body:
         'Open the downloaded .pkg file and click through with every default — Continue, Continue, Agree, Install. Enter your Mac password when it asks. On a Mac nothing has to be ticked; the installer wires up the terminal for you.',
-      shot: {
-        pending: 'The macOS Python .pkg installer on its first "Introduction" step.',
-      },
+      look: [
+        'A window titled "Install Python", with the steps listed down the left side: Introduction, Read Me, License, and so on. The one you are on is highlighted.',
+        'You never have to change a single setting. Continue → Continue → Continue → Agree → Install, in the bottom-right corner each time.',
+        'It asks for your Mac password — the one you log in with. Nothing appears as you type; that is normal, keep going.',
+        'It finishes on "The installation was successful." Click Close. If it offers to move the installer to the Bin, either answer is fine.',
+      ],
     },
     {
       title: 'Open Terminal and check it worked',
@@ -148,11 +162,14 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       title: 'Create hello.py',
       body:
         'Open TextEdit, and first do Format → Make Plain Text (rich text saves invisible junk). Type one line: print("Jimin") — your chosen member, your choice. Save it as hello.py on your Desktop. Then, in Terminal, move to that folder.',
+      look: [
+        'If TextEdit opens a chooser first, start a new document.',
+        'Format → Make Plain Text, in the menu bar at the top. You will see the ruler and the font controls disappear — that is how you know it worked. (⇧⌘T does the same.)',
+        'Type the one line and nothing else.',
+        'Then File → Save. Put hello.py in the name box, choose Desktop, and Save.',
+        'A box may ask whether to keep the ".py" ending or add ".txt". Choose the one that keeps .py — the name has to end in .py for Python to run it.',
+      ],
       command: 'cd ~/Desktop',
-      shot: {
-        pending:
-          'TextEdit in plain-text mode with print("Jimin") typed, and the Save dialog naming the file hello.py.',
-      },
     },
     {
       title: 'Run it',

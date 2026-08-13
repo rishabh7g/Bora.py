@@ -163,7 +163,10 @@ const ROWS = [
   // stepper gains that block's quiet sub-label too.
   ['setup', '.setup-step .ex-expected-sub', 'step output sub'],
   ['setup', '.setup-shot figcaption', 'screenshot caption'],
-  ['setup', '.setup-shot-pending', 'screenshot-pending note'],
+  // #62 — the screenshot-pending note is gone; the words that replaced it are
+  // instructions the learner must read, so both parts are measured.
+  ['setup', '.setup-look-label', 'what-you’ll-see label'],
+  ['setup', '.setup-look-list li', 'what-you’ll-see instruction'],
   ['setup', '.setup-step-num', 'step numeral (accent, large)'],
   ['setup', '.setup-exit-label', 'setup exit label (accent)'],
   // #55 — links and ghost buttons. Every one of these is 13px/800 interactive

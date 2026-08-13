@@ -3,8 +3,10 @@
 // 0): OS picker → step-by-step with screenshots"; prototype:
 // design/PyLearn Prototype.dc.html → Setup guide).
 //
-// OS picker (Windows / Mac, persisted) → install stepper with locally bundled
-// screenshots → the Module 0 exit checkpoint, inline.
+// OS picker (Windows / Mac, persisted) → install stepper → the Module 0 exit
+// checkpoint, inline. A step shows a locally bundled screenshot only where one
+// exists for BOTH paths; where none does, it shows the same landmarks in words
+// (`look`), never a placeholder (#62).
 //
 // Ownership, as everywhere else in this app:
 // - step content + screenshots: src/content/setup.ts (data, not markup)
@@ -17,7 +19,6 @@
 import { useState } from 'react';
 import { findTierOf, moduleNumberOf } from './content/load';
 import {
-  isBundledShot,
   SETUP_OS_LABELS,
   setupShotUrl,
   setupStepsFor,
@@ -44,15 +45,22 @@ export type SetupGuideProps = {
 
 const OS_OPTIONS: SetupOs[] = ['windows', 'mac'];
 
+// The words that stand in for a screenshot there is no pair for (#62): the
+// landmarks to look for, in order, so the step is followable with no picture.
+function LookList({ look }: { look: string[] }) {
+  return (
+    <div className="setup-look">
+      <span className="setup-look-label">WHAT YOU’LL SEE</span>
+      <ul className="setup-look-list">
+        {look.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function ShotFigure({ shot }: { shot: SetupShot }) {
-  if (!isBundledShot(shot)) {
-    // Honest gap, not a fake image: this is what the missing screenshot shows.
-    return (
-      <p className="setup-shot-pending">
-        <span className="setup-shot-pending-label">SCREENSHOT PENDING</span> {shot.pending}
-      </p>
-    );
-  }
   return (
     <figure className="setup-shot">
       {/* A squeezed screenshot is a useless screenshot: at 375px the image keeps
@@ -76,6 +84,7 @@ function StepRow({ step, number }: { step: SetupStep; number: number }) {
       <div className="setup-step-body">
         <h3 className="setup-step-title">{step.title}</h3>
         <p className="setup-step-text">{step.body}</p>
+        {step.look && <LookList look={step.look} />}
         {step.command && (
           <div className="setup-term">
             <span className="setup-term-label">TYPE THIS</span>

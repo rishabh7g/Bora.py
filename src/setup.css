@@ -134,7 +134,8 @@
   overflow-wrap: break-word;
 }
 
-/* Screenshots — local files only, full width of the step column. */
+/* Screenshots — local files only, full width of the step column, and only ever
+   as a complete Windows + Mac pair (#62; src/content/setup.ts rule 2). */
 .setup-shot {
   margin: 2px 0 0;
   display: flex;
@@ -161,21 +162,39 @@
   font-size: 12px;
   color: var(--color-text-quiet);
 }
-/* A step whose screenshot has not been captured yet says so plainly. */
-.setup-shot-pending {
-  margin: 0;
-  padding: 10px 12px;
-  border: 1px dashed var(--color-divider);
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--color-text-quiet);
+/* "What you'll see" — the words that stand in for a screenshot there is no
+   Windows/Mac pair for (#62). It replaces a picture, so it is styled as real
+   instructions with a solid edge, not as a dashed "something is missing" box:
+   same 1px divider frame as the TYPE THIS block, and body-weight ink. Markers
+   are the browser's own `square` — no pseudo-element content, which would reach
+   the accessibility tree (see the #14 note in ExpectedOutput.tsx). */
+.setup-look {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--color-divider);
+  padding: 12px 14px;
 }
-.setup-shot-pending-label {
+.setup-look-label {
   font-size: 10px;
   letter-spacing: 0.12em;
   font-weight: 800;
+  color: var(--color-text-quiet);
+}
+.setup-look-list {
+  margin: 0;
+  padding-left: 18px;
+  list-style: square;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 14px;
+  line-height: 1.6;
   color: var(--color-neutral-800);
-  margin-right: 6px;
+}
+.setup-look-list::marker,
+.setup-look-list li::marker {
+  color: var(--color-text-accent);
 }
 
 /* — exit checkpoint — */

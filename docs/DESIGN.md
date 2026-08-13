@@ -150,7 +150,32 @@ One shared dataset evolves across all modules. By the capstone she is intimate w
 - **Module screen:** concept explainer → worked examples → exercise list → exit exercise (locked until practice exercises attempted)
 - **Exercise screen:** task, expected output block (copy-safe monospace), "I tried and got stuck" button, hint ladder, "My output matches" button, revealed solution + approach checklist
 - **Photocard shelf:** collected cards, cracked corners visible
-- **Setup guide (Module 0):** OS picker → step-by-step with screenshots
+- **Setup guide (Module 0):** OS picker → step-by-step, per OS path
+
+### 7b. What a setup step may show
+
+Module 0 is where beginners quit, so every step has to be followable on the learner's own
+machine. Two rules decide what a step is allowed to put on the page. Both **supersede the
+"real screenshot per step" part of issue #13's acceptance criteria** — a future change must not
+restore a placeholder or a one-sided screenshot as a "fix".
+
+- **A command, or the output a command prints, is text — never an image** (#61). Text can be
+  selected and copied, read aloud by a screen reader, and machine-verified by
+  `scripts/verify-outputs.py`; a picture of a terminal can do none of those and goes stale the
+  moment a prompt or a version number changes. There is exactly one component that renders an
+  output block, `src/ExpectedOutput.tsx`, so the stepper's `IT PRINTS` and the checkpoint's
+  `EXPECTED OUTPUT` are the same thing with a different heading — whitespace toggle included.
+- **A GUI screenshot ships only as a complete Windows + Mac pair, at the same step index on
+  both paths** (#62). A picture on one path and a placeholder on the other tells the other
+  learner she got the lesser version of the lesson. Where no pair exists — the Windows
+  installer's PATH checkbox, the macOS `.pkg` wizard, the Notepad and TextEdit save dialogs,
+  none of them capturable from this repo's only dev host — the step carries `look`: the
+  on-screen landmarks in words (the exact button wording, roughly where it sits, what to click
+  next, and what to do if it went wrong). `SetupShot` has no "pending" variant, so a one-sided
+  placeholder is not expressible in the content model.
+
+The pair that does exist and stays: `src/art/setup/python-downloads-windows.png` and
+`python-downloads-mac.png` — the python.org download page as each OS sees it.
 
 ---
 

@@ -12,7 +12,6 @@ import HomeMap, { SETUP_MODULE_ID, SETUP_ROUTE } from './HomeMap';
 import { findModule, loadCurriculum } from './content/load';
 import {
   bundledShotFiles,
-  isBundledShot,
   setupStepsFor,
   type SetupOs,
   type SetupStep,
@@ -135,7 +134,7 @@ it('never points at a screenshot of a terminal, a command or its output (#61)', 
   const TERMINAL =
     /\bpowershell\b|\bterminal\b|command prompt|\bpython3?\s+(--version|hello\.py)|\bprint(s|ed)\b|printed output/i;
   for (const shot of allShots) {
-    const subject = isBundledShot(shot) ? `${shot.alt} ${shot.caption}` : shot.pending;
+    const subject = `${shot.alt} ${shot.caption}`;
     expect(subject, `a shot must not depict terminal content: ${subject}`).not.toMatch(TERMINAL);
   }
   // A step whose subject IS printed output carries that output as text and no
@@ -162,17 +161,51 @@ it('precaches the screenshots so setup works offline', () => {
   expect(bundledShotFiles().every((file) => file.endsWith('.png'))).toBe(true);
 });
 
-it('says plainly what an uncaptured screenshot has to show, instead of faking one', () => {
-  const pending = allShots.filter((shot) => !isBundledShot(shot));
-  // Windows/macOS installer dialogs cannot be captured from this repo's CI or
-  // dev box; the slot is data-driven so the file drops in without code changes.
-  expect(pending.length).toBeGreaterThan(0);
-  for (const shot of pending) expect((shot as { pending: string }).pending.length).toBeGreaterThan(20);
-  expect(render()).toContain('SCREENSHOT PENDING');
+it('ships screenshots only as complete Windows/Mac pairs (#62)', () => {
+  const windows = setupStepsFor('windows');
+  const mac = setupStepsFor('mac');
+  expect(windows.length).toBe(mac.length);
+  for (let index = 0; index < windows.length; index += 1) {
+    // A picture on one path and nothing on the other would tell the other
+    // learner she got the lesser version of the lesson.
+    expect(
+      Boolean(windows[index].shot),
+      `step ${index + 1} must have a screenshot on both paths or neither`,
+    ).toBe(Boolean(mac[index].shot));
+  }
+  // The pair that does exist: the python.org download page, per OS.
+  expect(bundledShotFiles().sort()).toEqual([
+    'python-downloads-mac.png',
+    'python-downloads-windows.png',
+  ]);
+});
+
+it('never renders a placeholder — an unpaired step gets instructions instead (#62)', () => {
+  const html = render();
+  expect(html).not.toContain('SCREENSHOT PENDING');
+  expect(html).not.toContain('setup-shot-pending');
+  // Structurally impossible, not merely absent: there is no placeholder shape.
+  for (const shot of allShots) expect(shot).not.toHaveProperty('pending');
+  // The four steps that lost a screenshot carry the landmarks in words, and
+  // enough of them to actually follow: this replaced a picture.
+  const withLook = allSteps.filter((step) => step.look);
+  expect(withLook.length).toBe(4); // the installer and the save dialog, per OS
+  for (const step of withLook) {
+    expect(step.look!.length, `"${step.title}" needs the landmarks, not a sentence`).toBeGreaterThanOrEqual(4);
+    for (const line of step.look!) expect(line.length).toBeGreaterThan(30);
+  }
+  // And no step is left with nothing but prose: no picture and nothing to type
+  // means it has to say what to look for.
+  for (const step of allSteps) {
+    if (!step.shot && !step.command && !step.output) {
+      expect(step.look, `step "${step.title}" has neither a picture nor a command`).toBeDefined();
+    }
+  }
+  expect(render()).toContain('WHAT YOU’LL SEE');
 });
 
 it('gives every bundled screenshot descriptive alt text and a provenance caption', () => {
-  for (const shot of allShots.filter(isBundledShot)) {
+  for (const shot of allShots) {
     expect(shot.alt.length).toBeGreaterThan(40);
     expect(shot.caption).toMatch(/captured \d{4}-\d{2}-\d{2}/);
   }
