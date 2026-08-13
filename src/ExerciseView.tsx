@@ -181,8 +181,14 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
       {!isExit && (
         <>
           <h2 className="ex-section-title">Hint ladder</h2>
+          {/* "Each hint", not "each reveal" (#89): a crack is one hint viewed
+              (DESIGN.md §4, cardCracksOf), so the solution rung — the largest
+              reveal on the ladder — adds none. The two hint buttons already say
+              "cracks the card" and the solution button does not; this sentence
+              is the summary of those buttons, so it promises exactly what they
+              do and no more. */}
           <p className="ex-section-sub">
-            Attempt → hint → attempt → hint → attempt → solution. Each reveal cracks this module's
+            Attempt → hint → attempt → hint → attempt → solution. Each hint cracks this module's
             photocard. Cracks never block anything.
           </p>
           <div className="ex-ladder">
