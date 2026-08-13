@@ -90,11 +90,33 @@ export function bundledShotFiles(): string[] {
 
 const DOWNLOADS_PAGE = 'python.org/downloads';
 
+// The Python version the prose names, in ONE place (#69, Option A). python.org
+// changes these strings with every release, and six independent literals drift
+// independently — a beginner told to click a link labelled "3.14.7" on a page
+// that now offers 3.16.2 assumes she is on the wrong page. One edit here per
+// release updates every sentence at once.
+//
+// Deliberately NOT used in `shot.alt` / `shot.caption`: those describe the
+// bundled screenshots, which genuinely show 3.14.7 — interpolating the constant
+// there would make the alt text lie about the picture next to it the first time
+// the constant moves without a recapture. The caption's `captured <date>` line
+// carries the image's own staleness signal (#62).
+export const PYTHON_VERSION = '3.14.7'; // full — the download link/button on python.org
+export const PYTHON_MINOR = '3.14'; // major.minor — the Windows installer window title
+
+// The staleness signal for the prose (#69, Option C): the screenshots carry a
+// `captured <date>` caption, so the words carry a checked-on date too — plus
+// what to do in the window before anyone refreshes it, which is the actual
+// failure mode. Rendered once above the stepper (SetupGuide.tsx); update the
+// date whenever the steps are re-walked against the live site.
+export const CHECKED_AGAINST =
+  'These steps were checked against python.org on 2026-08-12. If what you see says a different 3.x version, that is fine — follow the same shape.';
+
 const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
   windows: [
     {
       title: 'Open the downloads page',
-      body: `Go to ${DOWNLOADS_PAGE} in your browser. It spots that you are on Windows on its own. Under the big button, click the standalone installer link — "Python 3.14.7" (a newer 3.x is fine too).`,
+      body: `Go to ${DOWNLOADS_PAGE} in your browser. It spots that you are on Windows on its own. Under the big button, click the standalone installer link — "Python ${PYTHON_VERSION}" (a newer 3.x is fine too).`,
       shot: {
         file: 'python-downloads-windows.png',
         alt: 'python.org downloads page on Windows: a "Download Python install manager" button, and below it a link to the standalone installer for Python 3.14.7.',
@@ -106,7 +128,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
       body:
         'Open the downloaded .exe. On the very first screen, tick "Add python.exe to PATH" at the bottom, then click "Install Now". That one checkbox is what lets the terminal find Python later.',
       look: [
-        'A small window whose title starts "Install Python 3.14" — it opens with everything you need on one screen.',
+        `A small window whose title starts "Install Python ${PYTHON_MINOR}" — it opens with everything you need on one screen.`,
         'In the middle, two wide buttons stacked: "Install Now" on top, "Customize installation" below it. You want the top one, but not yet.',
         'Along the bottom, under a thin line, a couple of checkboxes. The one that matters reads "Add python.exe to PATH". Tick it first — it is easy to miss, and it is the whole reason this step exists.',
         'Now "Install Now". If Windows asks whether to let the app make changes, choose Yes.',
@@ -151,7 +173,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
   mac: [
     {
       title: 'Open the downloads page',
-      body: `Go to ${DOWNLOADS_PAGE} in your browser. It spots that you are on a Mac on its own — click the big "Download Python 3.14.7" button (a newer 3.x is fine too).`,
+      body: `Go to ${DOWNLOADS_PAGE} in your browser. It spots that you are on a Mac on its own — click the big "Download Python ${PYTHON_VERSION}" button (a newer 3.x is fine too).`,
       shot: {
         file: 'python-downloads-mac.png',
         alt: 'python.org downloads page on macOS: a large "Download Python 3.14.7" button.',

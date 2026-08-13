@@ -19,6 +19,7 @@
 import { useState } from 'react';
 import { findTierOf, moduleNumberOf } from './content/load';
 import {
+  CHECKED_AGAINST,
   SETUP_OS_LABELS,
   setupShotUrl,
   setupStepsFor,
@@ -154,6 +155,12 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
           Steps below follow this choice, and it is remembered for next time.
         </p>
       </fieldset>
+
+      {/* The prose's staleness signal (#69): the screenshots carry a `captured
+          <date>` caption, this line is the same honesty for the words — plus
+          what to do when python.org shows a different 3.x. Data lives in
+          src/content/setup.ts next to the version constants it dates. */}
+      <p className="setup-checked">{CHECKED_AGAINST}</p>
 
       <ol className="setup-steps">
         {setupStepsFor(os).map((step, index) => (

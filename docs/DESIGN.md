@@ -188,6 +188,21 @@ restore a placeholder or a one-sided screenshot as a "fix".
   nothing at all until `python --version` fails in step 3, and a beginner who has to scroll back
   up to find the repair concludes she broke her computer instead. Same no-guilt phrasing as the
   line it copies — "Nothing is broken" first, instructions after.
+- **A Python version string in the prose is one constant, and the prose carries a checked-on
+  date** (#69). The move to words (#61/#62) traded a visible staleness signal for an invisible
+  one: a stale screenshot looks stale and its caption dates it, but stale prose lies silently —
+  it tells a beginner to click "Python 3.14.7" on a page that now offers something newer, and
+  she concludes she is on the wrong page. So the version python.org's UI names lives in
+  `PYTHON_VERSION` / `PYTHON_MINOR` in `src/content/setup.ts`, next to `DOWNLOADS_PAGE`, and is
+  interpolated everywhere the prose says it — one edit per release, and drift between two
+  sentences that must agree is not expressible. Screenshot `alt` and `caption` stay literal:
+  they describe what the bundled image actually shows, and interpolating the constant there
+  would make the alt text lie about the picture the moment the constant moves without a
+  recapture. And because a constant still goes stale silently, the guide shows the prose's own
+  provenance line above the stepper — "These steps were checked against python.org on
+  <date>…" (`CHECKED_AGAINST`, rendered by `SetupGuide.tsx`) — which also tells the learner
+  that a different 3.x on the live page is fine, the actual failure mode in the window before
+  anyone refreshes the date.
 
 The pair that does exist and stays: `src/art/setup/python-downloads-windows.png` and
 `python-downloads-mac.png` — the python.org download page as each OS sees it.

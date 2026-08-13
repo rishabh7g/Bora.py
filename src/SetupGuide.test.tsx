@@ -12,6 +12,9 @@ import HomeMap, { SETUP_MODULE_ID, SETUP_ROUTE } from './HomeMap';
 import { findModule, loadCurriculum } from './content/load';
 import {
   bundledShotFiles,
+  CHECKED_AGAINST,
+  PYTHON_MINOR,
+  PYTHON_VERSION,
   setupStepsFor,
   type SetupOs,
   type SetupStep,
@@ -241,6 +244,38 @@ it('gives every bundled screenshot descriptive alt text and a provenance caption
     expect(shot.alt.length).toBeGreaterThan(40);
     expect(shot.caption).toMatch(/captured \d{4}-\d{2}-\d{2}/);
   }
+});
+
+it('names the Python version in prose from one constant, so sentences cannot drift (#69)', () => {
+  // The installer window's title is the major.minor form of the same release,
+  // so the two constants themselves must agree.
+  expect(PYTHON_VERSION.startsWith(`${PYTHON_MINOR}.`)).toBe(true);
+  // Every version string in the prose (title, body, look) is one of the two
+  // constants — a bare hand-typed version is a second literal that must agree
+  // with the first, which is exactly the drift #69 removes.
+  const VERSION = /\b3\.\d+(?:\.\d+)?\b/g;
+  for (const step of allSteps) {
+    const prose = [step.title, step.body, ...(step.look ?? [])].join('\n');
+    for (const found of prose.match(VERSION) ?? []) {
+      expect(
+        [PYTHON_VERSION, PYTHON_MINOR],
+        `"${found}" in step "${step.title}" must be PYTHON_VERSION or PYTHON_MINOR`,
+      ).toContain(found);
+    }
+  }
+  // alt/captions are deliberately NOT interpolated: they describe what the
+  // bundled images actually show, and stay honest via the captured-date
+  // caption (asserted above) even after the constant moves.
+});
+
+it('shows the dated checked-against line above the stepper (#69)', () => {
+  // The screenshots carry `captured <date>` (#62); this line is the same
+  // staleness signal for the prose — plus what to do when python.org shows a
+  // different 3.x, which is the failure mode a beginner actually hits.
+  expect(CHECKED_AGAINST).toMatch(/checked against python\.org on \d{4}-\d{2}-\d{2}/);
+  expect(CHECKED_AGAINST).toMatch(/different 3\.x/);
+  const html = render();
+  expect(html).toContain(`<p class="setup-checked">${escaped(CHECKED_AGAINST)}</p>`);
 });
 
 it('ends in the exit checkpoint: expected output, match or come back later, no hints', () => {
