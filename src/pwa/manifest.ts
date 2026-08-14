@@ -57,25 +57,10 @@ export const pwaOptions: Partial<VitePWAOptions> = {
     navigateFallback: 'index.html',
     cleanupOutdatedCaches: true,
     clientsClaim: true,
-    runtimeCaching: [
-      // The design system pulls Archivo from Google Fonts. Cache it on first
-      // online visit so the typography survives offline; the app degrades to
-      // system-ui if it was never fetched. Still a pure static app — there is
-      // no API or backend of our own (ENGINEERING.md §1).
-      {
-        urlPattern: /^https:\/\/fonts\.googleapis\.com\//,
-        handler: 'StaleWhileRevalidate',
-        options: { cacheName: 'google-fonts-stylesheets' },
-      },
-      {
-        urlPattern: /^https:\/\/fonts\.gstatic\.com\//,
-        handler: 'CacheFirst',
-        options: {
-          cacheName: 'google-fonts-webfonts',
-          expiration: { maxEntries: 16, maxAgeSeconds: 60 * 60 * 24 * 365 },
-          cacheableResponse: { statuses: [0, 200] },
-        },
-      },
-    ],
+    // Archivo is self-hosted (#95): the three woff2 files sit beside the
+    // design-system stylesheet, so globPatterns' woff2 entry above precaches
+    // them with everything else. No third-party origin is fetched at
+    // runtime, so there is nothing to list here.
+    runtimeCaching: [],
   },
 };
