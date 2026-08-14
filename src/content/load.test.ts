@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findModule, loadCurriculum, photocardArtUrl } from './load';
+import { buildCurriculum, CurriculumError, findModule, loadCurriculum, photocardArtUrl } from './load';
 
 describe('loadCurriculum', () => {
   const curriculum = loadCurriculum();
@@ -64,5 +64,27 @@ describe('photocard art', () => {
 
   it('resolves an unknown art file name to an empty ref (content lint blocks it)', () => {
     expect(photocardArtUrl('not-a-real-card.svg')).toBe('');
+  });
+});
+
+describe('a curriculum whose content will not load (#96)', () => {
+  it('throws a typed CurriculumError, not a bare Error, naming the tier and the missing module', () => {
+    const broken = {
+      version: 1,
+      brand: 'bora.py',
+      tiers: [{ id: 't1', title: 'Tier One', era: 'now', modules: ['ghost-module'] }],
+      modules: {},
+    };
+    let caught: unknown;
+    try {
+      buildCurriculum(broken as never);
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeInstanceOf(CurriculumError);
+    const error = caught as CurriculumError;
+    expect(error.url).toBe('content/curriculum.json');
+    expect(error.reason).toContain('t1');
+    expect(error.reason).toContain('ghost-module');
   });
 });

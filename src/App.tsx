@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -28,8 +29,6 @@ import { exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './st
 import { exerciseStateOf } from './state/progress';
 import { useProgress } from './state/useProgress';
 import './app.css';
-
-const curriculum = loadCurriculum();
 
 // Minimal hash routing:
 //   #/                            → HomeMap (root)
@@ -162,6 +161,13 @@ function Shell({ children }: { children: ReactNode }) {
 }
 
 export default function App() {
+  // Was module scope (#96): a throw there happens before createRoot(...).render()
+  // ever runs, so nothing could catch it and the learner got an empty #root and
+  // a console line they would never see. Computed here instead, a throw happens
+  // during App's own render and is caught by the ErrorBoundary main.tsx wraps it
+  // in. useMemo, not a plain call: the curriculum is static content bundled at
+  // build time, so it never needs to be re-parsed on a later render.
+  const curriculum = useMemo(() => loadCurriculum(), []);
   const [hash, setHash] = useState(() => window.location.hash || HOME_ROUTE);
   const { progress, storageStalled, apply, replaceAll, resetModule } = useProgress();
   // The celebration is transient by design (ENGINEERING.md §11 step 8): it is

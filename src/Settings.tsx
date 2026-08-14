@@ -15,6 +15,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { flatModules, moduleNumberOf } from './content/load';
 import type { Curriculum } from './content/types';
+import Notice from './Notice';
 import { BACKUP_FILENAME, parseBackup, serializeProgress } from './state/backup';
 import { moduleStateOf } from './state/gating';
 import { hasModuleProgress, type Progress } from './state/progress';
@@ -202,9 +203,10 @@ export default function Settings({
         />
 
         {error && (
-          <p className="set-error" role="alert">
-            {error}
-          </p>
+          // h2, not the default h1: this screen already has one (.set-title,
+          // above) — a raised notice takes the screen's h1 only when nothing
+          // else has loaded (src/Notice.tsx).
+          <Notice level="h2" title="Import failed." body={error} />
         )}
 
         {pending && (

@@ -3,6 +3,22 @@
 import raw from '../../content/curriculum.json';
 import type { Curriculum, Exercise, Module, Tier } from './types';
 
+/** The one typed error this subsystem throws (UI baseline §10): carries what
+ *  a raised Notice needs to name — the source the loader was reading from, and
+ *  the shape it found wrong — instead of a bare Error whose message is the
+ *  only thing anyone downstream can show. */
+export class CurriculumError extends Error {
+  readonly url: string;
+  readonly reason: string;
+
+  constructor({ url, reason }: { url: string; reason: string }) {
+    super(`${reason} (${url})`);
+    this.name = 'CurriculumError';
+    this.url = url;
+    this.reason = reason;
+  }
+}
+
 // Photocard art: original SVGs authored in this repo (DESIGN.md §4 — no
 // official imagery). curriculum.json names the file ("card-m7.svg"); the
 // bundler owns the real URL, so the art survives hashing and any deploy base
@@ -83,19 +99,32 @@ function toModule(rawModule: RawModule): Module {
   };
 }
 
-export function loadCurriculum(): Curriculum {
-  const data = raw as unknown as RawCurriculum;
+/** The mapping logic, taking the raw shape as data rather than reading the
+ *  bundled import directly — so a test can hand it a deliberately broken
+ *  curriculum and assert CurriculumError, without a second copy of
+ *  content/curriculum.json on disk. loadCurriculum() below is the one real
+ *  caller: the bundled data, mapped through this. */
+export function buildCurriculum(data: RawCurriculum): Curriculum {
   const tiers: Tier[] = data.tiers.map((tier) => ({
     id: tier.id,
     title: tier.title,
     era: tier.era,
     modules: tier.modules.map((moduleId) => {
       const rawModule = data.modules[moduleId];
-      if (!rawModule) throw new Error(`Tier ${tier.id} references unknown module "${moduleId}"`);
+      if (!rawModule) {
+        throw new CurriculumError({
+          url: 'content/curriculum.json',
+          reason: `Tier "${tier.id}" references unknown module "${moduleId}"`,
+        });
+      }
       return toModule(rawModule);
     }),
   }));
   return { tiers };
+}
+
+export function loadCurriculum(): Curriculum {
+  return buildCurriculum(raw as unknown as RawCurriculum);
 }
 
 export function findModule(curriculum: Curriculum, moduleId: string): Module | undefined {

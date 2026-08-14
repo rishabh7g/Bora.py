@@ -9,29 +9,27 @@
 // used to leave the learner on a permanently empty page with nothing to read.
 // So: always say something, and after a wait say what went wrong.
 //
-// The wait itself is CSS (loading.css): the text is in the DOM immediately for
-// assistive tech, but fades in only if the load is slow, so a normal fast load
-// never flashes it.
+// The stalled state is the shared failure panel (src/Notice.tsx, #96) — this is
+// exactly the "nothing else has loaded" case Notice's default h1 title is for.
+// The pending state is not a failure, so it stays its own small, quiet element:
+// the text is in the DOM immediately for assistive tech, but fades in only if
+// the read is still running after a beat, so a normal fast load never flashes it.
+import Notice from './Notice';
 import './loading.css';
 
 export default function ProgressLoading({ stalled }: { stalled: boolean }) {
+  if (stalled) {
+    return (
+      <Notice
+        title="Your checkpoints are not loading."
+        body="This browser’s storage looks blocked or unavailable — private browsing and blocked site data can both do it. Your progress is safe; this copy of the app just cannot read it."
+        action={{ label: 'Try again', onClick: () => window.location.reload() }}
+      />
+    );
+  }
   return (
     <div className="load-screen" role="status">
-      {stalled ? (
-        <>
-          <p className="load-title">Your checkpoints are not loading.</p>
-          <p className="load-body">
-            This browser&rsquo;s storage looks blocked or unavailable — private browsing and
-            blocked site data can both do it. Your progress is safe; this copy of the app just
-            cannot read it.
-          </p>
-          <button className="btn btn-secondary" type="button" onClick={() => window.location.reload()}>
-            Try again
-          </button>
-        </>
-      ) : (
-        <p className="load-body load-body-pending">Loading your checkpoints&hellip;</p>
-      )}
+      <p className="load-body load-body-pending">Loading your checkpoints&hellip;</p>
     </div>
   );
 }
