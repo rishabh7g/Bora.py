@@ -6,7 +6,7 @@
   width: min(860px, 100%);
   box-sizing: border-box;
   margin: 0 auto;
-  padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 0;
+  padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
 }
 
 /* Back link — ghost button as anchor, flush left. The label is short ("← Map"),
@@ -39,7 +39,7 @@
   margin: 14px 0 0;
   font-size: 15px;
   line-height: 1.6;
-  max-width: 62ch;
+  max-width: var(--content-max);
   color: var(--color-neutral-800);
 }
 
