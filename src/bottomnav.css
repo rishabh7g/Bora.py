@@ -50,6 +50,9 @@
   /* Kills the 300ms double-tap-zoom delay. */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  /* #103: chrome only — the nav's three destinations are UI, never content
+     a learner would want to select and copy. */
+  user-select: none;
 }
 
 /* The current destination, selected off the same attribute a screen reader

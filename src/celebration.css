@@ -129,6 +129,10 @@
   align-items: center;
   justify-content: flex-start;
   white-space: nowrap;
+  /* #103: a plain <button>, not a .btn, so it needs its own rule — the one
+     control on the celebration field. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Hover and pressed are one tonal step apart on the same ramp, so the inverted
