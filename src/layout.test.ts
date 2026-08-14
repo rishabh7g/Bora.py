@@ -3,7 +3,8 @@
 // min-width — never both directions around the same pixel value. Asserted
 // against source, the way src/tokens.test.ts and the shell guards in
 // src/App.test.tsx and src/BottomNav.test.tsx do: this suite has no jsdom,
-// and a jsdom would resolve neither `env()` nor `max()` if it had one.
+// and a jsdom would resolve neither `env()` nor the `calc()` around it if it
+// had one.
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -45,5 +46,14 @@ describe('breakpoints (#97)', () => {
       (match) => match[1],
     );
     for (const width of widths) expect(['480', '768', '1024']).toContain(width);
+  });
+});
+
+describe('safe-area insets (#122)', () => {
+  it('never writes a bare env() — every inset sits inside a calc() or max() with a designed term', () => {
+    const insets = allCss.match(/env\(safe-area-inset-[a-z]+/g) ?? [];
+    const guarded = allCss.match(/(?:calc|max)\([^;]*env\(safe-area-inset-[a-z]+/g) ?? [];
+    expect(insets).not.toHaveLength(0);
+    expect(insets).toHaveLength(guarded.length);
   });
 });

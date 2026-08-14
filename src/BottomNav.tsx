@@ -11,10 +11,12 @@
 // does not have yet.
 //
 // Two rules live in src/bottomnav.css rather than here, because they are
-// layout facts: an item is 48px tall (above the app's 44px floor — a bottom
-// nav is thumb territory) and `touch-action: manipulation` kills the 300ms
-// double-tap-zoom delay; the bar clears the home indicator with
-// `max(var(--space-8), env(safe-area-inset-bottom))`.
+// layout facts: an item is 56px tall (the house UI standard's bottom-nav row,
+// well above the app's 44px floor — a bottom nav is thumb territory) and
+// `touch-action: manipulation` kills the 300ms double-tap-zoom delay; the bar
+// adds the home indicator's strip beneath its own designed padding with
+// `calc(var(--space-1) + env(safe-area-inset-bottom, 0px))` (#122) — the inset
+// is the device's, added below the bar, never a replacement for the bar's gap.
 //
 // The label span (#97) is in the DOM at every width — icon-only below 768px
 // is a `display: none` in bottomnav.css, not an absent element, so the
