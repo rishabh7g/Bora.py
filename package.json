@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint:content": "node content/lint.ts",
+    "icons": "node scripts/generate-icons.mjs",
     "test": "vitest run"
   },
   "dependencies": {

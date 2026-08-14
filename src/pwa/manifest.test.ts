@@ -64,6 +64,21 @@ it('ships 192, 512 and maskable icons, and each file exists', () => {
   }
 });
 
+// #99 — the full required set (§13), by name, so a file quietly going
+// missing from disk fails here even if it slipped out of `icons` or
+// `includedAssets` too.
+it('has the whole §13 required icon set on disk: source SVG, 192, 512, maskable, apple-touch, favicon-32', () => {
+  const required = [
+    'favicon.svg',
+    'icons/icon-192.png',
+    'icons/icon-512.png',
+    'icons/icon-maskable-512.png',
+    'icons/apple-touch-icon-180.png',
+    'icons/favicon-32.png',
+  ];
+  for (const file of required) expect(existsSync(join(repoRoot, 'public', file))).toBe(true);
+});
+
 it('precaches the shell, the photocard art and the icons, and falls back to it offline', () => {
   const patterns = workbox.globPatterns!.join(' ');
   for (const extension of ['html', 'js', 'css', 'svg', 'png', 'woff2']) {
