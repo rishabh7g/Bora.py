@@ -51,6 +51,24 @@ it('names every item, because an icon-only link has no other accessible name', (
   expect(render('home')).toContain('aria-hidden="true"');
 });
 
+it('gives every item a title alongside its aria-label, so a pointer user gets a tooltip too (#107)', () => {
+  // aria-label produces no tooltip in any browser — title is the sighted
+  // pointer user's half of the accessible-name contract, mandatory at every
+  // viewport, never gated by a media query or matchMedia check.
+  for (const screen of ['home', 'shelf', 'settings']) {
+    const items = links(render(screen));
+    for (const item of items) {
+      const ariaLabel = /aria-label="([^"]+)"/.exec(item)?.[1];
+      const title = /title="([^"]+)"/.exec(item)?.[1];
+      expect(title).toBeDefined();
+      expect(title).toBe(ariaLabel);
+    }
+  }
+  // Set in JSX, not behind a viewport check — src/BottomNav.tsx has no
+  // matchMedia and title is never inside a conditional.
+  expect(readFileSync(join(repoRoot, 'src/BottomNav.tsx'), 'utf8')).not.toMatch(/matchMedia/);
+});
+
 it('keeps the label in the DOM at every width — only its display changes (#97)', () => {
   // Icon-only below 768px is bottomnav.css hiding a real element, not an
   // absent one: the >=768px rail has real text to reveal.
