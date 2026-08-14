@@ -7,6 +7,7 @@ import '../design/_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/styles.css'
 import './tokens.css';
 import App from './App';
 import ErrorBoundary from './ErrorBoundary';
+import StandaloneZoomLock from './pwa/StandaloneZoomLock';
 
 // Offline precache + silent auto-update (ENGINEERING.md §9). The generated
 // registration knows the deploy base, so this works at any subpath; in dev it
@@ -21,6 +22,11 @@ createRoot(document.getElementById('root')!).render(
         inside App rather than at module scope — renders a Notice instead of
         an empty #root. */}
     <ErrorBoundary>
+      {/* Zoom is on in a browser tab and off once installed (#98, UI baseline
+          §7) — rendered once, near the root, beside <App/> rather than inside
+          it: it owns no screen and returns null, so it never affects what
+          ErrorBoundary is guarding. */}
+      <StandaloneZoomLock />
       <App />
     </ErrorBoundary>
   </StrictMode>,
