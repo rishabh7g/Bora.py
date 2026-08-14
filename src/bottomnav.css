@@ -1,13 +1,31 @@
 /* Bottom navigation — Modernist system. Tokens and the prototype's structural
    measures only (design/README.md): radius 0 by token, 2px rules between major
    sections, accent used sparingly (exactly one item is accent-coloured at a
-   time), hit targets ≥ 44px. */
+   time), hit targets ≥ 44px.
+
+   Bar below 768px, left rail from 768px up (house UI standard §3/§5, #97):
+   the two bands share every class below, so the DOM and the accessible name
+   never change — only layout properties move inside the min-width query. */
+
+:root {
+  /* The rail's fixed width (house UI standard §4). A token, not a literal
+     repeated between this file and src/app.css's grid-template-columns —
+     both read the one value. */
+  --rail-width: 232px;
+  /* The bar's icon is already this size; naming it means the rail (which the
+     standard calls out explicitly) and the bar draw from the same value
+     instead of two identical literals drifting apart. */
+  --icon-ui: 20px;
+}
 
 .bottomnav {
-  /* The shell's last flex child (#73, src/app.css) — never position: fixed.
-     Sitting in the column means it cannot overlap the screen above it, and
-     CelebrationScreen's fixed red field still covers it without an argument
-     about z-index. */
+  /* The shell's last flex child on the phone/large-phone bands (#73,
+     src/app.css) — never position: fixed. Sitting in the column means it
+     cannot overlap the screen above it, and CelebrationScreen's fixed red
+     field still covers it without an argument about z-index. From 768px up,
+     src/app.css turns the shell into a grid and this becomes that grid's
+     first column — still not fixed, still a sibling of the scroll area, not
+     drawn over it. */
   flex: none;
   display: flex;
   background: var(--color-bg);
@@ -43,6 +61,56 @@
 }
 
 .bottomnav-icon {
-  width: 20px;
-  height: 20px;
+  width: var(--icon-ui);
+  height: var(--icon-ui);
+}
+
+/* Icon-only bar (house UI standard §5): the label stays in the DOM at every
+   width — hiding it here is a purely visual change, never an accessibility
+   regression (the link's aria-label carries the name at both bands
+   regardless). Restored in the >=768px rail below. */
+.bottomnav-label {
+  display: none;
+}
+
+/* Tablet and laptop (house UI standard §3, §4, §5): a 232px-wide left rail,
+   icon beside a visible label, instead of a bar of icons under the screen. */
+@media (min-width: 768px) {
+  .bottomnav {
+    /* The shell's grid places the scroll area in column 2 (src/app.css); this
+       is column 1 — explicit, so auto-placement is never what decides which
+       side the rail draws on. */
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: var(--rail-width);
+    border-top: none;
+    border-right: 2px solid var(--color-divider);
+    padding: var(--space-4) var(--space-3);
+    padding-bottom: var(--space-4);
+  }
+
+  .bottomnav-item {
+    flex: none;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    padding: 0 var(--space-2);
+  }
+
+  .bottomnav-label {
+    display: block;
+    font-size: 14px;
+  }
+}
+
+/* Laptop (house UI standard §3): the rail's shape does not change again —
+   still a 232px icon+label rail — but a laptop canvas has room the tablet
+   band does not, so the rail's own inline padding opens up a step instead of
+   staying pinned at the tablet gap. */
+@media (min-width: 1024px) {
+  .bottomnav {
+    padding-inline: var(--space-4);
+  }
 }
