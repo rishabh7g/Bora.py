@@ -5,6 +5,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { expect, it } from 'vitest';
+import { backgroundColor, injectThemeColor, themeColor } from './brand';
 import { includedAssets, pwaOptions, webManifest } from './manifest';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -26,8 +27,23 @@ it('names the app bora.py, never the working title PyLearn', () => {
 it('installs standalone and portrait in the brand colours', () => {
   expect(manifest.display).toBe('standalone');
   expect(manifest.orientation).toBe('portrait');
-  expect(manifest.theme_color).toBe('#ec3013');
-  expect(manifest.background_color).toBe('#f3f2f2');
+  // Read from the CSS token (#105), not retyped literals — this fails the
+  // moment the manifest and the design system's --color-accent / --color-bg
+  // disagree, which a literal-vs-literal comparison never could.
+  expect(manifest.theme_color).toBe(themeColor);
+  expect(manifest.background_color).toBe(backgroundColor);
+  // Pinned so a future retune of the token is a deliberate, reviewed change
+  // to this test too — not silently absorbed by both sides moving together.
+  expect(themeColor).toBe('#ec3013');
+  expect(backgroundColor).toBe('#f3f2f2');
+});
+
+it('carries the theme-color meta tag through the same token, so index.html and the manifest never drift (#105)', () => {
+  const html = readFileSync(join(repoRoot, 'index.html'), 'utf8');
+  expect(html).toContain('__THEME_COLOR__');
+  const transformed = injectThemeColor(html);
+  expect(transformed).toContain(`<meta name="theme-color" content="${themeColor}" />`);
+  expect(transformed).not.toContain('__THEME_COLOR__');
 });
 
 it('opts the viewport into the safe area, so an inset is real on a notched phone (#74)', () => {

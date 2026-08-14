@@ -8,7 +8,11 @@
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%icons/favicon-32.png" />
     <link rel="apple-touch-icon" href="%BASE_URL%icons/apple-touch-icon-180.png" />
-    <meta name="theme-color" content="#ec3013" />
+    <!-- __THEME_COLOR__ is substituted at build time (vite.config.ts) from the
+         design system's --color-accent token (src/pwa/brand.ts, #105) — the
+         same source src/pwa/manifest.ts reads for the PWA manifest's
+         theme_color, so the two can never drift apart. -->
+    <meta name="theme-color" content="__THEME_COLOR__" />
     <!-- Standalone display on a home-screen launch. The standard tag is what
          Chrome reads (it deprecated the apple- one and logs a console notice
          when it is alone); the apple- tag stays for older iOS, which only

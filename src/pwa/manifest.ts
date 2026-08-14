@@ -7,6 +7,7 @@
 // `start_url: '.'` and `scope: './'` resolve against wherever the manifest
 // itself lands. An absolute '/' would break the moment the app moves off root.
 import type { ManifestOptions, VitePWAOptions } from 'vite-plugin-pwa';
+import { backgroundColor, themeColor } from './brand';
 
 // Copied verbatim from public/ into the build, then precached below.
 export const includedAssets = [
@@ -32,9 +33,10 @@ export const webManifest: Partial<ManifestOptions> = {
   scope: './',
   display: 'standalone',
   orientation: 'portrait',
-  // The mark's field and the app's page colour (BRAND.md variants).
-  theme_color: '#ec3013',
-  background_color: '#f3f2f2',
+  // Read from the design system's tokens (#105, src/pwa/brand.ts) — never
+  // retyped. The mark's field and the app's page colour (BRAND.md variants).
+  theme_color: themeColor,
+  background_color: backgroundColor,
   icons: [
     { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
     { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
