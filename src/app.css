@@ -6,6 +6,13 @@
  * position: fixed, no z-index argument with CelebrationScreen, and no
  * per-screen padding to compensate for an overlap that never happens.
  *
+ * From 768px up (house UI standard §3, §4, #97) the column becomes a two-
+ * column grid — rail, then the scroll area — instead of a column with the
+ * nav as its last row. There is still exactly one scroll area at every band:
+ * .app-screen keeps owning it, in the grid's second column rather than the
+ * flex column's last-but-one row. src/bottomnav.css owns what the nav looks
+ * like at each band; this file only owns where the shell places it.
+ *
  * Layout only — no colour, no type. Those stay with the design system and
  * src/tokens.css.
  */
@@ -30,6 +37,21 @@ body,
   overflow: hidden;
 }
 
+/* Tablet and laptop (house UI standard §3, §4): rail beside the scroll area,
+   not a bar under it. Grid, not flex-row — src/bottomnav.css's rail sets its
+   own grid-column: 1, so it paints first regardless of DOM order (it is
+   still the shell's LAST child; only where it is placed changes, not the
+   markup). --rail-width is declared once, in src/bottomnav.css, and read
+   here so the column and the rail's own width can never drift apart. */
+@media (min-width: 768px) {
+  .app-shell {
+    display: grid;
+    grid-template-columns: var(--rail-width) 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
+  }
+}
+
 /* The one scroll area in the app: the <main> the shell wraps every screen in. */
 .app-screen {
   flex: 1;
@@ -43,4 +65,15 @@ body,
      scrollTop on every route change (#85), and smooth would turn that reset
      into an animation the learner never asked for — one that would then owe
      prefers-reduced-motion an answer. Arriving on a screen is not a scroll. */
+}
+
+@media (min-width: 768px) {
+  .app-screen {
+    grid-column: 2;
+    grid-row: 1;
+    /* Grid items default to stretch, but the min-height: 0 above is what lets
+       this cell shrink below its content instead of growing the grid row past
+       the viewport — the same double-scrollbar guard the flex column needed. */
+    min-height: 0;
+  }
 }

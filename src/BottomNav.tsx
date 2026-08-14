@@ -15,6 +15,12 @@
 // nav is thumb territory) and `touch-action: manipulation` kills the 300ms
 // double-tap-zoom delay; the bar clears the home indicator with
 // `max(var(--space-8), env(safe-area-inset-bottom))`.
+//
+// The label span (#97) is in the DOM at every width — icon-only below 768px
+// is a `display: none` in bottomnav.css, not an absent element, so the
+// >=768px rail has real text to reveal rather than nothing to build. The
+// link's aria-label carries the accessible name at both bands regardless, so
+// hiding the visible label is never an accessibility regression.
 import { Layers, Map, Settings } from 'lucide-react';
 import { HOME_ROUTE, SETTINGS_ROUTE, SHELF_ROUTE } from './HomeMap';
 import './bottomnav.css';
@@ -45,6 +51,7 @@ export default function BottomNav({ screen }: { screen: string }) {
           aria-current={item.screen === screen ? 'page' : undefined}
         >
           <item.Icon className="bottomnav-icon" aria-hidden="true" />
+          <span className="bottomnav-label">{item.label}</span>
         </a>
       ))}
     </nav>

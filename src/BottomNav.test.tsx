@@ -48,10 +48,17 @@ it('names every item, because an icon-only link has no other accessible name', (
     'Shelf',
     'Settings',
   ]);
-  // Icon only: no visible text anywhere in the bar, and the glyph itself is
-  // muted so the label is announced once.
-  expect(render('home').replace(/<[^>]*>/g, '').trim()).toBe('');
   expect(render('home')).toContain('aria-hidden="true"');
+});
+
+it('keeps the label in the DOM at every width — only its display changes (#97)', () => {
+  // Icon-only below 768px is bottomnav.css hiding a real element, not an
+  // absent one: the >=768px rail has real text to reveal.
+  const html = render('home');
+  expect(html).toContain('<span class="bottomnav-label">Map</span>');
+  expect(html).toContain('<span class="bottomnav-label">Shelf</span>');
+  expect(html).toContain('<span class="bottomnav-label">Settings</span>');
+  expect(css).toMatch(/\.bottomnav-label\s*\{\s*display:\s*none;\s*\}/);
 });
 
 it('marks the destination being shown, and marks it exactly once', () => {
@@ -98,6 +105,35 @@ it('gives every item a thumb-sized target with no tap delay', () => {
   expect(item).toContain('min-height: 48px'); // above the app's 44px floor
   expect(item).toContain('touch-action: manipulation');
   expect(item).toContain('-webkit-tap-highlight-color: transparent');
+});
+
+it('becomes a 232px left rail at >=768px, icon beside a visible label (#97)', () => {
+  const rail = /@media \(min-width: 768px\) \{\s*\.bottomnav\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+  expect(rail).toContain('grid-column: 1');
+  expect(rail).toContain('flex-direction: column');
+  expect(rail).toContain('width: var(--rail-width)');
+  expect(rail).toContain('border-right');
+  expect(rail).not.toMatch(/border-top:\s*2px/);
+
+  const railLabel =
+    /@media \(min-width: 768px\) \{[\s\S]*\.bottomnav-label\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+  expect(railLabel).toContain('display: block');
+});
+
+it('declares --rail-width and --icon-ui once, as tokens, never a literal repeated in a rule', () => {
+  expect(css).toMatch(/--rail-width:\s*232px/);
+  expect(css).toMatch(/--icon-ui:\s*20px/);
+  // Every place the rail's width or the icon's size is USED reads the token —
+  // no second "232px" or "20px" literal anywhere else in the file.
+  const widthLiterals = css.match(/232px/g) ?? [];
+  const iconLiterals = css.match(/20px/g) ?? [];
+  expect(widthLiterals).toHaveLength(1);
+  expect(iconLiterals).toHaveLength(1);
+});
+
+it('writes min-width only — no max-width rule pairs the same pixel value as either', () => {
+  const breakpoints = [...css.matchAll(/@media \(([^)]*)\)/g)].map((match) => match[1]);
+  expect(breakpoints).toEqual(['min-width: 768px', 'min-width: 1024px']);
 });
 
 it('takes its ink from the text roles, and accents exactly the current item', () => {
