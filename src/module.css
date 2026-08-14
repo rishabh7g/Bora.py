@@ -51,12 +51,6 @@
   border-top: 2px solid var(--color-divider);
   padding-top: 16px;
 }
-.mod-section-sub {
-  margin: 6px 0 0;
-  font-size: 16px;
-  color: var(--color-text-quiet);
-}
-
 /* — worked examples — */
 .mod-examples {
   display: flex;

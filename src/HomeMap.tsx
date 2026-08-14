@@ -152,7 +152,9 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
         </span>
       </div>
       <h1 className="home-title">{t('home.greeting', { name: LEARNER_NAME })}</h1>
-      <p className="home-lede">{t('home.lede', { progressLine })}</p>
+      {/* Trimmed to the live value (#101, keeper test #1): the prose framing
+          ("never days or streaks") was read once and skimmed past forever. */}
+      <p className="home-lede">{progressLine}</p>
 
       <div className="home-tiers">
         {curriculum.tiers.map((tier) => (

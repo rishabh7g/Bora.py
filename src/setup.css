@@ -66,12 +66,6 @@
   padding-inline: 20px;
   font-weight: 700;
 }
-.setup-os-note {
-  margin: 8px 0 0;
-  font-size: 16px;
-  color: var(--color-text-quiet);
-}
-
 /* Section heading over the stepper (#88) — the H2 the five step H3s hang off,
    so the screen's outline descends without a gap. Same treatment as the other
    two content screens' section headings (.mod-section-title, .ex-section-title):
@@ -88,10 +82,10 @@
 }
 
 /* Checked-against line (#69) — the prose's provenance date, opening the steps
-   section it dates (#88 put a heading above it). Quiet supporting text, so it takes the
-   same ink and size as .setup-os-note: --color-text-quiet is a §7a role token
-   that clears AA at this size, and no ancestor opacity multiplies it. Measured
-   by its own contrast-audit row (docs/QA.md). */
+   section it dates (#88 put a heading above it). Quiet supporting text:
+   --color-text-quiet is a §7a role token that clears AA at this size, and no
+   ancestor opacity multiplies it. Measured by its own contrast-audit row
+   (docs/QA.md). */
 .setup-checked {
   margin: 22px 0 0;
   font-size: 16px;

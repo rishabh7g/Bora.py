@@ -9,7 +9,7 @@
  * never the reverse. A `tools/` module the app bundle imports is how a second copy of the list
  * gets born, which is the one thing this file exists to prevent.
  *
- * Keys are DOT-PATHS into a nested object (`home.lede`), so the authored pack
+ * Keys are DOT-PATHS into a nested object (`home.kicker`), so the authored pack
  * (`src/strings/en.ts`) reads like a document instead of a flat table. `t()` (`src/strings/t.ts`)
  * flattens the pack once at module load and reads it back with exactly the key named here.
  *
@@ -57,7 +57,6 @@ export const STRINGS_KEYS = [
   'home.kicker',
   'home.checkpointsCount',
   'home.greeting',
-  'home.lede',
   'home.progressLine.next',
   'home.progressLine.allPassed',
   'home.status.upNext',
@@ -69,7 +68,6 @@ export const STRINGS_KEYS = [
   // Settings.
   'settings.kicker',
   'settings.title',
-  'settings.lede',
   'settings.savedFile',
   'settings.export.h2',
   'settings.export.bodyBeforeFile',
@@ -125,7 +123,6 @@ export const STRINGS_KEYS = [
   'exercise.hint.label',
   'exercise.hint.revealLabel',
   'exercise.section.hintLadder',
-  'exercise.section.hintLadderSub',
   'exercise.solution.label',
   'exercise.solution.revealLabel',
   'exercise.solution.revealedNote',
@@ -142,7 +139,6 @@ export const STRINGS_KEYS = [
   'module.kicker.plain',
   'module.kicker.withTier',
   'module.section.workedExamples',
-  'module.section.workedExamplesSub',
   'module.section.exercises',
   'module.exit.badge',
   'module.exit.summativeNote',
@@ -179,7 +175,6 @@ export const STRINGS_KEYS = [
 
   // SetupGuide (the component's own chrome — step content stays in content/setup.ts, see above).
   'setup.osLegend',
-  'setup.osNote',
   'setup.section.installSteps',
   'setup.look.label',
   'setup.term.label',
@@ -224,7 +219,6 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'home.kicker': [],
   'home.checkpointsCount': ['passed', 'total'],
   'home.greeting': ['name'],
-  'home.lede': ['progressLine'],
   'home.progressLine.next': ['number'],
   'home.progressLine.allPassed': [],
   'home.status.upNext': [],
@@ -235,7 +229,6 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
 
   'settings.kicker': [],
   'settings.title': [],
-  'settings.lede': [],
   'settings.savedFile': ['fileName'],
   'settings.export.h2': [],
   'settings.export.bodyBeforeFile': [],
@@ -289,7 +282,6 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'exercise.hint.label': ['number'],
   'exercise.hint.revealLabel': ['number'],
   'exercise.section.hintLadder': [],
-  'exercise.section.hintLadderSub': [],
   'exercise.solution.label': [],
   'exercise.solution.revealLabel': [],
   'exercise.solution.revealedNote': [],
@@ -305,7 +297,6 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'module.kicker.plain': ['number'],
   'module.kicker.withTier': ['number', 'tier'],
   'module.section.workedExamples': [],
-  'module.section.workedExamplesSub': [],
   'module.section.exercises': [],
   'module.exit.badge': [],
   'module.exit.summativeNote': [],
@@ -339,7 +330,6 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'shelf.card.unearnedCaption': [],
 
   'setup.osLegend': [],
-  'setup.osNote': [],
   'setup.section.installSteps': [],
   'setup.look.label': [],
   'setup.term.label': [],

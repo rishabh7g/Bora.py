@@ -77,11 +77,11 @@ it('locked rows carry no href and no tabbable element', () => {
 });
 
 it('speaks in checkpoints only — no streaks, days, XP or percentages', () => {
+  // #101: the framing sentence is gone — the screen just states the fact
+  // (checkpoints count, next-up module), so there is nothing left to carve
+  // an exception out for.
   const html = render(passModule(emptyProgress(), 'm0'));
-  const disclaimer = 'Progress is checkpoints passed — never days or streaks.';
-  expect(html).toContain(disclaimer);
-  // Outside that one disclaimer sentence nothing may mention time or scores.
-  expect(html.replace(disclaimer, '')).not.toMatch(/streak|\bXP\b|\bdays?\b|\d+\s*%|complete/i);
+  expect(html).not.toMatch(/streak|\bXP\b|\bdays?\b|\d+\s*%|complete/i);
 });
 
 it('unlocks the Tier 5 section once the capstone passes', () => {

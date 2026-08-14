@@ -16,29 +16,29 @@ describe('checkStrings', () => {
 
   it('reports a missing key', () => {
     const flat = flattenStrings(en);
-    flat.delete('home.lede');
+    flat.delete('home.kicker');
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
-    expect(issues).toContain('en pack: missing key "home.lede"');
+    expect(issues).toContain('en pack: missing key "home.kicker"');
   });
 
   it('reports a present-but-empty key', () => {
     const flat = flattenStrings(en);
-    flat.set('home.lede', '   ');
+    flat.set('home.kicker', '   ');
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
-    expect(issues.some((issue) => issue.includes('"home.lede" must be a non-empty string'))).toBe(
+    expect(issues.some((issue) => issue.includes('"home.kicker" must be a non-empty string'))).toBe(
       true,
     );
   });
 
   it('reports an unknown key', () => {
     const flat = flattenStrings(en);
-    flat.set('home.ledeTypo', 'stray');
+    flat.set('home.kickerTypo', 'stray');
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
     expect(issues).toContain(
-      'en pack: unknown key "home.ledeTypo" — not in the canonical list (src/strings/stringsKeys.ts)',
+      'en pack: unknown key "home.kickerTypo" — not in the canonical list (src/strings/stringsKeys.ts)',
     );
   });
 

@@ -1,6 +1,6 @@
 /**
  * The first (and, today, only) shell-copy pack (#100) — English, authored nested so the file
- * reads like a document: `{"home":{"lede":…}}` is the path `home.lede` names in
+ * reads like a document: `{"home":{"kicker":…}}` is the path `home.kicker` names in
  * `src/strings/stringsKeys.ts`.
  *
  * Deliberately NOT typed against `Record<StringsKey, string>`: a mapped type would make a missing
@@ -38,8 +38,11 @@ export const en = {
 
   progressLoading: {
     stalledTitle: 'Your checkpoints are not loading.',
+    // #101: trimmed to the diagnosis (still "storage", still actionable
+    // context for the retry button); the "your progress is safe" reassurance
+    // was read once and skimmed past forever.
     stalledBody:
-      'This browser’s storage looks blocked or unavailable — private browsing and blocked site data can both do it. Your progress is safe; this copy of the app just cannot read it.',
+      'This browser’s storage looks blocked or unavailable — private browsing and blocked site data can both do it.',
     pending: 'Loading your checkpoints…',
   },
 
@@ -47,7 +50,6 @@ export const en = {
     kicker: 'Checkpoint path',
     checkpointsCount: '{passed} / {total} CHECKPOINTS',
     greeting: 'Annyeong, {name}.',
-    lede: 'Progress is checkpoints passed — never days or streaks. {progressLine}',
     progressLine: {
       next: 'Next up: Module {number}.',
       allPassed: 'Every checkpoint passed. Tier 5 is yours.',
@@ -66,12 +68,11 @@ export const en = {
   settings: {
     kicker: 'Settings',
     title: 'Your progress, your file.',
-    lede: 'Everything is saved in this browser only — no account, no server. Export a copy so a cleared browser or a new device never costs you the work.',
     savedFile: 'Saved {fileName}.',
     export: {
       h2: 'Export',
       bodyBeforeFile: 'Downloads everything saved here as ',
-      bodyAfterFile: '. Keep it wherever you keep files.',
+      bodyAfterFile: '.',
       button: 'Export progress',
     },
     summary: {
@@ -82,7 +83,7 @@ export const en = {
     import: {
       h2: 'Import',
       bodyBeforeFile: 'Reads a ',
-      bodyAfterFile: ' file back in. It replaces what is saved here, and only after you confirm.',
+      bodyAfterFile: ' file back in.',
       label: 'Backup file',
       failedTitle: 'Import failed.',
       replaceWarning: "Importing replaces the progress saved in this browser with the file's.",
@@ -146,8 +147,6 @@ export const en = {
     },
     section: {
       hintLadder: 'Hint ladder',
-      hintLadderSub:
-        "Attempt → hint → attempt → hint → attempt → solution. Each hint cracks this module's photocard. Cracks never block anything.",
     },
     solution: {
       label: 'SOLUTION',
@@ -176,8 +175,6 @@ export const en = {
     },
     section: {
       workedExamples: 'Worked examples',
-      workedExamplesSub:
-        'Each shows the code, its exact terminal output, and why it works. Type and run every one on your machine.',
       exercises: 'Exercises',
     },
     exit: {
@@ -228,7 +225,6 @@ export const en = {
 
   setup: {
     osLegend: 'Your machine',
-    osNote: 'Steps below follow this choice, and it is remembered for next time.',
     section: {
       installSteps: 'Install steps',
     },

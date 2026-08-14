@@ -28,14 +28,6 @@
   letter-spacing: -0.01em;
 }
 
-.set-lede {
-  margin: 10px 0 0;
-  font-size: 16px;
-  line-height: 1.6;
-  max-width: var(--content-max);
-  color: var(--color-text-quiet);
-}
-
 /* Status line for the last thing that happened — a fact, stated once. */
 .set-notice {
   margin: 16px 0 0;

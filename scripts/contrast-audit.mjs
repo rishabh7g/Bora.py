@@ -160,12 +160,10 @@ const ROWS = [
   ['shelf-fresh', '.shelf-note', 'card caption'],
   ['shelf-fresh', '.shelf-kicker', 'shelf kicker'],
   ['module-m1', '.mod-kicker', 'module kicker'],
-  ['module-m1', '.mod-section-sub', 'section sub'],
   ['module-m1', '.mod-example-why', 'why line'],
   ['module-m1', '.mod-num', 'example numeral'],
   ['exercise-e1', '.ex-kicker', 'exercise kicker'],
   ['exercise-e1', '.ex-expected-sub', 'expected-output sub'],
-  ['exercise-e1', '.ex-section-sub', 'ladder section sub'],
   ['exercise-e1-ws', '.ex-ws-legend', 'whitespace legend'],
   // #86 — the other .seg in the app. This fixture already clicks the toggle on
   // to render the legend, so the checked option is right there: the audit used
@@ -179,7 +177,6 @@ const ROWS = [
   ['settings', '.set-copy--quiet', 'settings quiet copy'],
   ['settings', '.set-rowstate', 'settings row state'],
   ['setup', '.setup-kicker', 'setup kicker'],
-  ['setup', '.setup-os-note', 'setup OS note'],
   // #69 — the dated "checked against python.org" line above the stepper: quiet
   // supporting text the learner must be able to read.
   ['setup', '.setup-checked', 'checked-against line'],
