@@ -108,7 +108,10 @@ h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: var(--font-headi
    ══════════════════════════════════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; }
-body { margin: 0; font-size: 15px; line-height: 1.55; font-weight: 400; }
+/* #106: floored at --text-body-min (src/tokens.css) — zoom is off once the
+   app is installed (StandaloneZoomLock, #98), so nothing the app renders may
+   start below the size a learner can actually read without it. */
+body { margin: 0; font-size: var(--text-body-min, 16px); line-height: 1.55; font-weight: 400; }
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
   line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 var(--space-2);
@@ -124,8 +127,11 @@ p { margin: 0 0 var(--space-3); }
 a { color: var(--color-accent); text-underline-offset: 3px; }
 img { display: block; max-width: 100%; }
 figure { margin: 0; }
+/* #106: this app's only figcaption (a screenshot caption, src/setup.css
+   ".setup-shot figcaption") is a caption — the rule explicitly gives those
+   no exception. */
 figcaption {
-  font-size: 11px; margin-top: var(--space-1);
+  font-size: 16px; margin-top: var(--space-1);
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 .text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
@@ -144,7 +150,8 @@ figcaption {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   cursor: pointer; text-decoration: none;
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: 13px; line-height: 1.2; color: var(--color-text);
+  /* #106: every button and back link in the app is a .btn (or .btn-ghost). */
+  font-size: 16px; line-height: 1.2; color: var(--color-text);
   background: transparent; border: 1px solid transparent;
   padding: calc(var(--space-2) * 0.85) var(--space-3);
   border-radius: var(--radius-md);
@@ -170,7 +177,9 @@ figcaption {
 }
 .input {
   width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
-  font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+  /* #106/#103: also clears the ≥16px input floor — below that iOS Safari
+     zooms the page on focus, and standalone it cannot zoom back out. */
+  font-size: 16px; color: var(--color-text); caret-color: var(--color-accent);
   background: var(--color-surface);
   border: 1px solid var(--color-divider); border-radius: var(--radius-md);
 }
@@ -197,7 +206,9 @@ textarea.input { min-height: 90px; resize: vertical; }
 }
 .seg-opt {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 12px; font-size: 13px; cursor: pointer;
+  /* #106: the OS-picker radios and the "Show whitespace" toggle both read
+     this label. */
+  padding: 7px 12px; font-size: 16px; cursor: pointer;
 }
 .seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
 .seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
@@ -224,8 +235,12 @@ textarea.input { min-height: 90px; resize: vertical; }
 .elev-lg { box-shadow: var(--shadow-lg); }
 
 /* — tags — */
+/* #106: the status chip every screen uses (PASSED / LOCKED / UP NEXT / OPEN /
+   MATCHED / …). §7's "chip labels … all count" — a 0.02em tracking is not
+   the ≥0.08em "tracked kicker style" the one exception is for, so this
+   raises like the rest rather than joining the kicker allow-list. */
 .tag {
-  display: inline-flex; align-items: center; font-size: 11px;
+  display: inline-flex; align-items: center; font-size: 16px;
   letter-spacing: 0.02em; padding: 3px 10px;
   border-radius: calc(var(--radius-md) * 0.75);
 }

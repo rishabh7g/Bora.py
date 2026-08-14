@@ -47,7 +47,7 @@
 
 .home-lede {
   margin: 10px 0 0;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--color-text-quiet);
   max-width: var(--content-max);
 }
@@ -75,7 +75,7 @@
   text-transform: uppercase;
 }
 .home-tierera {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 .home-tier5 {
@@ -176,7 +176,7 @@
   font-size: 16px;
 }
 .home-rowanchor {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 .home-chip {

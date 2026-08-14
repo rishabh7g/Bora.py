@@ -79,11 +79,11 @@
 
 .celebrate-cardtitle {
   font-weight: 800;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .celebrate-cardfoot {
-  font-size: 10px;
+  font-size: 16px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.8;
@@ -111,7 +111,7 @@
 
 .celebrate-unlock {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -123,7 +123,7 @@
   border: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font: 700 14px var(--font-body);
+  font: 700 16px var(--font-body);
   cursor: pointer;
   display: inline-flex;
   align-items: center;

@@ -37,7 +37,7 @@
 
 .mod-intro {
   margin: 14px 0 0;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   max-width: var(--content-max);
   color: var(--color-neutral-800);
@@ -53,7 +53,7 @@
 }
 .mod-section-sub {
   margin: 6px 0 0;
-  font-size: 13px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 
@@ -72,9 +72,10 @@
 .mod-num {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 15px;
-  /* 15px/800 is below the large-text threshold, so the quiet role's 4.5:1 is
-     the bar it has to clear — --color-neutral-500 was 2.59:1 (#46). */
+  font-size: 16px;
+  /* #106: was 15px, raised to the body floor. Still below the large-text
+     threshold (18.66px/700), so the quiet role's 4.5:1 is the bar it has to
+     clear — --color-neutral-500 was 2.59:1 (#46). */
   color: var(--color-text-quiet);
 }
 .mod-num--accent {
@@ -124,7 +125,7 @@
 }
 .mod-copy-note {
   margin: 6px 0 0;
-  font-size: 12.5px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 .mod-copy:hover {
@@ -146,7 +147,7 @@
 }
 .mod-example-why {
   margin: 0;
-  font-size: 13px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 
@@ -182,7 +183,7 @@
 }
 .mod-exrow-title {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16px;
 }
 .mod-chip {
   white-space: nowrap;
@@ -228,9 +229,9 @@
 }
 .mod-exitrow-title {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
 }
 .mod-exitrow-sub {
-  font-size: 12.5px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }

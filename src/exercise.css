@@ -25,7 +25,7 @@
 
 .ex-exit-note {
   margin: 12px 0 0;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--color-text-accent);
@@ -33,7 +33,7 @@
 
 .ex-prompt {
   margin: 14px 0 0;
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.65;
   max-width: var(--content-max);
 }
@@ -58,13 +58,13 @@
   font-weight: 800;
 }
 .ex-expected-sub {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 .ex-expected pre {
   margin: 0;
   padding: 16px;
-  font: 600 14px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+  font: 600 16px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
   white-space: pre-wrap;
   overflow-wrap: break-word;
   /* #102: belt-and-braces alongside the wrap above — see src/code.css. */
@@ -82,7 +82,7 @@
 .ex-ws-toggle .seg-opt {
   min-height: 44px;
   padding-inline: 14px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -136,7 +136,7 @@
   margin: 0;
   padding: 8px 16px 10px;
   border-top: 1px dashed var(--color-divider);
-  font-size: 12px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 .ex-ws-legend-item {
@@ -149,7 +149,7 @@
   background: var(--color-accent-100);
   color: var(--color-accent-800);
   font-weight: 700;
-  font-size: 14.5px;
+  font-size: 16px;
 }
 
 .ex-actions {
@@ -163,13 +163,13 @@
   min-height: 46px;
   justify-content: flex-start;
   text-align: left;
-  font-size: 14px;
+  font-size: 16px;
   padding-inline: var(--space-4);
 }
 
 .ex-note {
   margin: 10px 0 0;
-  font-size: 12.5px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 
@@ -183,7 +183,7 @@
 }
 .ex-section-sub {
   margin: 6px 0 0;
-  font-size: 12.5px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 
@@ -218,7 +218,7 @@
 }
 .ex-hint-text {
   margin: 0;
-  font-size: 14.5px;
+  font-size: 16px;
   line-height: 1.6;
 }
 /* The lock note is the app stating its own rule ("Locked. Mark 'I tried and got
@@ -226,7 +226,7 @@
    measured 2.59:1 (#45). */
 .ex-lock-note {
   margin: 0;
-  font-size: 13px;
+  font-size: 16px;
   color: var(--color-text-locked);
   padding-top: 6px;
 }
@@ -262,7 +262,7 @@
   transform: translateY(-1px);
 }
 .ex-checklist-item .text {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.55;
 }
 

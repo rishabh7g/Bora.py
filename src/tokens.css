@@ -39,6 +39,43 @@
   }
 }
 
+/* The body-text floor (#106, UI baseline §7 "Touch, zoom and app-feel" —
+ * the compensating obligations for turning zoom off once the app is
+ * installed, StandaloneZoomLock #98): "Body text may not go below 16px. No
+ * exceptions, including captions inside cards." Every stylesheet under
+ * src/ (and the design system's shared components the app actually
+ * renders — body, .btn, .input, .seg-opt, figcaption, .tag) is floored at
+ * this token or higher.
+ *
+ * Two categories are kept below it, each on purpose, never silently (§1).
+ * src/textFloor.test.ts is the mechanical proof: an explicit allow-list
+ * rather than a per-line comment scan (the "simpler" option the issue
+ * names):
+ *
+ *   1. Kickers — the uppercase, letter-spacing >= 0.08em micro-labels and
+ *      section eyebrows (home-kicker, ex-section-title, setup-look-label,
+ *      the "HINT 1" rung badge, the model-solution COPY button, …). These
+ *      are wayfinding furniture, not supporting prose — the one exception
+ *      §7 itself names.
+
+ *   2. Verbatim monospace content shown as reference rather than checked
+ *      against — a worked-example's code and output, the setup guide's
+ *      terminal command, and the backup filename. This is exact program
+ *      text, not English the app writes; enlarging it to 16px would widen
+ *      every code line, a redesign of its own and not this issue's job.
+ *      The expected-output pane is NOT in this category and IS floored:
+ *      it is the text a learner reads character-by-character to check her
+ *      own work against, which makes it the most load-bearing text on the
+ *      screen, not the least.
+ *
+ * Nothing else may sit below this token. src/textFloor.test.ts fails on
+ * any src/*.css or design system rule under 16px that is not on its
+ * allow-list, naming the file and selector.
+ */
+:root {
+  --text-body-min: 16px;
+}
+
 @media (min-width: 1024px) {
   :root {
     --gutter: var(--gutter-lg);

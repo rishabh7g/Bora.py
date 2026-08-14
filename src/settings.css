@@ -30,7 +30,7 @@
 
 .set-lede {
   margin: 10px 0 0;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   max-width: var(--content-max);
   color: var(--color-text-quiet);
@@ -40,7 +40,7 @@
 .set-notice {
   margin: 16px 0 0;
   padding: 10px 12px;
-  font-size: 13px;
+  font-size: 16px;
   background: var(--color-surface);
   border-left: 2px solid var(--color-accent);
 }
@@ -60,14 +60,14 @@
 
 .set-copy {
   margin: 10px 0 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   max-width: var(--content-max);
   color: var(--color-neutral-800);
 }
 .set-copy--quiet {
   color: var(--color-text-quiet);
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .set-file {
@@ -89,7 +89,7 @@
 
 .set-label {
   margin: 16px 0 5px;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 
@@ -112,7 +112,7 @@
   padding-inline: var(--space-4);
   font-family: var(--font-heading);
   font-weight: var(--font-heading-weight);
-  font-size: 13px;
+  font-size: 16px;
   color: var(--color-text);
   background: transparent;
   border: 0;
@@ -173,11 +173,11 @@
 .set-rowtitle {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .set-rowstate {
-  font-size: 11px;
+  font-size: 16px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-text-quiet);
