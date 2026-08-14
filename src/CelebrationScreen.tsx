@@ -15,6 +15,7 @@ import { useEffect, useRef } from 'react';
 import type { Module } from './content/types';
 import PhotocardArt from './PhotocardArt';
 import { modulePassed, type ExerciseState } from './state/effortGate';
+import { t } from './strings/t';
 import './celebration.css';
 
 /** The celebration edge: an exit exercise reaching matched while the module had
@@ -32,10 +33,10 @@ export function celebrationTriggered(
 // number, so the same checkpoint always celebrates the same way (and a reload
 // mid-celebration could never swap the line).
 export const CELEBRATION_LINES = [
-  'Borahae. On to the next era.',
-  'Namjoon would be proud of that punctuation.',
-  'No skips, no shortcuts. Legend behavior.',
-  'Add it to the setlist.',
+  t('celebration.line1'),
+  t('celebration.line2'),
+  t('celebration.line3'),
+  t('celebration.line4'),
 ] as const;
 
 export function celebrationLineFor(moduleNumber: string): string {
@@ -108,13 +109,13 @@ export default function CelebrationScreen({
       className="celebrate-field"
       role="dialog"
       aria-modal="true"
-      aria-label="Checkpoint passed"
+      aria-label={t('celebration.dialogLabel')}
       onKeyDown={onKeyDown}
     >
       <Confetti />
       <div className="celebrate-body">
-        <p className="celebrate-kicker">CHECKPOINT PASSED</p>
-        <h1 className="celebrate-title">{`Module ${moduleNumber} cleared.`}</h1>
+        <p className="celebrate-kicker">{t('celebration.kicker')}</p>
+        <h1 className="celebrate-title">{t('celebration.title', { number: moduleNumber })}</h1>
         <p className="celebrate-line">{celebrationLineFor(moduleNumber)}</p>
 
         <div className="celebrate-card">
@@ -122,16 +123,14 @@ export default function CelebrationScreen({
           <span className="celebrate-cardnum">{moduleNumber}</span>
           <span className="celebrate-cardtext">
             <span className="celebrate-cardtitle">{module.photocard.title}</span>
-            <span className="celebrate-cardfoot">Photocard added to shelf</span>
+            <span className="celebrate-cardfoot">{t('celebration.card.foot')}</span>
           </span>
         </div>
 
-        {tier5Unlocked && (
-          <p className="celebrate-unlock">That was the capstone — Tier 5 (Advanced) is open.</p>
-        )}
+        {tier5Unlocked && <p className="celebrate-unlock">{t('celebration.unlockTier5')}</p>}
 
         <button ref={continueRef} type="button" className="celebrate-continue" onClick={onContinue}>
-          Continue →
+          {t('celebration.continueLabel')}
         </button>
       </div>
     </div>

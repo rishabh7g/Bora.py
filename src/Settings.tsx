@@ -19,6 +19,7 @@ import Notice from './Notice';
 import { BACKUP_FILENAME, parseBackup, serializeProgress } from './state/backup';
 import { moduleStateOf } from './state/gating';
 import { hasModuleProgress, type Progress } from './state/progress';
+import { t } from './strings/t';
 import './settings.css';
 
 /** Download the progress file from memory — a Blob and an anchor click, so it
@@ -43,10 +44,10 @@ export function backupSummary(curriculum: Curriculum, progress: Progress): strin
     (module) => moduleStateOf(curriculum, module.id, progress) === 'passed',
   ).length;
   const started = modules.filter((module) => hasModuleProgress(progress, module.id)).length;
-  const checkpoints = `${passed} of ${modules.length} checkpoints passed`;
+  const checkpoints = t('settings.summary.checkpoints', { passed, total: modules.length });
   return started === 1
-    ? `${checkpoints}, 1 module with saved work.`
-    : `${checkpoints}, ${started} modules with saved work.`;
+    ? t('settings.summary.oneModule', { checkpoints })
+    : t('settings.summary.modules', { checkpoints, count: started });
 }
 
 // Confirming is a swap: the control that was clicked is replaced by the pair
@@ -115,7 +116,7 @@ export default function Settings({
   function onExport() {
     clearMessages();
     downloadBackup(progress);
-    setNotice(`Saved ${BACKUP_FILENAME}.`);
+    setNotice(t('settings.savedFile', { fileName: BACKUP_FILENAME }));
   }
 
   async function onFileChosen(event: React.ChangeEvent<HTMLInputElement>) {
@@ -139,7 +140,7 @@ export default function Settings({
     if (!pending) return;
     onImport(pending.progress);
     setPending(null);
-    setNotice('Progress replaced from the backup.');
+    setNotice(t('settings.import.confirmedNotice'));
     setFocusAfter({ kind: 'notice' });
   }
 
@@ -147,7 +148,7 @@ export default function Settings({
     clearMessages();
     onResetModule(moduleId);
     setConfirmingResetOf(null);
-    setNotice(`Module ${moduleNumberOf(curriculum, moduleId)} reset.`);
+    setNotice(t('settings.reset.confirmedNotice', { number: moduleNumberOf(curriculum, moduleId) }));
     // The row itself goes with the progress it held, so the fact of the reset is
     // what focus lands on.
     setFocusAfter({ kind: 'notice' });
@@ -155,12 +156,9 @@ export default function Settings({
 
   return (
     <div className="set-screen">
-      <p className="set-kicker">Settings</p>
-      <h1 className="set-title">Your progress, your file.</h1>
-      <p className="set-lede">
-        Everything is saved in this browser only — no account, no server. Export a copy so a cleared
-        browser or a new device never costs you the work.
-      </p>
+      <p className="set-kicker">{t('settings.kicker')}</p>
+      <h1 className="set-title">{t('settings.title')}</h1>
+      <p className="set-lede">{t('settings.lede')}</p>
 
       {notice && (
         <p className="set-notice" role="status" tabIndex={-1} ref={noticeRef}>
@@ -171,27 +169,29 @@ export default function Settings({
       <hr className="hr" />
 
       <section className="set-section">
-        <h2 className="set-h2">Export</h2>
+        <h2 className="set-h2">{t('settings.export.h2')}</h2>
         <p className="set-copy">
-          Downloads everything saved here as <code className="set-file">{BACKUP_FILENAME}</code>.
-          Keep it wherever you keep files.
+          {t('settings.export.bodyBeforeFile')}
+          <code className="set-file">{BACKUP_FILENAME}</code>
+          {t('settings.export.bodyAfterFile')}
         </p>
         <p className="set-copy set-copy--quiet">{backupSummary(curriculum, progress)}</p>
         <button type="button" className="btn btn-primary set-btn" onClick={onExport}>
-          Export progress
+          {t('settings.export.button')}
         </button>
       </section>
 
       <hr className="hr" />
 
       <section className="set-section">
-        <h2 className="set-h2">Import</h2>
+        <h2 className="set-h2">{t('settings.import.h2')}</h2>
         <p className="set-copy">
-          Reads a <code className="set-file">{BACKUP_FILENAME}</code> file back in. It replaces
-          what is saved here, and only after you confirm.
+          {t('settings.import.bodyBeforeFile')}
+          <code className="set-file">{BACKUP_FILENAME}</code>
+          {t('settings.import.bodyAfterFile')}
         </p>
         <label className="set-label" htmlFor="set-file">
-          Backup file
+          {t('settings.import.label')}
         </label>
         <input
           id="set-file"
@@ -206,7 +206,7 @@ export default function Settings({
           // h2, not the default h1: this screen already has one (.set-title,
           // above) — a raised notice takes the screen's h1 only when nothing
           // else has loaded (src/Notice.tsx).
-          <Notice level="h2" title="Import failed." body={error} />
+          <Notice level="h2" title={t('settings.import.failedTitle')} body={error} />
         )}
 
         {pending && (
@@ -214,9 +214,7 @@ export default function Settings({
             <p className="set-copy">
               <strong>{pending.fileName}</strong> — {backupSummary(curriculum, pending.progress)}
             </p>
-            <p className="set-copy set-copy--quiet">
-              Importing replaces the progress saved in this browser with the file&apos;s.
-            </p>
+            <p className="set-copy set-copy--quiet">{t('settings.import.replaceWarning')}</p>
             <div className="set-actions">
               <button
                 type="button"
@@ -224,7 +222,7 @@ export default function Settings({
                 className="btn btn-primary set-btn"
                 onClick={onConfirmImport}
               >
-                Replace saved progress
+                {t('settings.import.confirmButton')}
               </button>
               <button
                 type="button"
@@ -236,7 +234,7 @@ export default function Settings({
                   fileInputRef.current?.focus();
                 }}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
             </div>
           </div>
@@ -246,15 +244,11 @@ export default function Settings({
       <hr className="hr" />
 
       <section className="set-section">
-        <h2 className="set-h2">Reset a module</h2>
-        <p className="set-copy">
-          Clears the attempts, hints and checkpoint of one module so it can be worked through
-          again. Every other module keeps its progress, and checkpoints already passed stay open —
-          this one simply becomes the one you are on.
-        </p>
+        <h2 className="set-h2">{t('settings.reset.h2')}</h2>
+        <p className="set-copy">{t('settings.reset.body')}</p>
 
         {started.length === 0 ? (
-          <p className="set-copy set-copy--quiet">No module has saved progress yet.</p>
+          <p className="set-copy set-copy--quiet">{t('settings.reset.empty')}</p>
         ) : (
           <ul className="set-list">
             {started.map((module) => {
@@ -265,7 +259,9 @@ export default function Settings({
                   <span className="set-rownum">{number}</span>
                   <span className="set-rowtext">
                     <span className="set-rowtitle">{module.title}</span>
-                    <span className="set-rowstate">{passed ? 'Passed' : 'In progress'}</span>
+                    <span className="set-rowstate">
+                      {passed ? t('settings.reset.passed') : t('settings.reset.inProgress')}
+                    </span>
                   </span>
                   {confirmingResetOf === module.id ? (
                     <span className="set-actions">
@@ -275,7 +271,7 @@ export default function Settings({
                         className="btn btn-primary set-btn"
                         onClick={() => onConfirmReset(module.id)}
                       >
-                        {`Reset Module ${number}`}
+                        {t('settings.reset.button', { number })}
                       </button>
                       <button
                         type="button"
@@ -285,7 +281,7 @@ export default function Settings({
                           setFocusAfter({ kind: 'resetButton', moduleId: module.id });
                         }}
                       >
-                        Cancel
+                        {t('common.cancel')}
                       </button>
                     </span>
                   ) : (
@@ -301,7 +297,7 @@ export default function Settings({
                         setFocusAfter({ kind: 'confirmReset' });
                       }}
                     >
-                      Reset
+                      {t('settings.reset.resetButton')}
                     </button>
                   )}
                 </li>

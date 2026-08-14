@@ -23,20 +23,21 @@
 // hiding the visible label is never an accessibility regression.
 import { Layers, Map, Settings } from 'lucide-react';
 import { HOME_ROUTE, SETTINGS_ROUTE, SHELF_ROUTE } from './HomeMap';
+import { t } from './strings/t';
 import './bottomnav.css';
 
 /** The three destinations, paired with the route screen each one *is*. This
  *  app has no react-router and so no NavLink to hand out `aria-current`; the
  *  screen App already resolved is the single source the state comes from. */
 const ITEMS = [
-  { href: HOME_ROUTE, screen: 'home', label: 'Map', Icon: Map },
-  { href: SHELF_ROUTE, screen: 'shelf', label: 'Shelf', Icon: Layers },
-  { href: SETTINGS_ROUTE, screen: 'settings', label: 'Settings', Icon: Settings },
+  { href: HOME_ROUTE, screen: 'home', label: t('nav.map'), Icon: Map },
+  { href: SHELF_ROUTE, screen: 'shelf', label: t('nav.shelf'), Icon: Layers },
+  { href: SETTINGS_ROUTE, screen: 'settings', label: t('nav.settings'), Icon: Settings },
 ] as const;
 
 export default function BottomNav({ screen }: { screen: string }) {
   return (
-    <nav className="bottomnav" aria-label="Primary">
+    <nav className="bottomnav" aria-label={t('nav.primaryLabel')}>
       {ITEMS.map((item) => (
         <a
           key={item.href}

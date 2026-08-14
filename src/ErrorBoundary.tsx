@@ -10,6 +10,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { describeError } from './describeError';
 import Notice from './Notice';
+import { t } from './strings/t';
 
 type ErrorBoundaryState = { error: unknown } | { error: null };
 
@@ -31,10 +32,10 @@ export default class ErrorBoundary extends Component<{ children: ReactNode }, Er
       const detail = describeError(this.state.error);
       return (
         <Notice
-          title="Something went wrong."
-          body="This copy of the app hit a problem it could not recover from. Your saved progress is untouched — reloading is safe."
+          title={t('errorBoundary.title')}
+          body={t('errorBoundary.body')}
           detail={detail ?? undefined}
-          action={{ label: 'Reload', onClick: () => window.location.reload() }}
+          action={{ label: t('common.reload'), onClick: () => window.location.reload() }}
         />
       );
     }
