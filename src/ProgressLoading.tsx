@@ -15,21 +15,22 @@
 // the text is in the DOM immediately for assistive tech, but fades in only if
 // the read is still running after a beat, so a normal fast load never flashes it.
 import Notice from './Notice';
+import { t } from './strings/t';
 import './loading.css';
 
 export default function ProgressLoading({ stalled }: { stalled: boolean }) {
   if (stalled) {
     return (
       <Notice
-        title="Your checkpoints are not loading."
-        body="This browser’s storage looks blocked or unavailable — private browsing and blocked site data can both do it. Your progress is safe; this copy of the app just cannot read it."
-        action={{ label: 'Try again', onClick: () => window.location.reload() }}
+        title={t('progressLoading.stalledTitle')}
+        body={t('progressLoading.stalledBody')}
+        action={{ label: t('common.tryAgain'), onClick: () => window.location.reload() }}
       />
     );
   }
   return (
     <div className="load-screen" role="status">
-      <p className="load-body load-body-pending">Loading your checkpoints&hellip;</p>
+      <p className="load-body load-body-pending">{t('progressLoading.pending')}</p>
     </div>
   );
 }

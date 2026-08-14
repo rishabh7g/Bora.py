@@ -16,6 +16,7 @@
 // last line gets no ⏎, because authored outputs omit the program's final newline.
 import { Fragment, useState } from 'react';
 import { loadWhitespaceVisible, saveWhitespaceVisible } from './state/whitespaceVisible';
+import { t } from './strings/t';
 import './exercise.css';
 
 export type ExpectedOutputProps = {
@@ -54,9 +55,9 @@ export function splitOutput(output: string): OutputLine[] {
 export function whitespaceLegend(lines: OutputLine[]): string[] {
   const kinds = new Set(lines.flatMap((line) => line.chunks.map((chunk) => chunk.kind)));
   const legend: string[] = [];
-  if (kinds.has('space')) legend.push('· space');
-  if (kinds.has('tab')) legend.push('→ tab');
-  if (lines.some((line) => line.endsWithNewline)) legend.push('⏎ line break');
+  if (kinds.has('space')) legend.push(t('expectedOutput.legend.space'));
+  if (kinds.has('tab')) legend.push(t('expectedOutput.legend.tab'));
+  if (lines.some((line) => line.endsWithNewline)) legend.push(t('expectedOutput.legend.lineBreak'));
   return legend;
 }
 
@@ -109,8 +110,8 @@ export function OutputText({
 
 export default function ExpectedOutput({
   output,
-  sub = 'your terminal should print this',
-  label = 'EXPECTED OUTPUT',
+  sub = t('expectedOutput.defaultSub'),
+  label = t('expectedOutput.defaultLabel'),
 }: ExpectedOutputProps) {
   // Read synchronously on first render, and write through, so the choice holds
   // across exercises and reloads (state/whitespaceVisible.ts — never Progress).
@@ -136,7 +137,7 @@ export default function ExpectedOutput({
               checked={showWhitespace}
               onChange={(event) => toggle(event.target.checked)}
             />
-            Show whitespace
+            {t('expectedOutput.showWhitespace')}
           </label>
         </div>
       </div>
@@ -149,7 +150,7 @@ export default function ExpectedOutput({
                   {entry}
                 </span>
               ))
-            : 'Nothing hidden in here — no spaces, tabs or line breaks.'}
+            : t('expectedOutput.legend.empty')}
         </p>
       )}
     </div>

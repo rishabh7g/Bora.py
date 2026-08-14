@@ -12,6 +12,7 @@ import { flatModules, moduleNumberOf } from './content/load';
 import type { Curriculum, Module, Tier } from './content/types';
 import { currentModule, moduleStateOf, tier5Unlocked, type ModuleState } from './state/gating';
 import type { Progress } from './state/progress';
+import { t } from './strings/t';
 import Wordmark from './Wordmark';
 import './home.css';
 
@@ -38,11 +39,11 @@ type RowStatus = { label: string; className: string };
 /** Row tag per prototype: PASSED / UP NEXT (the current checkpoint) / OPEN /
  *  LOCKED. `isCurrent` is decided by gating.currentModule, not re-derived. */
 export function rowStatusOf(state: ModuleState, isCurrent: boolean): RowStatus {
-  if (state === 'passed') return { label: 'PASSED', className: 'tag-accent' };
-  if (state === 'locked') return { label: 'LOCKED', className: 'tag-neutral' };
+  if (state === 'passed') return { label: t('common.status.passed'), className: 'tag-accent' };
+  if (state === 'locked') return { label: t('common.status.locked'), className: 'tag-neutral' };
   return isCurrent
-    ? { label: 'UP NEXT', className: 'tag-outline' }
-    : { label: 'OPEN', className: 'tag-neutral' };
+    ? { label: t('home.status.upNext'), className: 'tag-outline' }
+    : { label: t('home.status.open'), className: 'tag-neutral' };
 }
 
 function ModuleRow({
@@ -133,8 +134,8 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
     (module) => moduleStateOf(curriculum, module.id, progress) === 'passed',
   ).length;
   const progressLine = current
-    ? `Next up: Module ${moduleNumberOf(curriculum, current.id)}.`
-    : 'Every checkpoint passed. Tier 5 is yours.';
+    ? t('home.progressLine.next', { number: moduleNumberOf(curriculum, current.id) })
+    : t('home.progressLine.allPassed');
 
   return (
     <div className="home-screen">
@@ -145,11 +146,13 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
           bare because BRAND.md keeps red off red. */}
       <Wordmark className="home-wordmark" />
       <div className="home-head">
-        <p className="home-kicker">Checkpoint path</p>
-        <span className="tag tag-neutral home-count">{`${passedCount} / ${modules.length} CHECKPOINTS`}</span>
+        <p className="home-kicker">{t('home.kicker')}</p>
+        <span className="tag tag-neutral home-count">
+          {t('home.checkpointsCount', { passed: passedCount, total: modules.length })}
+        </span>
       </div>
-      <h1 className="home-title">{`Annyeong, ${LEARNER_NAME}.`}</h1>
-      <p className="home-lede">{`Progress is checkpoints passed — never days or streaks. ${progressLine}`}</p>
+      <h1 className="home-title">{t('home.greeting', { name: LEARNER_NAME })}</h1>
+      <p className="home-lede">{t('home.lede', { progressLine })}</p>
 
       <div className="home-tiers">
         {curriculum.tiers.map((tier) => (
@@ -166,11 +169,9 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
             open, so the capstone rule is consumed rather than restated. */}
         <section className={`home-tier home-tier5${tier5Unlocked(curriculum, progress) ? '' : ' home-tier5--locked'}`}>
           <div className="home-tierhead">
-            <h2 className="home-tiertitle">Tier 5 — Advanced</h2>
+            <h2 className="home-tiertitle">{t('home.tier5.title')}</h2>
             <span className="home-tierera">
-              {tier5Unlocked(curriculum, progress)
-                ? 'Files, APIs, classes. Unlocked — content lands later.'
-                : 'Files, APIs, classes. Unlocks after the capstone.'}
+              {tier5Unlocked(curriculum, progress) ? t('home.tier5.unlocked') : t('home.tier5.locked')}
             </span>
           </div>
         </section>

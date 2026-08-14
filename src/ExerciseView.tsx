@@ -16,6 +16,7 @@ import {
   viewHint,
   type ExerciseState,
 } from './state/effortGate';
+import { t } from './strings/t';
 import './exercise.css';
 
 export type ExerciseViewProps = {
@@ -106,45 +107,51 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
 
   const exerciseIndex = module.exercises.findIndex((candidate) => candidate.id === exercise.id);
   const kicker = isExit
-    ? 'Exit checkpoint'
-    : `Exercise ${Math.max(1, exerciseIndex + 1)} of ${module.exercises.length}`;
+    ? t('exercise.kicker.exit')
+    : t('exercise.kicker.numbered', {
+        index: Math.max(1, exerciseIndex + 1),
+        total: module.exercises.length,
+      });
 
   // The top of the ladder has no next rung, so nothing here may promise one and
   // the "stuck" button is not offered (§5: an attempt declared past the solution
   // unlocks nothing). Every other state still points at the rung it can reach.
   const ladderSpent = gate === 'SOLUTION_REVEALED';
-  const declaredCount = `${state.attempts} ${state.attempts === 1 ? 'attempt' : 'attempts'} declared.`;
+  const declaredCount = t('exercise.attempts.declared', {
+    count: state.attempts,
+    unit: t(state.attempts === 1 ? 'exercise.attempts.unit.one' : 'exercise.attempts.unit.other'),
+  });
   const attemptsNote = ladderSpent
-    ? `${declaredCount} Every rung is open — the model solution is below. Compare it with yours, then mark the match whenever your output lines up.`
+    ? declaredCount + t('exercise.attempts.ladderSpentSuffix')
     : state.attempts === 0
       ? isExit
-        ? 'Write it on your machine, run it, compare. No hints on this one — leave and come back anytime.'
-        : 'Write it on your machine, run it, compare. Declaring an attempt unlocks the next rung.'
+        ? t('exercise.attempts.exitFirstNote')
+        : t('exercise.attempts.firstNote')
       : declaredCount +
-        (state.stuck ? ' Next rung unlocked below.' : ' Try again to unlock the next rung.');
+        (state.stuck
+          ? t('exercise.attempts.stuckSuffix')
+          : t('exercise.attempts.tryAgainSuffix'));
 
   const hintLockNote =
-    state.attempts === 0
-      ? 'Locked. Mark "I tried and got stuck" after a real attempt.'
-      : 'Locked. Another declared attempt unlocks this.';
+    state.attempts === 0 ? t('exercise.hint.lockedFirst') : t('exercise.hint.lockedNext');
 
   return (
     <div className="ex-screen">
       <a className="btn btn-ghost ex-back" href={moduleHref}>
-        ← {module.title}
+        {t('common.backArrow')} {module.title}
       </a>
       <p className="ex-kicker">
         {module.title} — {kicker}
       </p>
       <h1 className="ex-title">{exercise.title ?? exercise.prompt.slice(0, 40)}</h1>
-      {isExit && <p className="ex-exit-note">EXIT CHECKPOINT — UNSCAFFOLDED. NO HINTS ON THIS ONE.</p>}
+      {isExit && <p className="ex-exit-note">{t('exercise.exitNote')}</p>}
       <p className="ex-prompt">{exercise.prompt}</p>
 
       <ExpectedOutput output={exercise.expectedOutput} />
 
       {matched ? (
         <div className="ex-matched-banner" role="status" tabIndex={-1} ref={matchedRef}>
-          Output matched — checkpoint logged. Model solution below: compare approaches, not text.
+          {t('exercise.matchedBanner')}
         </div>
       ) : (
         <>
@@ -157,7 +164,7 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
                 setRevealed('matched');
               }}
             >
-              My output matches
+              {t('exercise.matchButton')}
             </button>
             {!isExit && !ladderSpent && (
               <button
@@ -165,12 +172,12 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
                 className="btn btn-secondary btn-action"
                 onClick={() => onTransition((current) => declareAttempt(current, isExit))}
               >
-                I tried and got stuck
+                {t('exercise.stuckButton')}
               </button>
             )}
             {isExit && (
               <a className="btn btn-secondary btn-action" href={moduleHref}>
-                Come back later
+                {t('exercise.comeBackLater')}
               </a>
             )}
           </div>
@@ -180,17 +187,14 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
 
       {!isExit && (
         <>
-          <h2 className="ex-section-title">Hint ladder</h2>
+          <h2 className="ex-section-title">{t('exercise.section.hintLadder')}</h2>
           {/* "Each hint", not "each reveal" (#89): a crack is one hint viewed
               (DESIGN.md §4, cardCracksOf), so the solution rung — the largest
               reveal on the ladder — adds none. The two hint buttons already say
               "cracks the card" and the solution button does not; this sentence
               is the summary of those buttons, so it promises exactly what they
               do and no more. */}
-          <p className="ex-section-sub">
-            Attempt → hint → attempt → hint → attempt → solution. Each hint cracks this module's
-            photocard. Cracks never block anything.
-          </p>
+          <p className="ex-section-sub">{t('exercise.section.hintLadderSub')}</p>
           <div className="ex-ladder">
             {([1, 2] as const).map((hintNumber) => {
               const seen = state.hintsUnlocked >= hintNumber;
@@ -198,12 +202,12 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
               return (
                 <HintRung
                   key={hintNumber}
-                  label={`HINT ${hintNumber}`}
+                  label={t('exercise.hint.label', { number: hintNumber })}
                   active={seen || available}
                   seen={seen}
                   available={available}
                   body={exercise.hints[hintNumber - 1]}
-                  revealLabel={`Reveal hint ${hintNumber} — cracks the card`}
+                  revealLabel={t('exercise.hint.revealLabel', { number: hintNumber })}
                   lockNote={hintLockNote}
                   textRef={(node) => {
                     hintRefs.current[`hint${hintNumber}`] = node;
@@ -216,16 +220,16 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
               );
             })}
             <HintRung
-              label="SOLUTION"
+              label={t('exercise.solution.label')}
               active={state.solutionRevealed || gate === 'SOLUTION_AVAILABLE'}
               seen={false}
               available={gate === 'SOLUTION_AVAILABLE'}
               body=""
-              revealLabel="Reveal solution"
+              revealLabel={t('exercise.solution.revealLabel')}
               lockNote={
                 state.solutionRevealed
-                  ? 'Revealed below.'
-                  : 'Reachable only after the full ladder — or by matching.'
+                  ? t('exercise.solution.revealedNote')
+                  : t('exercise.solution.lockNote')
               }
               onReveal={() => {
                 onTransition((current) => revealSolution(current, isExit));
@@ -241,10 +245,10 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
       {solutionShown && (
         <>
           <h2 className="ex-section-title" tabIndex={-1} ref={solutionRef}>
-            Model solution
+            {t('exercise.solution.heading')}
           </h2>
           <PythonCode code={exercise.solution} className="ex-solution" />
-          <h3 className="ex-checklist-title">Compare approaches</h3>
+          <h3 className="ex-checklist-title">{t('exercise.checklist.heading')}</h3>
           <div className="ex-checklist">
             {exercise.approachChecklist.map((item, index) => (
               <div key={index} className="ex-checklist-item">

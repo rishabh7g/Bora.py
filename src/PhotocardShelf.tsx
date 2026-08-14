@@ -17,6 +17,7 @@ import { moduleHref } from './HomeMap';
 import PhotocardArt from './PhotocardArt';
 import { moduleStateOf } from './state/gating';
 import { moduleCracksOf, type Progress } from './state/progress';
+import { t } from './strings/t';
 import './shelf.css';
 
 // A card has four corners, so at most four cracks are drawn. The count in the
@@ -26,8 +27,8 @@ export const MAX_DRAWN_CRACKS = 4;
 /** Caption under an earned card. Never scolding: hints used are stated as a
  *  fact, and "mint" is the only superlative. */
 export function crackNote(cracks: number): string {
-  if (cracks === 0) return 'Mint — no hints used';
-  return cracks === 1 ? '1 crack' : `${cracks} cracks`;
+  if (cracks === 0) return t('shelf.card.captionMint');
+  return cracks === 1 ? t('shelf.card.captionOneCrack') : t('shelf.card.captionCracks', { count: cracks });
 }
 
 function ShelfCard({
@@ -50,14 +51,14 @@ function ShelfCard({
       {earned ? <PhotocardArt art={module.photocard.art} className="shelf-art" /> : null}
       <span className="shelf-num">{number}</span>
       <span className="shelf-cardtitle">{module.photocard.title}</span>
-      <span className="shelf-foot">{earned ? module.title : 'Not earned'}</span>
+      <span className="shelf-foot">{earned ? module.title : t('shelf.card.notEarned')}</span>
       {Array.from({ length: drawnCracks }, (_, index) => (
         <span key={index} className={`shelf-crack shelf-crack--${index + 1}`} aria-hidden="true" />
       ))}
     </>
   );
 
-  const caption = earned ? crackNote(cracks) : 'Pass the checkpoint to earn it';
+  const caption = earned ? crackNote(cracks) : t('shelf.card.unearnedCaption');
 
   return (
     <div className="shelf-slot">
@@ -89,16 +90,14 @@ export default function PhotocardShelf({ curriculum, progress }: PhotocardShelfP
   );
   const headline =
     earned.length === 0
-      ? 'Empty shelf. For now.'
-      : `${earned.length} of ${modules.length} collected.`;
+      ? t('shelf.headline.empty')
+      : t('shelf.headline.collected', { count: earned.length, total: modules.length });
 
   return (
     <div className="shelf-screen">
-      <p className="shelf-kicker">Photocard shelf</p>
+      <p className="shelf-kicker">{t('shelf.kicker')}</p>
       <h1 className="shelf-title">{headline}</h1>
-      <p className="shelf-lede">
-        One original card per checkpoint. Hints crack corners — a visible cost, never a wall.
-      </p>
+      <p className="shelf-lede">{t('shelf.lede')}</p>
 
       <div className="shelf-grid">
         {modules.map((module) => (

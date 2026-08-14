@@ -13,6 +13,7 @@ import PythonCode from './PythonCode';
 import type { ExerciseState } from './state/effortGate';
 import { exitUnlocked } from './state/gating';
 import { exerciseStateOf, type Progress } from './state/progress';
+import { t } from './strings/t';
 import './module.css';
 
 export type Chip = { label: string; className: string };
@@ -20,12 +21,17 @@ export type Chip = { label: string; className: string };
 /** Exercise state chip derived from persisted Progress —
  *  untouched / attempted / hint used / matched / solution seen. */
 export function exerciseChipOf(state: ExerciseState): Chip {
-  if (state.matched) return { label: 'MATCHED', className: 'tag-accent' };
-  if (state.solutionRevealed) return { label: 'SOLUTION SEEN', className: 'tag-neutral' };
+  if (state.matched) return { label: t('module.status.matched'), className: 'tag-accent' };
+  if (state.solutionRevealed)
+    return { label: t('module.status.solutionSeen'), className: 'tag-neutral' };
   if (state.hintsUnlocked > 0)
-    return { label: `HINT ${state.hintsUnlocked} USED`, className: 'tag-outline' };
-  if (state.attempts > 0) return { label: `TRIED ×${state.attempts}`, className: 'tag-outline' };
-  return { label: 'NOT STARTED', className: 'tag-neutral' };
+    return {
+      label: t('module.status.hintUsed', { number: state.hintsUnlocked }),
+      className: 'tag-outline',
+    };
+  if (state.attempts > 0)
+    return { label: t('module.status.tried', { count: state.attempts }), className: 'tag-outline' };
+  return { label: t('module.status.notStarted'), className: 'tag-neutral' };
 }
 
 export type CopyStatus = 'idle' | 'copied' | 'failed';
@@ -51,9 +57,9 @@ export async function copyStatusOf(
 /** Button label per status — a refused write says so instead of staying on COPY
  *  as if the code had been copied. */
 export function copyLabelOf(status: CopyStatus): string {
-  if (status === 'copied') return 'COPIED';
-  if (status === 'failed') return 'COPY FAILED';
-  return 'COPY';
+  if (status === 'copied') return t('module.copy.copied');
+  if (status === 'failed') return t('module.copy.failed');
+  return t('module.copy.idleLabel');
 }
 
 /** Copy button for worked-example CODE blocks only — expected-output blocks
@@ -79,14 +85,13 @@ function CopyButton({ code }: { code: string }) {
         type="button"
         className={status === 'failed' ? 'mod-copy mod-copy--failed' : 'mod-copy'}
         onClick={copy}
-        aria-label={status === 'idle' ? 'Copy code' : copyLabelOf(status)}
+        aria-label={status === 'idle' ? t('module.copy.ariaIdle') : copyLabelOf(status)}
       >
         {copyLabelOf(status)}
       </button>
       {status === 'failed' && (
         <p className="mod-copy-note" role="status">
-          This browser blocked the clipboard. Select the code and copy it by hand — or type it out,
-          which is what these examples are for anyway.
+          {t('module.copy.blockedNote')}
         </p>
       )}
     </>
@@ -121,18 +126,22 @@ export default function ModuleView({ curriculum, module, progress }: ModuleViewP
   const exitOpen = exitUnlocked(module, progress);
   const exitState = exerciseStateOf(progress, module.id, module.exitExercise.id);
   const exitChip: Chip = exitState.matched
-    ? { label: 'PASSED', className: 'tag-accent' }
-    : { label: 'READY', className: 'tag-outline' };
-  const exitTitle = module.exitExercise.title ?? 'Exit checkpoint';
+    ? { label: t('common.status.passed'), className: 'tag-accent' }
+    : { label: t('module.status.ready'), className: 'tag-outline' };
+  const exitTitle = module.exitExercise.title ?? t('common.exitCheckpointTitle');
 
   return (
     <div className="mod-screen">
       {/* "#/" is the Home-map route; HomeMap ships with a later issue and the
           router falls back to the default module until then. */}
       <a className="btn btn-ghost mod-back" href="#/">
-        ← Map
+        {t('common.backToMap')}
       </a>
-      <p className="mod-kicker">{`Module ${moduleNumber}${tier ? ` — ${tier.title}` : ''}`}</p>
+      <p className="mod-kicker">
+        {tier
+          ? t('module.kicker.withTier', { number: moduleNumber, tier: tier.title })
+          : t('module.kicker.plain', { number: moduleNumber })}
+      </p>
       <h1 className="mod-title">{module.title}</h1>
       {/* Concept intro is authored markdown; today's content uses plain
           paragraphs, so render paragraph breaks only. */}
@@ -142,11 +151,8 @@ export default function ModuleView({ curriculum, module, progress }: ModuleViewP
         </p>
       ))}
 
-      <h2 className="mod-section-title">Worked examples</h2>
-      <p className="mod-section-sub">
-        Each shows the code, its exact terminal output, and why it works. Type and run every one on
-        your machine.
-      </p>
+      <h2 className="mod-section-title">{t('module.section.workedExamples')}</h2>
+      <p className="mod-section-sub">{t('module.section.workedExamplesSub')}</p>
       <div className="mod-examples">
         {module.concept.examples.map((example, index) => (
           <WorkedExampleBlock
@@ -157,7 +163,7 @@ export default function ModuleView({ curriculum, module, progress }: ModuleViewP
         ))}
       </div>
 
-      <h2 className="mod-section-title">Exercises</h2>
+      <h2 className="mod-section-title">{t('module.section.exercises')}</h2>
       <div className="mod-exercises">
         {module.exercises.map((exercise, index) => {
           const chip = exerciseChipOf(exerciseStateOf(progress, module.id, exercise.id));
@@ -176,25 +182,21 @@ export default function ModuleView({ curriculum, module, progress }: ModuleViewP
 
         {exitOpen ? (
           <a className="mod-exitrow mod-exitrow--open" href={`#/module/${module.id}/exit`}>
-            <span className="mod-num mod-num--accent">EX</span>
+            <span className="mod-num mod-num--accent">{t('module.exit.badge')}</span>
             <span className="mod-exitrow-text">
               <span className="mod-exitrow-title">{exitTitle}</span>
-              <span className="mod-exitrow-sub">
-                Summative. No hints, no examples on screen. Passing awards the photocard.
-              </span>
+              <span className="mod-exitrow-sub">{t('module.exit.summativeNote')}</span>
             </span>
             <span className={`tag ${exitChip.className} mod-chip`}>{exitChip.label}</span>
           </a>
         ) : (
           <div className="mod-exitrow mod-exitrow--locked">
-            <span className="mod-num">EX</span>
+            <span className="mod-num">{t('module.exit.badge')}</span>
             <span className="mod-exitrow-text">
               <span className="mod-exitrow-title">{exitTitle}</span>
-              <span className="mod-exitrow-sub">
-                Unlocks when every practice exercise is matched or its solution seen.
-              </span>
+              <span className="mod-exitrow-sub">{t('module.exit.lockedNote')}</span>
             </span>
-            <span className="tag tag-neutral mod-chip">LOCKED</span>
+            <span className="tag tag-neutral mod-chip">{t('common.status.locked')}</span>
           </div>
         )}
       </div>

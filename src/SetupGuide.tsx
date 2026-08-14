@@ -34,6 +34,7 @@ import PythonCode from './PythonCode';
 import { declareMatch, gateStateOf, type ExerciseState } from './state/effortGate';
 import { exerciseStateOf, type Progress } from './state/progress';
 import { loadSetupOs, saveSetupOs } from './state/setupOs';
+import { t } from './strings/t';
 import './setup.css';
 
 export type SetupGuideProps = {
@@ -51,7 +52,7 @@ const OS_OPTIONS: SetupOs[] = ['windows', 'mac'];
 function LookList({ look }: { look: string[] }) {
   return (
     <div className="setup-look">
-      <span className="setup-look-label">WHAT YOU’LL SEE</span>
+      <span className="setup-look-label">{t('setup.look.label')}</span>
       <ul className="setup-look-list">
         {look.map((line) => (
           <li key={line}>{line}</li>
@@ -88,7 +89,7 @@ function StepRow({ step, number }: { step: SetupStep; number: number }) {
         {step.look && <LookList look={step.look} />}
         {step.command && (
           <div className="setup-term">
-            <span className="setup-term-label">TYPE THIS</span>
+            <span className="setup-term-label">{t('setup.term.label')}</span>
             {/* Real text in a <pre>, so it can be selected and copied. A picture
                 of a terminal could not be (#61). */}
             <pre className="setup-term-command">{step.command}</pre>
@@ -99,9 +100,9 @@ function StepRow({ step, number }: { step: SetupStep; number: number }) {
             implementation to drift (#61). */}
         {step.output && (
           <ExpectedOutput
-            label="IT PRINTS"
+            label={t('setup.itPrints.label')}
             output={step.output}
-            sub="your chosen member's name, on its own line"
+            sub={t('setup.itPrints.sub')}
           />
         )}
         {step.shot && <ShotFigure shot={step.shot} />}
@@ -129,14 +130,14 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
   return (
     <div className="setup-screen">
       <a className="btn btn-ghost setup-back" href={HOME_ROUTE}>
-        ← Map
+        {t('common.backToMap')}
       </a>
       <p className="setup-kicker">{kicker}</p>
       <h1 className="setup-title">{module.title}</h1>
       <p className="setup-intro">{module.concept.intro}</p>
 
       <fieldset className="setup-os">
-        <legend className="setup-os-legend">Your machine</legend>
+        <legend className="setup-os-legend">{t('setup.osLegend')}</legend>
         <div className="seg">
           {OS_OPTIONS.map((option) => (
             <label key={option} className="seg-opt">
@@ -151,9 +152,7 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
             </label>
           ))}
         </div>
-        <p className="setup-os-note">
-          Steps below follow this choice, and it is remembered for next time.
-        </p>
+        <p className="setup-os-note">{t('setup.osNote')}</p>
       </fieldset>
 
       {/* The stepper's own section heading (#88). Without it the five step
@@ -161,7 +160,7 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
           navigating by heading level saw a gap where a section should be. Same
           shape as ModuleView's "Worked examples" / "Exercises": an H2 section
           over H3 items, so the two content screens read alike. */}
-      <h2 className="setup-section-title">Install steps</h2>
+      <h2 className="setup-section-title">{t('setup.section.installSteps')}</h2>
 
       {/* The prose's staleness signal (#69): the screenshots carry a `captured
           <date>` caption, this line is the same honesty for the words — plus
@@ -176,17 +175,15 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
       </ol>
 
       <section className="setup-exit">
-        <span className="setup-exit-label">EXIT CHECKPOINT</span>
-        <h2 className="setup-exit-title">{exit.title ?? 'Exit checkpoint'}</h2>
+        <span className="setup-exit-label">{t('setup.exit.label')}</span>
+        <h2 className="setup-exit-title">{exit.title ?? t('common.exitCheckpointTitle')}</h2>
         <p className="setup-exit-prompt">{exit.prompt}</p>
-        <ExpectedOutput
-          output={exit.expectedOutput}
-          sub="the shape — your chosen member's name, on its own line"
-        />
+        <ExpectedOutput output={exit.expectedOutput} sub={t('setup.exit.sub')} />
         {matched ? (
           <>
             <p className="setup-exit-passed">
-              <span className="tag tag-accent">PASSED</span> Module 01 is open. Nothing here expires.
+              <span className="tag tag-accent">{t('common.status.passed')}</span>{' '}
+              {t('setup.exit.passedNote')}
             </p>
             <PythonCode code={exit.solution} className="setup-exit-solution" />
           </>
@@ -198,15 +195,13 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
                 className="btn btn-primary btn-action"
                 onClick={() => onTransition(declareMatch)}
               >
-                My output matches
+                {t('exercise.matchButton')}
               </button>
               <a className="btn btn-secondary btn-action" href={HOME_ROUTE}>
-                Come back later
+                {t('exercise.comeBackLater')}
               </a>
             </div>
-            <p className="setup-exit-note">
-              No hints on this one, and no rush — leave whenever. Your place is kept.
-            </p>
+            <p className="setup-exit-note">{t('setup.exit.note')}</p>
           </>
         )}
       </section>
