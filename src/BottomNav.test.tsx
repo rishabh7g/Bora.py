@@ -7,9 +7,9 @@
 // one destination being shown. The layout rules are asserted by reading
 // src/bottomnav.css as text, the way src/tokens.test.ts and the shell guard in
 // src/App.test.tsx do: this suite has no jsdom, and a jsdom would resolve
-// neither `env()` nor `max()` if it had one. Comments are stripped before
-// matching, so a guard can never pass on a comment quoting the very value the
-// rule it describes was deleted from.
+// neither `env()` nor the `calc()` around it if it had one. Comments are
+// stripped before matching, so a guard can never pass on a comment quoting the
+// very value the rule it describes was deleted from.
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -106,13 +106,22 @@ it('sits in the shell as a flex child, never as a bar floating over the screen',
   expect(css).not.toMatch(/border-radius/);
 });
 
-it('clears the home indicator with the design gap as the floor', () => {
-  expect(css).toMatch(
-    /padding-bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom\)\)/,
+it('adds the home indicator beneath its own designed padding, never instead of it (#122)', () => {
+  const bar = /\.bottomnav\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+  // Symmetric 4px top and bottom, horizontal gap unchanged — one designed bar,
+  // identical on every device: 4 + 56 + 4 + the 2px rule = 66px.
+  expect(bar).toContain('padding: var(--space-1) var(--space-3)');
+  expect(bar).toMatch(
+    /padding-bottom:\s*calc\(var\(--space-1\)\s*\+\s*env\(safe-area-inset-bottom,\s*0px\)\)/,
   );
-  // Never a bare env(): a desktop inset is 0 and the padding would vanish.
-  const insets = css.match(/env\(safe-area-inset-[a-z]+\)/g) ?? [];
-  const guarded = css.match(/max\([^;]*env\(safe-area-inset-[a-z]+\)/g) ?? [];
+  // calc(), not max(): max() made one expression take a different branch per
+  // platform — the token on Android, Apple's 34px on an iPhone, the design
+  // discarded. The inset is an OS-owned strip added BELOW the bar.
+  expect(css).not.toMatch(/max\([^;]*env\(safe-area-inset-[a-z]+/);
+  // Never a bare env(): every inset sits inside a calc() or max() with a
+  // designed term, so a 0 inset leaves the designed gap standing.
+  const insets = css.match(/env\(safe-area-inset-[a-z]+/g) ?? [];
+  const guarded = css.match(/(?:calc|max)\([^;]*env\(safe-area-inset-[a-z]+/g) ?? [];
   expect(insets).toHaveLength(guarded.length);
   expect(insets).not.toHaveLength(0);
 });
@@ -120,7 +129,8 @@ it('clears the home indicator with the design gap as the floor', () => {
 it('gives every item a thumb-sized target with no tap delay', () => {
   const item = /\.bottomnav-item\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
   expect(item).toContain('flex: 1');
-  expect(item).toContain('min-height: 48px'); // above the app's 44px floor
+  // The house UI standard's bottom-nav row (#122), well above the 44px floor.
+  expect(item).toContain('min-height: 56px');
   expect(item).toContain('touch-action: manipulation');
   expect(item).toContain('-webkit-tap-highlight-color: transparent');
 });

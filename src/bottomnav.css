@@ -30,18 +30,27 @@
   display: flex;
   background: var(--color-bg);
   border-top: 2px solid var(--color-divider);
-  padding: var(--space-2) var(--space-3);
-  /* The home indicator: the device's own inset when there is one, the design's
-     gap when there isn't. Never a bare env() — a desktop inset is 0 and the
-     padding would vanish. index.html opts in with viewport-fit=cover (#74). */
-  padding-bottom: max(var(--space-8), env(safe-area-inset-bottom));
+  padding: var(--space-1) var(--space-3);
+  /* The home indicator (#122): the OS inset is a strip the device owns BELOW a
+     fixed designed bar, never a substitute for the bar's own padding — the way
+     both native platforms build it (iOS UITabBar = 49pt content + 34pt safe
+     area; Android Material = 56dp + gesture inset). So calc(), not max():
+     max() made one expression take a different branch per platform (32px on
+     Android, Apple's 34px on an iPhone, the design token discarded), which is
+     what left the icons riding high with a dead strip beneath them. Written
+     with calc() the designed bar is 4 + 56 + 4 + the 2px rule = 66px on every
+     device, and the inset is added under it. Never a bare env() — the 0px
+     fallback keeps the designed gap where there is no inset to add.
+     index.html opts in with viewport-fit=cover (#74). */
+  padding-bottom: calc(var(--space-1) + env(safe-area-inset-bottom, 0px));
 }
 
 .bottomnav-item {
   flex: 1;
   min-width: 0;
-  /* Above the app's 44px floor: a bottom nav is thumb territory. */
-  min-height: 48px;
+  /* The house UI standard's bottom-nav row (#122): 56px, well above the app's
+     44px floor — a bottom nav is thumb territory. */
+  min-height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
