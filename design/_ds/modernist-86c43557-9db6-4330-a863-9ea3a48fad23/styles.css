@@ -124,7 +124,12 @@ h5 { font-size: 16px; }
 h6 { font-size: 13px; }
 h6 { letter-spacing: 0.08em; text-transform: uppercase; }
 p { margin: 0 0 var(--space-3); }
-a { color: var(--color-accent); text-underline-offset: 3px; }
+/* #103: every link in the app skips the 300ms double-tap-zoom wait and the
+   grey Android tap flash, the same as every button below. */
+a {
+  color: var(--color-accent); text-underline-offset: 3px;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
 img { display: block; max-width: 100%; }
 figure { margin: 0; }
 /* #106: this app's only figcaption (a screenshot caption, src/setup.css
@@ -155,6 +160,9 @@ figcaption {
   background: transparent; border: 1px solid transparent;
   padding: calc(var(--space-2) * 0.85) var(--space-3);
   border-radius: var(--radius-md);
+  /* #103: every .btn — primary, secondary, ghost, icon, block, action —
+     skips the 300ms double-tap-zoom wait and the grey Android tap flash. */
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
 .btn svg { display: block; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -186,7 +194,13 @@ figcaption {
 .input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
 .input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
 textarea.input { min-height: 90px; resize: vertical; }
-.radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+/* #103: not used by this app today (the OS picker and the whitespace toggle
+   are both .seg-opt, below) — kept in step with the rest of the design
+   system's interactive elements in case a future screen reaches for it. */
+.radio {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
 .radio input, .seg-opt input {
   position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
 }
@@ -209,6 +223,8 @@ textarea.input { min-height: 90px; resize: vertical; }
   /* #106: the OS-picker radios and the "Show whitespace" toggle both read
      this label. */
   padding: 7px 12px; font-size: 16px; cursor: pointer;
+  /* #103: the OS picker and the whitespace toggle are both tapped controls. */
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
 .seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
 .seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }

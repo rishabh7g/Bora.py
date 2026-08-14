@@ -114,6 +114,9 @@
   font: 700 11px var(--font-body);
   letter-spacing: 0.1em;
   padding: 0 12px;
+  /* #103: a plain <button>, not a .btn, so it needs its own rule. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 /* Copy refused (#44). Narrower type so the longer label still clears the code's
    reserved right gutter, plus a note under the block saying what to do instead.

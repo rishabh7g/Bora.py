@@ -65,6 +65,10 @@
   color: var(--color-bg);
   text-decoration: none;
   cursor: pointer;
+  /* #103: already inherits both from the shared `a` rule — restated here
+     since this is the one card in the grid that is actually tappable. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .shelf-card--earned:hover {
   background: var(--color-accent-600);

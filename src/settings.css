@@ -119,6 +119,10 @@
   border-inline-end: 1px solid var(--color-divider);
   border-radius: var(--radius-md);
   cursor: pointer;
+  /* #103: the one control on this screen the design system's .btn does not
+     reach — the browser draws it, so it needs its own rule. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .set-input::file-selector-button:hover {
   background: color-mix(in srgb, var(--color-text) 7%, transparent);
