@@ -9,7 +9,11 @@
 import type { ManifestOptions, VitePWAOptions } from 'vite-plugin-pwa';
 
 // Copied verbatim from public/ into the build, then precached below.
-export const includedAssets = ['favicon.svg', 'icons/apple-touch-icon-180.png'];
+export const includedAssets = [
+  'favicon.svg',
+  'icons/apple-touch-icon-180.png',
+  'icons/favicon-32.png',
+];
 
 export const webManifest: Partial<ManifestOptions> = {
   // The brand name, always lowercase and always with the dot (BRAND.md).
