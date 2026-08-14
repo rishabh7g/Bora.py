@@ -53,6 +53,11 @@ it('keeps every manifest URL relative so a subpath deploy still works', () => {
   for (const url of urls) expect(url.startsWith('/')).toBe(false);
 });
 
+it('sets an explicit id, so a deploy-path change never re-installs the app as a different one (#104)', () => {
+  expect(manifest.id).toBe('./');
+  expect(manifest.id!.startsWith('/')).toBe(false);
+});
+
 it('ships 192, 512 and maskable icons, and each file exists', () => {
   const icons = manifest.icons!;
   expect(icons.find((icon) => icon.sizes === '192x192')).toBeDefined();

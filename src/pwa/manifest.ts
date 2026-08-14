@@ -22,6 +22,12 @@ export const webManifest: Partial<ManifestOptions> = {
   description:
     'Learn the Pareto slice of Python — you write and run the code, the app keeps the checkpoints.',
   lang: 'en',
+  // Set explicitly (#104) — otherwise the browser derives identity from
+  // start_url, which resolves against whatever prefix the app is deployed
+  // under. A prefix change (repo rename, custom domain, different mount)
+  // would then re-install the app as a second, unrelated copy, stranding
+  // the first one's IndexedDB progress under the old origin path.
+  id: './',
   start_url: '.',
   scope: './',
   display: 'standalone',
