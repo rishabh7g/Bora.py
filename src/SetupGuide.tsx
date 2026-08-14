@@ -152,7 +152,8 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
             </label>
           ))}
         </div>
-        <p className="setup-os-note">{t('setup.osNote')}</p>
+        {/* #101: the choice is followed and remembered whether or not this
+            says so — read once, then skimmed past on every visit. */}
       </fieldset>
 
       {/* The stepper's own section heading (#88). Without it the five step

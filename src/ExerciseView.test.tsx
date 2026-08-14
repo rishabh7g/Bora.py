@@ -115,15 +115,13 @@ it('one rung down the note still promises the rung that does exist', () => {
   expect(spentOnHint2).toContain('1 attempt declared. Try again to unlock the next rung.');
 });
 
-// #89 — the ladder's summary sentence priced every reveal, but a crack is one
-// hint viewed: the solution, the biggest reveal on the ladder, is free. The
-// sentence is checked against the state it describes, so neither can drift.
+// #89 — a crack is one hint viewed: the solution, the biggest reveal on the
+// ladder, is free. (The ladder's old summary sentence that stated this in
+// prose is gone — #101, read once and skimmed past on every exercise — so
+// what is left to check is that the buttons themselves price it correctly.)
 it('prices the ladder the way the state actually charges it (#89)', () => {
   const html = render(declareAttempt(initialExerciseState(), false));
-  expect(html).toContain('Each hint cracks this module&#x27;s photocard');
-  expect(html).not.toContain('Each reveal cracks');
-  // The two buttons the sentence summarises: hints carry the price, the
-  // solution does not claim one.
+  // The button that carries the price: hints "crack", the solution does not.
   expect(html).toContain('Reveal hint 1 — cracks the card');
   let s = initialExerciseState();
   for (const hint of [1, 2] as const) s = viewHint(declareAttempt(s, false), hint, false);

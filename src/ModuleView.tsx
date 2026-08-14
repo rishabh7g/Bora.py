@@ -152,7 +152,8 @@ export default function ModuleView({ curriculum, module, progress }: ModuleViewP
       ))}
 
       <h2 className="mod-section-title">{t('module.section.workedExamples')}</h2>
-      <p className="mod-section-sub">{t('module.section.workedExamplesSub')}</p>
+      {/* #101: the sub-line described mechanics the rows underneath already
+          demonstrate — read once, then skimmed past on every module. */}
       <div className="mod-examples">
         {module.concept.examples.map((example, index) => (
           <WorkedExampleBlock

@@ -158,7 +158,8 @@ export default function Settings({
     <div className="set-screen">
       <p className="set-kicker">{t('settings.kicker')}</p>
       <h1 className="set-title">{t('settings.title')}</h1>
-      <p className="set-lede">{t('settings.lede')}</p>
+      {/* #101: "no account, no server" and "export a copy" were read once —
+          the Export section below already says both, with the live filename. */}
 
       {notice && (
         <p className="set-notice" role="status" tabIndex={-1} ref={noticeRef}>

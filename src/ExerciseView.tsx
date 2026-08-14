@@ -188,13 +188,9 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
       {!isExit && (
         <>
           <h2 className="ex-section-title">{t('exercise.section.hintLadder')}</h2>
-          {/* "Each hint", not "each reveal" (#89): a crack is one hint viewed
-              (DESIGN.md §4, cardCracksOf), so the solution rung — the largest
-              reveal on the ladder — adds none. The two hint buttons already say
-              "cracks the card" and the solution button does not; this sentence
-              is the summary of those buttons, so it promises exactly what they
-              do and no more. */}
-          <p className="ex-section-sub">{t('exercise.section.hintLadderSub')}</p>
+          {/* #101: the sub-line described the same attempt→hint→solution
+              mechanic the rungs below it demonstrate — read once, then
+              skimmed past on every exercise. */}
           <div className="ex-ladder">
             {([1, 2] as const).map((hintNumber) => {
               const seen = state.hintsUnlocked >= hintNumber;

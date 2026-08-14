@@ -186,12 +186,6 @@
   border-top: 2px solid var(--color-divider);
   padding-top: 16px;
 }
-.ex-section-sub {
-  margin: 6px 0 0;
-  font-size: 16px;
-  color: var(--color-text-quiet);
-}
-
 .ex-ladder {
   display: flex;
   flex-direction: column;
