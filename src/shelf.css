@@ -30,7 +30,7 @@
 
 .shelf-lede {
   margin: 10px 0 0;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--color-text-quiet);
   max-width: var(--content-max);
 }
@@ -107,7 +107,7 @@
 }
 
 .shelf-foot {
-  font-size: 10.5px;
+  font-size: 16px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -166,7 +166,7 @@
 }
 
 .shelf-note {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 

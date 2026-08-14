@@ -38,7 +38,7 @@
 
 .setup-intro {
   margin: 14px 0 0;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   max-width: var(--content-max);
   color: var(--color-neutral-800);
@@ -68,7 +68,7 @@
 }
 .setup-os-note {
   margin: 8px 0 0;
-  font-size: 12.5px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 
@@ -94,7 +94,7 @@
    by its own contrast-audit row (docs/QA.md). */
 .setup-checked {
   margin: 22px 0 0;
-  font-size: 12.5px;
+  font-size: 16px;
   line-height: 1.6;
   max-width: var(--content-max);
   color: var(--color-text-quiet);
@@ -133,7 +133,7 @@
 }
 .setup-step-text {
   margin: 0;
-  font-size: 14.5px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--color-neutral-800);
 }
@@ -189,7 +189,7 @@
   height: auto;
 }
 .setup-shot figcaption {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 /* "What you'll see" — the words that stand in for a screenshot there is no
@@ -218,7 +218,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--color-neutral-800);
 }
@@ -249,7 +249,7 @@
 }
 .setup-exit-prompt {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   max-width: var(--content-max);
 }
@@ -266,7 +266,7 @@
 }
 .setup-exit-note {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 16px;
   color: var(--color-text-quiet);
 }
 .setup-exit-passed {
@@ -275,6 +275,6 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  font-size: 14.5px;
+  font-size: 16px;
   font-weight: 700;
 }
