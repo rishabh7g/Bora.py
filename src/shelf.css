@@ -6,7 +6,7 @@
   width: min(1020px, 100%);
   box-sizing: border-box;
   margin: 0 auto;
-  padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 40px) 0;
+  padding: clamp(28px, 5vw, 56px) var(--gutter) 0;
 }
 
 /* The kicker opens the screen now, so it takes no top margin: the 14px used to
@@ -32,7 +32,7 @@
   margin: 10px 0 0;
   font-size: 15px;
   color: var(--color-text-quiet);
-  max-width: 60ch;
+  max-width: var(--content-max);
 }
 
 .shelf-grid {

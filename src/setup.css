@@ -8,7 +8,7 @@
   width: min(780px, 100%);
   box-sizing: border-box;
   margin: 0 auto;
-  padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 0;
+  padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
 }
 
 /* Back link — ghost button as anchor, flush left, ≥44px both ways ("← Map" is
@@ -40,7 +40,7 @@
   margin: 14px 0 0;
   font-size: 15px;
   line-height: 1.6;
-  max-width: 62ch;
+  max-width: var(--content-max);
   color: var(--color-neutral-800);
 }
 
@@ -96,7 +96,7 @@
   margin: 22px 0 0;
   font-size: 12.5px;
   line-height: 1.6;
-  max-width: 62ch;
+  max-width: var(--content-max);
   color: var(--color-text-quiet);
 }
 
@@ -160,6 +160,8 @@
   font: 600 14px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
   white-space: pre-wrap;
   overflow-wrap: break-word;
+  /* #102: belt-and-braces alongside the wrap above — see src/code.css. */
+  overflow-x: auto;
 }
 
 /* Screenshots — local files only, full width of the step column, and only ever
@@ -249,7 +251,7 @@
   margin: 0;
   font-size: 15px;
   line-height: 1.6;
-  max-width: 60ch;
+  max-width: var(--content-max);
 }
 /* The shared block brings its own top margin for the exercise screen's flow; in
    both of this screen's stacks the gap comes from the flex container instead. */

@@ -5,12 +5,12 @@
   width: min(760px, 100%);
   box-sizing: border-box;
   margin: 0 auto;
-  padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 0;
+  padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
 }
 
 .load-body {
   margin: 0 0 var(--space-4);
-  max-width: 52ch;
+  max-width: var(--content-max);
   opacity: 0.8;
 }
 

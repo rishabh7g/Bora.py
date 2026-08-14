@@ -9,6 +9,10 @@
   font: 500 13.5px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
   white-space: pre-wrap;
   overflow-wrap: break-word;
+  /* #102: belt-and-braces alongside the wrap above — pre-wrap already keeps
+     this block from widening the page, but a genuinely wide block scrolls
+     inside itself rather than the page, never the other way round. */
+  overflow-x: auto;
 }
 .py-code .token.keyword {
   color: var(--color-accent-400);

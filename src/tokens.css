@@ -12,6 +12,39 @@
  * normal text, 3:1 only where the type is large (>= 24px, or >= 18.66px at
  * weight >= 700). `node scripts/contrast-audit.mjs` measures it.
  */
+/* Gutters and the reading measure (#102, UI baseline §11 "Gutters, spacing
+ * and content width"). Three bands, matched to the breakpoints #97 already
+ * introduced (src/layout.test.ts) — a phone gutter, a tablet/laptop gutter,
+ * and a desktop gutter, so the same screen never has one fixed padding at
+ * every width.
+ *
+ * --content-max is the reading measure: 720px, roughly 75 characters at
+ * 16px. It caps prose — ledes, prompts, settings copy — never a table,
+ * chart or dashboard, none of which this app has today. Anything genuinely
+ * wide (a code block, an expected-output pane) stays inside its own
+ * scrolling container instead of widening the page (src/code.css,
+ * src/exercise.css).
+ */
+:root {
+  --gutter-sm: 16px;
+  --gutter-md: 24px;
+  --gutter-lg: 32px;
+  --gutter: var(--gutter-sm);
+  --content-max: 720px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: var(--gutter-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gutter: var(--gutter-lg);
+  }
+}
+
 :root {
   /* Quiet supporting text — era labels, anchor lines, captions, notes, ledes.
      Used at 10.5–13px all over the app, so the "large text only" steps are not

@@ -67,6 +67,17 @@ body,
      prefers-reduced-motion an answer. Arriving on a screen is not a scroll. */
 }
 
+/* #102 (UI baseline §11): a flex/grid item's default min-width is auto, which
+   lets its content refuse to shrink below its intrinsic width and push the
+   page into horizontal scroll — a long unbroken code line inside a screen
+   that never asked to be that wide. Every screen is a direct child of
+   .app-screen, so this one rule lets all of them shrink to the viewport;
+   the genuinely wide children (code blocks, expected-output panes) scroll
+   inside their own container instead (src/code.css, src/exercise.css). */
+.app-screen > * {
+  min-width: 0;
+}
+
 @media (min-width: 768px) {
   .app-screen {
     grid-column: 2;
