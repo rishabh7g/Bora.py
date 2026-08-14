@@ -46,6 +46,12 @@ export default function BottomNav({ screen }: { screen: string }) {
           // The icon is the whole item, so this is the only accessible name it
           // has — without it the link announces as its href.
           aria-label={item.label}
+          // Mandatory, and set at EVERY viewport (#107): aria-label produces
+          // no tooltip in any browser, so without this a pointer user gets no
+          // hint which glyph is which until they click one. Set unconditionally
+          // in JSX — never gated by viewport — so the a11y contract never
+          // depends on which CSS rule happened to match.
+          title={item.label}
           // On #/setup, #/module/… and the exercise routes none of the three
           // destinations is the screen being shown, so nothing is current.
           // That is the honest answer, not a gap.
