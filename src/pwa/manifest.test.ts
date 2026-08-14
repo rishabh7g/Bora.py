@@ -66,17 +66,26 @@ it('ships 192, 512 and maskable icons, and each file exists', () => {
 
 it('precaches the shell, the photocard art and the icons, and falls back to it offline', () => {
   const patterns = workbox.globPatterns!.join(' ');
-  for (const extension of ['html', 'js', 'css', 'svg', 'png']) {
+  for (const extension of ['html', 'js', 'css', 'svg', 'png', 'woff2']) {
     expect(patterns).toContain(extension);
   }
   // Hash routing: every deep link is index.html, so offline navigation needs it.
   expect(workbox.navigateFallback).toBe('index.html');
 });
 
-it('adds no analytics or error tracking — only the font CDN is cached at runtime', () => {
-  const hosts = workbox.runtimeCaching!.map((rule) => String(rule.urlPattern));
-  expect(hosts).toEqual([
-    String(/^https:\/\/fonts\.googleapis\.com\//),
-    String(/^https:\/\/fonts\.gstatic\.com\//),
-  ]);
+it('talks to no third-party origin at runtime — Archivo is self-hosted (#95)', () => {
+  expect(workbox.runtimeCaching).toEqual([]);
+});
+
+it('ships the three self-hosted Archivo weights the token ramp uses, and precaches them', () => {
+  const fontsDir = join(
+    repoRoot,
+    'design/_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/fonts',
+  );
+  for (const weight of ['400', '600', '800']) {
+    expect(existsSync(join(fontsDir, `archivo-${weight}.woff2`))).toBe(true);
+  }
+  // globPatterns' woff2 entry (asserted above) is what pulls these hashed
+  // build outputs into the precache — there is no separate font-specific rule.
+  expect(workbox.globPatterns!.join(' ')).toContain('woff2');
 });

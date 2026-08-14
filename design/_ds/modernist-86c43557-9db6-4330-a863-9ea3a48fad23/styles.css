@@ -1,5 +1,34 @@
 /* Modernist — design-system tokens and component classes. This file is the source of truth for the system's look; retune it here and see readme.md. */
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap');
+/* Self-hosted Archivo (#95): the app is an offline-first PWA and cannot depend
+   on a runtime fetch to a third-party font host for first paint. These three
+   files are the exact (family, weight) pairs the token ramp below uses —
+   --font-body at 400, --font-heading-weight at 800, plus 600 for the
+   in-between UI weight — subset to Latin-1 (U+00-FF plus the handful of
+   Google always includes) via Google's own per-weight static subsetting, so
+   no glyph outside what the app renders ships. Never re-add a third-party
+   font origin here; src/pwa/fontHosts.test.ts fails the build if one comes
+   back. */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/archivo-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/archivo-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('./fonts/archivo-800.woff2') format('woff2');
+}
 
 :root {
   --color-bg: #f3f2f2;
