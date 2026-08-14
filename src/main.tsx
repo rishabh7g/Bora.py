@@ -6,6 +6,7 @@ import '../design/_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/styles.css'
 // App text roles on top of the system's ramps — which step each job uses.
 import './tokens.css';
 import App from './App';
+import ErrorBoundary from './ErrorBoundary';
 
 // Offline precache + silent auto-update (ENGINEERING.md §9). The generated
 // registration knows the deploy base, so this works at any subpath; in dev it
@@ -15,6 +16,12 @@ registerSW({ immediate: true });
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    {/* The boundary above everything (#96, UI baseline §10): a throw
+        anywhere in the tree — including loadCurriculum(), now computed
+        inside App rather than at module scope — renders a Notice instead of
+        an empty #root. */}
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
 );

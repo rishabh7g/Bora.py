@@ -8,12 +8,6 @@
   padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 40px) 0;
 }
 
-.load-title {
-  margin: 0 0 var(--space-2);
-  font-size: 18px;
-  font-weight: 700;
-}
-
 .load-body {
   margin: 0 0 var(--space-4);
   max-width: 52ch;

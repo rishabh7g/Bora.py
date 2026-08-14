@@ -127,16 +127,6 @@
   background: color-mix(in srgb, var(--color-text) 14%, transparent);
 }
 
-.set-error {
-  margin: 14px 0 0;
-  padding: 10px 12px;
-  font-size: 13px;
-  max-width: 62ch;
-  color: var(--color-accent-900);
-  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
-  border-left: 2px solid var(--color-accent);
-}
-
 .set-confirm {
   margin-top: 18px;
   padding: 14px;
