@@ -18,11 +18,9 @@ const audit = readFileSync(join(repoRoot, 'scripts/contrast-audit.mjs'), 'utf8')
 
 // Every link and ghost button in the app, by the class its screen gives it.
 const linkClasses = [
-  // Only the deep screens keep a back link: the three nav destinations reach
-  // each other from the bar, never from a body link (#83).
-  'mod-back',
+  // One back link in the app: the exercise's, to its module — the one parent
+  // the nav does not list (#83). Module and setup go back through the bar.
   'ex-back',
-  'setup-back',
   // The bottom nav's three destinations are links too (#75), on every screen —
   // measured as icons rather than as text, see below (#76).
   'bottomnav-item',

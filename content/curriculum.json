@@ -91,7 +91,7 @@
         "art": "card-m1.svg"
       },
       "concept": {
-        "intro": "A variable is a named box for a value; print() is how your program talks back. An f-string — f\"My bias is {name}\" — drops variables straight into text. Everything runs on YOUR machine: write the file, run it in the terminal, compare outputs here. Outputs must match exactly, character for character — and a missing space is invisible. When one looks identical but feels wrong, switch on \"Show whitespace\" on any expected-output block: · marks each space, → a tab, ⏎ the end of a line.",
+        "intro": "A variable is a named box for a value; print() is how your program talks back. An f-string — f\"My bias is {name}\" — drops variables straight into text. Everything runs on YOUR machine: write the file, run it in the terminal, compare outputs here. Outputs must match exactly, character for character.",
         "examples": [
           {
             "code": "bias = \"Jungkook\"\nprint(bias)",
@@ -375,7 +375,7 @@
         "art": "card-m4.svg"
       },
       "concept": {
-        "intro": "Errors are not punishment — they are Python telling you exactly where it gave up. Read the LAST line first: the error type and its message. The lines above name the file and line, and ^ marks under the code point at the exact part that broke. Your File line shows the full path to hello.py on your own machine — that part will not match ours, everything else will. Every exercise below hands you broken code to fix.",
+        "intro": "Errors are not punishment — they are Python telling you exactly where it gave up. Read the LAST line first: the error type and its message. The lines above name the file and line, and ^ marks under the code point at the exact part that broke. Your File line shows the path on your machine — that part will not match ours, everything else will. Every exercise below hands you broken code to fix.",
         "examples": [
           {
             "code": "print(\"Dynamite)",

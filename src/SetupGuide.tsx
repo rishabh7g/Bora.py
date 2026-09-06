@@ -131,9 +131,7 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
 
   return (
     <div className="setup-screen">
-      <a className="btn btn-ghost setup-back" href={HOME_ROUTE}>
-        {t('common.backToMap')}
-      </a>
+      {/* No back link: the map is the nav's first item (#83). */}
       <p className="setup-kicker">{kicker}</p>
       <h1 className="setup-title">{module.title}</h1>
       <p className="setup-intro">{module.concept.intro}</p>

@@ -122,11 +122,13 @@ it('persists the preference under its own key — never inside the progress back
   expect(JSON.stringify(passed)).not.toContain('whitespace');
 });
 
-it('is taught in Module 1: outputs match exactly, and here is how to check', () => {
-  // ENGINEERING.md §7 — the concept doc has to point at the toggle by name.
+it('Module 1 says outputs match exactly; the block, not the prose, explains the toggle', () => {
+  // ENGINEERING.md §7 — the rule is taught once, in the concept doc; how to
+  // check it is the block's own legend, one tap away on every expected output.
   const intro = findModule(loadCurriculum(), 'm1')!.concept.intro;
   expect(intro).toContain('match exactly');
-  expect(intro).toContain('Show whitespace');
-  expect(intro).toContain('·');
-  expect(intro).toContain('⏎');
+  expect(intro).not.toContain('Show whitespace');
+  expect(intro).not.toContain('⏎');
+  const legend = whitespaceLegend(splitOutput('a b\nc'));
+  expect(legend).toEqual(['· space', '⏎ line break']);
 });

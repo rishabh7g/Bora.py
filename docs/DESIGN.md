@@ -147,7 +147,7 @@ One shared dataset evolves across all modules. By the capstone she is intimate w
 ## 7. Screens (PWA)
 
 - **Home / Map:** the current checkpoint as one card at the top (number, title, anchor, one button — the one statement of where she is), then the checkpoint path through the "eras": passed rows keep their anchor and link, the current row is plain, a locked row is one title line
-- **Module screen:** concept explainer → worked examples → exercise list → exit exercise (locked until practice exercises attempted)
+- **Module screen:** concept explainer → worked examples → exercise list (a row is its title, and MATCHED once it is) → exit exercise row (locked until every practice exercise is matched or its solution seen; a link once it is). The kicker names the module; the tier is the map's to say
 - **Exercise screen:** task, expected output block (copy-safe monospace), the hints revealed so far as text, then two buttons — "My output matches" and the one move the effort gate allows next ("I tried and got stuck", "Reveal hint n", "Reveal solution") — and the revealed solution + approach checklist. The ladder is never drawn; the gate is consumed, not narrated
 - **Photocard shelf:** collected cards, cracked corners visible
 - **Setup guide (Module 0):** OS picker → step-by-step, per OS path. A step is the doing — title, body, the command and what it prints; the window in words and the screenshot sit behind one closed "What you'll see" disclosure per step
@@ -257,10 +257,11 @@ being overwritten here.
   things?* — and the answer being "no" is a worse outcome than the question never being asked.
   The bar is the single top-level affordance for Map, Shelf and Settings; a second route to any
   of them makes it one of two navigations rather than the navigation. The boundary, so this is
-  not misread as "delete the back links": a back link survives exactly where its parent is
-  **not** a nav destination. `.mod-back`, `.ex-back` (which goes back to the parent *module*,
-  not to the map) and `.setup-back` are the only way up out of a deep screen, the nav cannot
-  return the learner to a place it does not list, and deleting them would strand her.
+  not misread as "delete every back link": a back link survives exactly where its parent is
+  **not** a nav destination. That is one link in the app — `.ex-back`, from an exercise to its
+  module, a place the bar does not list. The module and setup screens' "← Map" links were the
+  rule's own exception for a while; the bar's first item is that link, so they went with the
+  said-once pass.
 
 ---
 

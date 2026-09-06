@@ -12,6 +12,10 @@
 // 5. No copyrighted song-lyric lines anywhere in content (member names,
 //    song/album titles, and years are facts and fine); photocard art must be
 //    an original local svg ref, never official imagery.
+// 6. A concept intro is at most INTRO_MAX_CHARS: the idea, said once — the
+//    worked examples under it carry the rest. Anything about how the app
+//    works (the whitespace toggle, the terminal) belongs on the screen that
+//    does it, not in a module's prose.
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -44,6 +48,9 @@ export type RawCurriculum = {
 };
 
 export type Violation = { moduleId: string; exerciseId?: string; message: string };
+
+/** Rule 6: the longest a concept intro may be, in characters. */
+export const INTRO_MAX_CHARS = 400;
 
 // Substrings in a solution that make its output non-deterministic.
 const NONDETERMINISTIC_MARKERS = ['random', 'datetime', 'time.'];
@@ -152,6 +159,14 @@ export function lintCurriculum(
     ].join('\n');
     for (const lyric of lyricViolations(moduleText)) {
       violations.push({ moduleId, message: `contains copyrighted lyric line: "${lyric}"` });
+    }
+
+    // Rule 6: the intro is one idea, said once.
+    if (module.concept.intro.length > INTRO_MAX_CHARS) {
+      violations.push({
+        moduleId,
+        message: `concept intro is ${module.concept.intro.length} characters; the ceiling is ${INTRO_MAX_CHARS} — cut it to the idea, the examples carry the rest`,
+      });
     }
 
     // Rule 5: photocard art must be an original local svg — never official

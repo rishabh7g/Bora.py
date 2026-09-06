@@ -30,7 +30,6 @@
 export const STRINGS_KEYS = [
   // Shared across screens.
   'common.backArrow',
-  'common.backToMap',
   'common.reload',
   'common.tryAgain',
   'common.cancel',
@@ -117,18 +116,10 @@ export const STRINGS_KEYS = [
   'module.copy.idleLabel',
   'module.copy.blockedNote',
   'module.kicker.plain',
-  'module.kicker.withTier',
   'module.section.workedExamples',
   'module.section.exercises',
   'module.exit.badge',
-  'module.exit.summativeNote',
-  'module.exit.lockedNote',
   'module.status.matched',
-  'module.status.solutionSeen',
-  'module.status.hintUsed',
-  'module.status.tried',
-  'module.status.notStarted',
-  'module.status.ready',
 
   // CelebrationScreen.
   'celebration.dialogLabel',
@@ -171,7 +162,6 @@ export type StringsKey = (typeof STRINGS_KEYS)[number];
  */
 export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'common.backArrow': [],
-  'common.backToMap': [],
   'common.reload': [],
   'common.tryAgain': [],
   'common.cancel': [],
@@ -250,18 +240,10 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'module.copy.idleLabel': [],
   'module.copy.blockedNote': [],
   'module.kicker.plain': ['number'],
-  'module.kicker.withTier': ['number', 'tier'],
   'module.section.workedExamples': [],
   'module.section.exercises': [],
   'module.exit.badge': [],
-  'module.exit.summativeNote': [],
-  'module.exit.lockedNote': [],
   'module.status.matched': [],
-  'module.status.solutionSeen': [],
-  'module.status.hintUsed': ['number'],
-  'module.status.tried': ['count'],
-  'module.status.notStarted': [],
-  'module.status.ready': [],
 
   'celebration.dialogLabel': [],
   'celebration.kicker': [],

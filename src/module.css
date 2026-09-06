@@ -9,19 +9,8 @@
   padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
 }
 
-/* Back link — ghost button as anchor, flush left. The label is short ("← Map"),
-   so the target needs a width floor as well as a height one to clear 44px;
-   flex-start keeps the label flush left inside it. */
-.mod-back {
-  padding-inline: 0;
-  white-space: nowrap;
-  min-height: 44px;
-  min-width: 44px;
-  justify-content: flex-start;
-}
-
 .mod-kicker {
-  margin: 18px 0 8px;
+  margin: 0 0 8px;
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -208,27 +197,15 @@
 .mod-exitrow--open:active {
   background: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
-/* The locked exit row explains the app's own gate ("Unlocks when every practice
-   exercise is matched…"), so it is the last thing that should be hard to read:
-   `opacity: 0.55` folded it to 1.62–2.83:1 (#45). Quieter ink instead, on the
-   row and on the number it contains. */
+/* The locked row steps back in ink, never opacity (#45): `opacity: 0.55`
+   folded it to 1.62–2.83:1. */
 .mod-exitrow--locked {
   color: var(--color-text-locked);
 }
-.mod-exitrow--locked .mod-num,
-.mod-exitrow--locked .mod-exitrow-sub {
+.mod-exitrow--locked .mod-num {
   color: inherit;
-}
-.mod-exitrow-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 .mod-exitrow-title {
   font-weight: 700;
   font-size: 16px;
-}
-.mod-exitrow-sub {
-  font-size: 16px;
-  color: var(--color-text-quiet);
 }

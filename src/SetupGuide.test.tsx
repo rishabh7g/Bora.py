@@ -344,5 +344,5 @@ it('keeps hit targets ≥44px and buttons flush left, from shared classes', () =
   const html = render();
   expect(html).toContain('btn btn-primary btn-action'); // .btn-action: min-height 46px
   expect(html).toContain('btn btn-secondary btn-action');
-  expect(html).toContain('btn btn-ghost setup-back');
+  expect(html).not.toContain('setup-back'); // the map is the bar's first item (#83)
 });

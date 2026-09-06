@@ -11,18 +11,8 @@
   padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
 }
 
-/* Back link — ghost button as anchor, flush left, ≥44px both ways ("← Map" is
-   narrower than 44px on its own). */
-.setup-back {
-  padding-inline: 0;
-  white-space: nowrap;
-  min-height: 44px;
-  min-width: 44px;
-  justify-content: flex-start;
-}
-
 .setup-kicker {
-  margin: 18px 0 8px;
+  margin: 0 0 8px;
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;

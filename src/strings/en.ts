@@ -13,7 +13,6 @@
 export const en = {
   common: {
     backArrow: '←',
-    backToMap: '← Map',
     reload: 'Reload',
     tryAgain: 'Try again',
     cancel: 'Cancel',
@@ -140,7 +139,6 @@ export const en = {
     },
     kicker: {
       plain: 'Module {number}',
-      withTier: 'Module {number} — {tier}',
     },
     section: {
       workedExamples: 'Worked examples',
@@ -148,16 +146,9 @@ export const en = {
     },
     exit: {
       badge: 'EX',
-      summativeNote: 'Summative. No hints, no examples on screen. Passing awards the photocard.',
-      lockedNote: 'Unlocks when every practice exercise is matched or its solution seen.',
     },
     status: {
       matched: 'MATCHED',
-      solutionSeen: 'SOLUTION SEEN',
-      hintUsed: 'HINT {number} USED',
-      tried: 'TRIED ×{count}',
-      notStarted: 'NOT STARTED',
-      ready: 'READY',
     },
   },
 

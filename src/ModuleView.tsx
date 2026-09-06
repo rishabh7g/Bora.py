@@ -1,13 +1,15 @@
 // ModuleView — the Module screen (ENGINEERING.md §7, §11 step 3; DESIGN.md
 // §3.2, §3.6, §7; prototype: design/PyLearn Prototype.dc.html → Module).
 // Concept doc → worked examples (highlighted code + copy button) → exercise
-// list with state chips → exit exercise row.
+// list → exit exercise row. A row says the one thing that matters about it:
+// matched or not, passed or locked or open; the effort gate's internals stay
+// on the exercise screen that runs them.
 //
 // Every gating decision is read from src/state/gating.ts (§6 owner); chips
 // are a pure projection of the persisted ExerciseState. This component only
 // renders — it never mutates progress.
 import { useEffect, useRef, useState } from 'react';
-import { findTierOf, moduleNumberOf } from './content/load';
+import { moduleNumberOf } from './content/load';
 import type { Curriculum, Module, WorkedExample } from './content/types';
 import PythonCode from './PythonCode';
 import type { ExerciseState } from './state/effortGate';
@@ -18,20 +20,11 @@ import './module.css';
 
 export type Chip = { label: string; className: string };
 
-/** Exercise state chip derived from persisted Progress —
- *  untouched / attempted / hint used / matched / solution seen. */
-export function exerciseChipOf(state: ExerciseState): Chip {
+/** The one chip an exercise row carries: MATCHED, or nothing. Attempts, hints
+ *  and a seen solution are the exercise screen's business. */
+export function exerciseChipOf(state: ExerciseState): Chip | null {
   if (state.matched) return { label: t('module.status.matched'), className: 'tag-accent' };
-  if (state.solutionRevealed)
-    return { label: t('module.status.solutionSeen'), className: 'tag-neutral' };
-  if (state.hintsUnlocked > 0)
-    return {
-      label: t('module.status.hintUsed', { number: state.hintsUnlocked }),
-      className: 'tag-outline',
-    };
-  if (state.attempts > 0)
-    return { label: t('module.status.tried', { count: state.attempts }), className: 'tag-outline' };
-  return { label: t('module.status.notStarted'), className: 'tag-neutral' };
+  return null;
 }
 
 export type CopyStatus = 'idle' | 'copied' | 'failed';
@@ -121,27 +114,16 @@ export type ModuleViewProps = {
 };
 
 export default function ModuleView({ curriculum, module, progress }: ModuleViewProps) {
-  const tier = findTierOf(curriculum, module.id);
   const moduleNumber = moduleNumberOf(curriculum, module.id);
   const exitOpen = exitUnlocked(module, progress);
   const exitState = exerciseStateOf(progress, module.id, module.exitExercise.id);
-  const exitChip: Chip = exitState.matched
-    ? { label: t('common.status.passed'), className: 'tag-accent' }
-    : { label: t('module.status.ready'), className: 'tag-outline' };
   const exitTitle = module.exitExercise.title ?? t('common.exitCheckpointTitle');
 
   return (
     <div className="mod-screen">
-      {/* "#/" is the Home-map route; HomeMap ships with a later issue and the
-          router falls back to the default module until then. */}
-      <a className="btn btn-ghost mod-back" href="#/">
-        {t('common.backToMap')}
-      </a>
-      <p className="mod-kicker">
-        {tier
-          ? t('module.kicker.withTier', { number: moduleNumber, tier: tier.title })
-          : t('module.kicker.plain', { number: moduleNumber })}
-      </p>
+      {/* No back link: the map is the nav's first item (#83), and the tier is
+          the map's to say. The kicker names the module once. */}
+      <p className="mod-kicker">{t('module.kicker.plain', { number: moduleNumber })}</p>
       <h1 className="mod-title">{module.title}</h1>
       {/* Concept intro is authored markdown; today's content uses plain
           paragraphs, so render paragraph breaks only. */}
@@ -176,27 +158,25 @@ export default function ModuleView({ curriculum, module, progress }: ModuleViewP
             >
               <span className="mod-num">{String(index + 1).padStart(2, '0')}</span>
               <span className="mod-exrow-title">{exercise.title ?? exercise.id}</span>
-              <span className={`tag ${chip.className} mod-chip`}>{chip.label}</span>
+              {chip && <span className={`tag ${chip.className} mod-chip`}>{chip.label}</span>}
             </a>
           );
         })}
 
+        {/* The exit row: a link once the rows above are all engaged, a locked
+            row until then. The rule it used to print is visible in those rows. */}
         {exitOpen ? (
           <a className="mod-exitrow mod-exitrow--open" href={`#/module/${module.id}/exit`}>
             <span className="mod-num mod-num--accent">{t('module.exit.badge')}</span>
-            <span className="mod-exitrow-text">
-              <span className="mod-exitrow-title">{exitTitle}</span>
-              <span className="mod-exitrow-sub">{t('module.exit.summativeNote')}</span>
-            </span>
-            <span className={`tag ${exitChip.className} mod-chip`}>{exitChip.label}</span>
+            <span className="mod-exitrow-title">{exitTitle}</span>
+            {exitState.matched && (
+              <span className="tag tag-accent mod-chip">{t('common.status.passed')}</span>
+            )}
           </a>
         ) : (
           <div className="mod-exitrow mod-exitrow--locked">
             <span className="mod-num">{t('module.exit.badge')}</span>
-            <span className="mod-exitrow-text">
-              <span className="mod-exitrow-title">{exitTitle}</span>
-              <span className="mod-exitrow-sub">{t('module.exit.lockedNote')}</span>
-            </span>
+            <span className="mod-exitrow-title">{exitTitle}</span>
             <span className="tag tag-neutral mod-chip">{t('common.status.locked')}</span>
           </div>
         )}
