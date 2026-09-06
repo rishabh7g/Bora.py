@@ -49,10 +49,6 @@
   letter-spacing: 0.12em;
   font-weight: 800;
 }
-.ex-expected-sub {
-  font-size: 16px;
-  color: var(--color-text-quiet);
-}
 .ex-expected pre {
   margin: 0;
   padding: 16px;
@@ -61,6 +57,12 @@
   overflow-wrap: break-word;
   /* #102: belt-and-braces alongside the wrap above — see src/code.css. */
   overflow-x: auto;
+}
+
+/* The plain form (a transcript in the setup stepper): the head is the label
+   alone, so it sits on one short line. */
+.ex-expected--plain .ex-expected-head {
+  padding: 8px 14px;
 }
 
 /* — "show whitespace" toggle (ENGINEERING.md §7, §12) —

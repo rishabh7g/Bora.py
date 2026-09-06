@@ -90,7 +90,6 @@ export const STRINGS_KEYS = [
   'settings.reset.confirmedNotice',
 
   // ExpectedOutput.
-  'expectedOutput.defaultSub',
   'expectedOutput.defaultLabel',
   'expectedOutput.showWhitespace',
   'expectedOutput.legend.space',
@@ -157,14 +156,9 @@ export const STRINGS_KEYS = [
   // SetupGuide (the component's own chrome — step content stays in content/setup.ts, see above).
   'setup.osLegend',
   'setup.section.installSteps',
-  'setup.look.label',
   'setup.term.label',
+  'setup.more',
   'setup.itPrints.label',
-  'setup.itPrints.sub',
-  'setup.exit.label',
-  'setup.exit.sub',
-  'setup.exit.passedNote',
-  'setup.exit.note',
 ] as const;
 
 export type StringsKey = (typeof STRINGS_KEYS)[number];
@@ -231,7 +225,6 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'settings.reset.resetButton': [],
   'settings.reset.confirmedNotice': ['number'],
 
-  'expectedOutput.defaultSub': [],
   'expectedOutput.defaultLabel': [],
   'expectedOutput.showWhitespace': [],
   'expectedOutput.legend.space': [],
@@ -293,12 +286,7 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
 
   'setup.osLegend': [],
   'setup.section.installSteps': [],
-  'setup.look.label': [],
   'setup.term.label': [],
+  'setup.more': [],
   'setup.itPrints.label': [],
-  'setup.itPrints.sub': [],
-  'setup.exit.label': [],
-  'setup.exit.sub': [],
-  'setup.exit.passedNote': [],
-  'setup.exit.note': [],
 };

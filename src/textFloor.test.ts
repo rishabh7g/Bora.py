@@ -47,8 +47,6 @@ const KICKERS = [
   ['src/setup.css', '.setup-os-legend'],
   ['src/setup.css', '.setup-section-title'],
   ['src/setup.css', '.setup-term-label'],
-  ['src/setup.css', '.setup-look-label'],
-  ['src/setup.css', '.setup-exit-label'],
   ['src/shelf.css', '.shelf-kicker'],
 ] as const;
 

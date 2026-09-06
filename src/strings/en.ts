@@ -97,7 +97,6 @@ export const en = {
   },
 
   expectedOutput: {
-    defaultSub: 'your terminal should print this',
     defaultLabel: 'EXPECTED OUTPUT',
     showWhitespace: 'Show whitespace',
     legend: {
@@ -198,21 +197,12 @@ export const en = {
     section: {
       installSteps: 'Install steps',
     },
-    look: {
-      label: 'WHAT YOU’LL SEE',
-    },
     term: {
       label: 'TYPE THIS',
     },
     itPrints: {
       label: 'IT PRINTS',
-      sub: "your chosen member's name, on its own line",
     },
-    exit: {
-      label: 'EXIT CHECKPOINT',
-      sub: "the shape — your chosen member's name, on its own line",
-      passedNote: 'Module 01 is open. Nothing here expires.',
-      note: 'No hints on this one, and no rush — leave whenever. Your place is kept.',
-    },
+    more: 'What you’ll see',
   },
 };
