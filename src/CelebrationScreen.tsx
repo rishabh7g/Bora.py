@@ -10,7 +10,8 @@
 // that transient state, so reloading or coming back never re-fires it.
 //
 // The copy names the photocard just earned and says nothing about XP, streaks,
-// scores or time — playfulness lives in the content, not the chrome.
+// scores or time — playfulness lives in the content, not the chrome. The card
+// is its own caption: it is on the shelf because it is here.
 import { useEffect, useRef } from 'react';
 import type { Module } from './content/types';
 import PhotocardArt from './PhotocardArt';
@@ -114,7 +115,7 @@ export default function CelebrationScreen({
     >
       <Confetti />
       <div className="celebrate-body">
-        <p className="celebrate-kicker">{t('celebration.kicker')}</p>
+        {/* The title is the whole announcement; a kicker over it said it twice. */}
         <h1 className="celebrate-title">{t('celebration.title', { number: moduleNumber })}</h1>
         <p className="celebrate-line">{celebrationLineFor(moduleNumber)}</p>
 
@@ -123,7 +124,6 @@ export default function CelebrationScreen({
           <span className="celebrate-cardnum">{moduleNumber}</span>
           <span className="celebrate-cardtext">
             <span className="celebrate-cardtitle">{module.photocard.title}</span>
-            <span className="celebrate-cardfoot">{t('celebration.card.foot')}</span>
           </span>
         </div>
 

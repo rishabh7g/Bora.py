@@ -29,7 +29,6 @@ const repoRoot = resolve(srcDir, '..');
  * section eyebrow.
  */
 const KICKERS = [
-  ['src/celebration.css', '.celebrate-kicker'],
   ['src/exercise.css', '.ex-kicker'],
   ['src/exercise.css', '.ex-expected-label'],
   ['src/exercise.css', '.ex-section-title'],

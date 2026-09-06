@@ -171,7 +171,39 @@ Target: ≤ 1.2 screens with two earned. Strings: 3 retired.
 
 1. Home  2. Exercise  3. Setup  4. Module  5. Shelf  6. The rest.
 
-Each PR: one issue per bullet above, the commit body leads with the before/after
-measurement at 360px, the retired string keys are listed, and the recaptured screenshots
-replace the ones they retire. The measure script is
-`scripts/measure-screens.mjs` (added with pass 1, from the probe in `docs/QA.md`).
+Each pass is one commit on `claude/bora-simplification-plan-uxk3qa`; its body leads with the
+before/after measurement at 360px and lists the retired string keys. The measure script is
+`scripts/measure-screens.mjs`; the recaptured screens are `docs/qa/screenshots/360-*.png`.
+
+## Done — measured 2026-09-06, after all six passes
+
+Same method, same viewport, same script.
+
+| Screen | Before | After | Primary CTA y, before → after |
+|---|---|---|---|
+| Home, fresh | 3.45 | 1.96 | 316 → 216 |
+| Home, two passed | 3.41 | 2.13 | 606 → 216 |
+| Setup guide (doors closed) | 8.14 | 3.85 | 5303 → 2468 |
+| Module | 2.35 | 1.94 | — |
+| Exercise, fresh | 1.44 | 1.00 | 472 → 439 |
+| Exercise, solution revealed | 1.86 | 1.42 | — |
+| Exit checkpoint | 1.11 | 1.00 | 558 → 439 |
+| Shelf, two earned | 3.32 | 1.00 | — |
+| Settings | 1.24 | 1.16 | 265 → 265 |
+| Celebration | 1.10 | 1.10 | — |
+
+Words on the fresh exercise screen: 105 → 41. On the setup guide: 824 → 326. Strings: 133
+canonical keys → 94. Emitted curriculum: `version`, `brand`, `num`, `tier` and
+`inputsToType` no longer ship.
+
+What missed its target, and why: Setup's 2.5-screen target assumed the step bodies could
+go behind the door too. They are the instruction — what to click, what to type — so they
+stay on the page; 3.85 closed is five authored steps at 16px on a 360px phone. Home's
+1.6-screen target assumed fewer rows; thirteen rows at a 40–56px minimum is 2.1 screens,
+with the button at y=216 in every state, which was the point.
+
+What was left alone, and should be looked at next: the CSS-fact suites (`textFloor`,
+`gutter`, `layout`, `appFeel`, `shellPurity`) were updated to the new selectors, not cut;
+the module intros and the setup step bodies were not rewritten beyond m1 and m4; the
+contrast audit's rows were renamed to the new selectors but not re-run against a preview
+build here.

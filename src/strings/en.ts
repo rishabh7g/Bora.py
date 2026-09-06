@@ -75,8 +75,7 @@ export const en = {
     },
     import: {
       h2: 'Import',
-      bodyBeforeFile: 'Reads a ',
-      bodyAfterFile: ' file back in.',
+      body: 'Reads a saved file back in.',
       label: 'Backup file',
       failedTitle: 'Import failed.',
       replaceWarning: "Importing replaces the progress saved in this browser with the file's.",
@@ -85,7 +84,7 @@ export const en = {
     },
     reset: {
       h2: 'Reset a module',
-      body: 'Clears the attempts, hints and checkpoint of one module so it can be worked through again. Every other module keeps its progress, and checkpoints already passed stay open — this one simply becomes the one you are on.',
+      body: 'Clears one module’s attempts, hints and checkpoint. Every other module keeps its progress.',
       empty: 'No module has saved progress yet.',
       passed: 'Passed',
       inProgress: 'In progress',
@@ -154,11 +153,7 @@ export const en = {
 
   celebration: {
     dialogLabel: 'Checkpoint passed',
-    kicker: 'CHECKPOINT PASSED',
     title: 'Module {number} cleared.',
-    card: {
-      foot: 'Photocard added to shelf',
-    },
     unlockTier5: 'That was the capstone — Tier 5 (Advanced) is open.',
     continueLabel: 'Continue →',
     line1: 'Borahae. On to the next era.',

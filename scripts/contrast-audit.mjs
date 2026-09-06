@@ -135,43 +135,35 @@ const ROWS = [
   // #45 — locked / dimmed states
   ['home-fresh', '.home-row--locked .home-num', 'locked module number'],
   ['home-fresh', '.home-row--locked .home-rowtitle', 'locked module title'],
-  ['home-fresh', '.home-row--locked .home-rowanchor', 'locked module anchor'],
-  ['home-fresh', '.home-row--locked .home-chip', 'LOCKED chip'],
   ['home-fresh', '.home-tier5--locked .home-tiertitle', 'locked tier 5 title'],
-  ['home-fresh', '.home-tier5--locked .home-tierera', 'locked tier 5 era'],
-  ['shelf-fresh', '.shelf-card--locked .shelf-num', 'unearned card number'],
-  ['shelf-fresh', '.shelf-card--locked .shelf-cardtitle', 'unearned card title'],
-  ['shelf-fresh', '.shelf-card--locked .shelf-foot', 'unearned card foot'],
+  ['home-fresh', '.home-tier5--locked', 'locked tier 5 line'],
+  ['shelf-fresh', '.shelf-path-slot', 'still-on-the-path slot number'],
+  ['shelf-fresh', '.shelf-path-label', 'still-on-the-path label'],
   ['module-m1', '.mod-exitrow--locked .mod-exitrow-title', 'locked exit row title'],
-  ['module-m1', '.mod-exitrow--locked .mod-exitrow-sub', 'locked exit row reason'],
   ['module-m1', '.mod-exitrow--locked .mod-num', 'locked exit row EX'],
   ['module-m1', '.mod-exitrow--locked .mod-chip', 'locked exit row chip'],
-  ['exercise-e1', '.ex-lock-note', 'hint lock note'],
-  ['exercise-e1', '.ex-rung .ex-rung-label', 'locked rung label'],
   // The open row is here as the control: locked ink must clear AA without
   // becoming the open row's ink.
   ['home-fresh', '.home-row--open .home-rowtitle', 'open module title (control)'],
   // #46 — quiet supporting text and small accent labels
-  ['home-fresh', '.home-kicker', 'CHECKPOINT PATH kicker'],
-  ['home-fresh', '.home-row--open .home-rowanchor', 'open row anchor'],
+  ['home-fresh', '.home-current-kicker', 'checkpoints-passed kicker'],
+  ['module-m1', '.home-row--open .home-rowanchor', 'passed row anchor'],
   ['home-fresh', '.home-tier .home-tierera', 'era label'],
-  ['home-fresh', '.home-lede', 'home lede'],
+  ['home-fresh', '.home-lede', 'current card anchor'],
   ['home-fresh', '.home-num--current', 'current module numeral (accent, large)'],
-  ['shelf-fresh', '.shelf-note', 'card caption'],
+  ['shelf-m0', '.shelf-note', 'card caption'],
   ['shelf-fresh', '.shelf-kicker', 'shelf kicker'],
   ['module-m1', '.mod-kicker', 'module kicker'],
   ['module-m1', '.mod-example-why', 'why line'],
   ['module-m1', '.mod-num', 'example numeral'],
   ['exercise-e1', '.ex-kicker', 'exercise kicker'],
-  ['exercise-e1', '.ex-expected-sub', 'expected-output sub'],
   ['exercise-e1-ws', '.ex-ws-legend', 'whitespace legend'],
   // #86 — the other .seg in the app. This fixture already clicks the toggle on
   // to render the legend, so the checked option is right there: the audit used
   // to drive this exact control and then measure past it.
   ['exercise-e1-ws', '.ex-ws-toggle .seg-opt:has(input:checked)', 'checked whitespace toggle'],
-  ['exercise-e1-tried', '.ex-note', 'attempts note'],
-  ['exercise-e1-tried', '.ex-rung-label--active', 'active rung label (accent)'],
-  ['exit-m1', '.ex-exit-note', 'exit-checkpoint note (accent)'],
+  ['exercise-e1-hint', '.ex-hint-label', 'revealed hint label (accent)'],
+  ['exit-m1', '.ex-kicker', 'exit-checkpoint kicker (accent)'],
   ['settings', '.set-kicker', 'settings kicker'],
   ['settings', '.set-label', 'settings field label'],
   ['settings', '.set-copy--quiet', 'settings quiet copy'],
@@ -181,13 +173,11 @@ const ROWS = [
   // supporting text the learner must be able to read.
   ['setup', '.setup-checked', 'checked-against line'],
   ['setup', '.setup-term-label', 'terminal label'],
-  // #61 — a step's printed output is the shared expected-output block, so the
-  // stepper gains that block's quiet sub-label too.
-  ['setup', '.setup-step .ex-expected-sub', 'step output sub'],
   ['setup', '.setup-shot figcaption', 'screenshot caption'],
-  // #62 — the screenshot-pending note is gone; the words that replaced it are
-  // instructions the learner must read, so both parts are measured.
-  ['setup', '.setup-look-label', 'what-you’ll-see label'],
+  // #62 — the words that replaced the unpairable screenshots are instructions
+  // the learner must read; they live behind each step's door, which the
+  // fixture opens first.
+  ['setup', '.setup-more-summary', 'what-you’ll-see door'],
   ['setup', '.setup-look-list li', 'what-you’ll-see instruction'],
   ['setup', '.setup-step-num', 'step numeral (accent, large)'],
   // #86 — the design system's segment paints its CHECKED option as accent-red
@@ -200,18 +190,11 @@ const ROWS = [
   // NON_TEXT.
   ['setup', '.setup-os .seg-opt:has(input:checked)', 'checked OS option'],
   ['setup', '.setup-os .seg-opt:not(:has(input:checked))', 'unchecked OS option'],
-  ['setup', '.setup-exit-label', 'setup exit label (accent)'],
   // #55 — links and ghost buttons. Every one of these is 13px/800 interactive
   // text taking its colour from the design system's `a` / `.btn-ghost`, so they
   // stand or fall together; they are listed per screen anyway, because that is
   // what a regression here would look like (one screen quietly opting out).
-  ['module-m1', '.mod-back', '← Map back link'],
   ['exercise-e1', '.ex-back', 'exercise back link'],
-  ['setup', '.setup-back', 'setup back link'],
-  // #59 — the map's UP NEXT chip is the design system's .tag-outline, which
-  // paints its label in --color-accent (3.76:1 at 11px). Only the current
-  // module's row renders it, so home-fresh (no Module 00 pass yet) is reused.
-  ['home-fresh', '.home-row--current .home-chip', 'UP NEXT chip label'],
   // #76 — the bottom nav's two ink states (#75). The bar is on every screen, so
   // any fixture would do; home-fresh shows the current item (Map) and two
   // inactive ones in the same shot. Each item is an icon and an aria-label with
@@ -248,6 +231,8 @@ async function passModule0(hash) {
 const FIXTURES = {
   'home-fresh': () => open('#/'),
   'shelf-fresh': () => open('#/shelf'),
+  // An earned card, for its caption.
+  'shelf-m0': () => passModule0('#/shelf'),
   'module-m1': () => passModule0('#/module/m1'),
   'exercise-e1': () => passModule0('#/module/m1/exercise/e1'),
   'exercise-e1-ws': async () => {
@@ -258,10 +243,12 @@ const FIXTURES = {
     await wait(300);
     return { ctx, page };
   },
-  // One declared attempt: the attempts note and the rung that just went live.
-  'exercise-e1-tried': async () => {
+  // One declared attempt and hint 1 revealed: the hint's label is on screen.
+  'exercise-e1-hint': async () => {
     const { ctx, page } = await passModule0('#/module/m1/exercise/e1');
     await page.getByRole('button', { name: 'I tried and got stuck' }).click();
+    await wait(300);
+    await page.getByRole('button', { name: /Reveal hint 1/ }).click();
     await wait(400);
     return { ctx, page };
   },
@@ -282,7 +269,14 @@ const FIXTURES = {
   },
   // A settings row only exists once a module has saved work.
   settings: () => passModule0('#/settings'),
-  setup: () => open('#/setup'),
+  // Every step's "What you'll see" is closed on load; open them so the words
+  // inside are painted and measurable.
+  setup: async () => {
+    const { ctx, page } = await open('#/setup');
+    await page.$$eval('details', (doors) => doors.forEach((door) => (door.open = true)));
+    await wait(300);
+    return { ctx, page };
+  },
 };
 
 let failed = 0;

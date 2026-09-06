@@ -186,11 +186,7 @@ export default function Settings({
 
       <section className="set-section">
         <h2 className="set-h2">{t('settings.import.h2')}</h2>
-        <p className="set-copy">
-          {t('settings.import.bodyBeforeFile')}
-          <code className="set-file">{BACKUP_FILENAME}</code>
-          {t('settings.import.bodyAfterFile')}
-        </p>
+        <p className="set-copy">{t('settings.import.body')}</p>
         <label className="set-label" htmlFor="set-file">
           {t('settings.import.label')}
         </label>
