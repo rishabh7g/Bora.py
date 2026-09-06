@@ -148,7 +148,7 @@ One shared dataset evolves across all modules. By the capstone she is intimate w
 
 - **Home / Map:** the current checkpoint as one card at the top (number, title, anchor, one button — the one statement of where she is), then the checkpoint path through the "eras": passed rows keep their anchor and link, the current row is plain, a locked row is one title line
 - **Module screen:** concept explainer → worked examples → exercise list → exit exercise (locked until practice exercises attempted)
-- **Exercise screen:** task, expected output block (copy-safe monospace), "I tried and got stuck" button, hint ladder, "My output matches" button, revealed solution + approach checklist
+- **Exercise screen:** task, expected output block (copy-safe monospace), the hints revealed so far as text, then two buttons — "My output matches" and the one move the effort gate allows next ("I tried and got stuck", "Reveal hint n", "Reveal solution") — and the revealed solution + approach checklist. The ladder is never drawn; the gate is consumed, not narrated
 - **Photocard shelf:** collected cards, cracked corners visible
 - **Setup guide (Module 0):** OS picker → step-by-step, per OS path
 

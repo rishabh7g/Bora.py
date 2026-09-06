@@ -1,8 +1,14 @@
 // ExerciseView — the core product screen (ENGINEERING.md §7, §11 step 2).
 // Prompt, expected-output block (no copy button — validation is trust-based),
-// effort-gate buttons, hint ladder, solution reveal with approach checklist.
-// Every gating decision is read from src/state/effortGate.ts — the one owner
-// of the state machine. This component only renders and forwards transitions.
+// the hints she has revealed, two buttons, and the solution with its approach
+// checklist once it is visible.
+//
+// The screen is one card. The effort gate (src/state/effortGate.ts, the one
+// owner of the rules) already names the next legal move, so the screen offers
+// exactly that: "My output matches" always, and beside it whatever the ladder
+// allows right now — declare an attempt, reveal the hint that attempt opened,
+// or reveal the solution. Nothing narrates the rule, nothing shows a locked
+// rung, and a revealed hint is text above the buttons, not a row in a ladder.
 import { useEffect, useRef, useState } from 'react';
 import type { Exercise, Module } from './content/types';
 import ExpectedOutput from './ExpectedOutput';
@@ -15,12 +21,15 @@ import {
   revealSolution,
   viewHint,
   type ExerciseState,
+  type GateState,
 } from './state/effortGate';
 import { t } from './strings/t';
 import './exercise.css';
 
 export type ExerciseViewProps = {
   module: Module;
+  /** "01" — from content/load.moduleNumberOf; the back link names it. */
+  moduleNumber: string;
   exercise: Exercise;
   isExit: boolean;
   state: ExerciseState;
@@ -32,58 +41,47 @@ export type ExerciseViewProps = {
 // starts the whole screen again. Each one hands focus to what just appeared
 // instead: the keyboard learner reads on from where she was, and the themed ring
 // lands on the new content — which is also what a screen reader then announces.
-// The target is set by the handler that caused the change, so nothing here
-// guesses; `null` means focus is fine where it is.
+// `null` means focus is fine where it is.
 type RevealedFocus = 'hint1' | 'hint2' | 'solution' | 'matched' | null;
 
-function HintRung({
-  label,
-  active,
-  seen,
-  available,
-  body,
-  revealLabel,
-  lockNote,
-  onReveal,
-  textRef,
-}: {
-  label: string;
-  active: boolean;
-  seen: boolean;
-  available: boolean;
-  body: string;
-  revealLabel: string;
-  lockNote: string;
-  onReveal: () => void;
-  textRef?: React.Ref<HTMLParagraphElement>;
-}) {
-  return (
-    <div className="ex-rung">
-      <span className={`ex-rung-label${active ? ' ex-rung-label--active' : ''}`}>{label}</span>
-      <div className="ex-rung-body">
-        {seen ? (
-          // Focusable programmatically only (-1): revealing it moves focus here,
-          // but it never becomes a stop on the way down the screen.
-          <p className="ex-hint-text" tabIndex={-1} ref={textRef}>
-            {body}
-          </p>
-        ) : available ? (
-          <button type="button" className="btn btn-secondary btn-action" onClick={onReveal}>
-            {revealLabel}
-          </button>
-        ) : (
-          <p className="ex-lock-note">{lockNote}</p>
-        )}
-      </div>
-    </div>
-  );
+/** The one secondary action the gate allows from here, or none at the top of
+ *  the ladder (§5: an attempt declared past the solution unlocks nothing). */
+export type NextAction =
+  | { kind: 'attempt' }
+  | { kind: 'hint'; hint: 1 | 2 }
+  | { kind: 'solution' }
+  | null;
+
+export function nextActionOf(gate: GateState): NextAction {
+  switch (gate) {
+    case 'LOCKED_HINTS':
+    case 'HINT1_SEEN':
+    case 'HINT2_SEEN':
+      return { kind: 'attempt' };
+    case 'HINT1_AVAILABLE':
+      return { kind: 'hint', hint: 1 };
+    case 'HINT2_AVAILABLE':
+      return { kind: 'hint', hint: 2 };
+    case 'SOLUTION_AVAILABLE':
+      return { kind: 'solution' };
+    default:
+      return null;
+  }
 }
 
-export default function ExerciseView({ module, exercise, isExit, state, onTransition }: ExerciseViewProps) {
+export default function ExerciseView({
+  module,
+  moduleNumber,
+  exercise,
+  isExit,
+  state,
+  onTransition,
+}: ExerciseViewProps) {
   const gate = gateStateOf(state, isExit);
   const matched = gate === 'MATCHED';
   const solutionShown = isSolutionVisible(state);
   const moduleHref = `#/module/${module.id}`;
+  const next = nextActionOf(gate);
 
   const [revealed, setRevealed] = useState<RevealedFocus>(null);
   const hintRefs = useRef<Record<'hint1' | 'hint2', HTMLParagraphElement | null>>({
@@ -91,7 +89,7 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
     hint2: null,
   });
   const solutionRef = useRef<HTMLHeadingElement>(null);
-  const matchedRef = useRef<HTMLDivElement>(null);
+  const matchedRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (!revealed) return;
@@ -113,129 +111,108 @@ export default function ExerciseView({ module, exercise, isExit, state, onTransi
         total: module.exercises.length,
       });
 
-  // The top of the ladder has no next rung, so nothing here may promise one and
-  // the "stuck" button is not offered (§5: an attempt declared past the solution
-  // unlocks nothing). Every other state still points at the rung it can reach.
-  const ladderSpent = gate === 'SOLUTION_REVEALED';
-  const declaredCount = t('exercise.attempts.declared', {
-    count: state.attempts,
-    unit: t(state.attempts === 1 ? 'exercise.attempts.unit.one' : 'exercise.attempts.unit.other'),
-  });
-  const attemptsNote = ladderSpent
-    ? declaredCount + t('exercise.attempts.ladderSpentSuffix')
-    : state.attempts === 0
-      ? isExit
-        ? t('exercise.attempts.exitFirstNote')
-        : t('exercise.attempts.firstNote')
-      : declaredCount +
-        (state.stuck
-          ? t('exercise.attempts.stuckSuffix')
-          : t('exercise.attempts.tryAgainSuffix'));
-
-  const hintLockNote =
-    state.attempts === 0 ? t('exercise.hint.lockedFirst') : t('exercise.hint.lockedNext');
+  function nextButton() {
+    if (!next) return null;
+    if (next.kind === 'attempt') {
+      return (
+        <button
+          type="button"
+          className="btn btn-secondary btn-action"
+          onClick={() => onTransition((current) => declareAttempt(current, isExit))}
+        >
+          {t('exercise.stuckButton')}
+        </button>
+      );
+    }
+    if (next.kind === 'hint') {
+      const { hint } = next;
+      return (
+        <button
+          type="button"
+          className="btn btn-secondary btn-action"
+          onClick={() => {
+            onTransition((current) => viewHint(current, hint, isExit));
+            setRevealed(`hint${hint}`);
+          }}
+        >
+          {t('exercise.hint.revealLabel', { number: hint })}
+        </button>
+      );
+    }
+    return (
+      <button
+        type="button"
+        className="btn btn-secondary btn-action"
+        onClick={() => {
+          onTransition((current) => revealSolution(current, isExit));
+          setRevealed('solution');
+        }}
+      >
+        {t('exercise.solution.revealLabel')}
+      </button>
+    );
+  }
 
   return (
     <div className="ex-screen">
       <a className="btn btn-ghost ex-back" href={moduleHref}>
-        {t('common.backArrow')} {module.title}
+        {`${t('common.backArrow')} ${t('module.kicker.plain', { number: moduleNumber })}`}
       </a>
-      <p className="ex-kicker">
-        {module.title} — {kicker}
-      </p>
+      <p className="ex-kicker">{kicker}</p>
       <h1 className="ex-title">{exercise.title ?? exercise.prompt.slice(0, 40)}</h1>
-      {isExit && <p className="ex-exit-note">{t('exercise.exitNote')}</p>}
       <p className="ex-prompt">{exercise.prompt}</p>
 
       <ExpectedOutput output={exercise.expectedOutput} />
 
-      {matched ? (
-        <div className="ex-matched-banner" role="status" tabIndex={-1} ref={matchedRef}>
-          {t('exercise.matchedBanner')}
-        </div>
-      ) : (
-        <>
-          <div className="ex-actions">
-            <button
-              type="button"
-              className="btn btn-primary btn-action"
-              onClick={() => {
-                onTransition(declareMatch);
-                setRevealed('matched');
-              }}
-            >
-              {t('exercise.matchButton')}
-            </button>
-            {!isExit && !ladderSpent && (
-              <button
-                type="button"
-                className="btn btn-secondary btn-action"
-                onClick={() => onTransition((current) => declareAttempt(current, isExit))}
-              >
-                {t('exercise.stuckButton')}
-              </button>
-            )}
-            {isExit && (
-              <a className="btn btn-secondary btn-action" href={moduleHref}>
-                {t('exercise.comeBackLater')}
-              </a>
-            )}
-          </div>
-          <p className="ex-note">{attemptsNote}</p>
-        </>
-      )}
-
-      {!isExit && (
-        <>
-          <h2 className="ex-section-title">{t('exercise.section.hintLadder')}</h2>
-          {/* #101: the sub-line described the same attempt→hint→solution
-              mechanic the rungs below it demonstrate — read once, then
-              skimmed past on every exercise. */}
-          <div className="ex-ladder">
-            {([1, 2] as const).map((hintNumber) => {
-              const seen = state.hintsUnlocked >= hintNumber;
-              const available = gate === `HINT${hintNumber}_AVAILABLE`;
-              return (
-                <HintRung
-                  key={hintNumber}
-                  label={t('exercise.hint.label', { number: hintNumber })}
-                  active={seen || available}
-                  seen={seen}
-                  available={available}
-                  body={exercise.hints[hintNumber - 1]}
-                  revealLabel={t('exercise.hint.revealLabel', { number: hintNumber })}
-                  lockNote={hintLockNote}
-                  textRef={(node) => {
+      {/* The hints she has opened, in order, as text — a hint is something
+          read, not a rung to stand on. */}
+      {state.hintsUnlocked > 0 && (
+        <div className="ex-hints">
+          {([1, 2] as const)
+            .filter((hintNumber) => state.hintsUnlocked >= hintNumber)
+            .map((hintNumber) => (
+              <div key={hintNumber} className="ex-hint">
+                <span className="ex-hint-label">{t('exercise.hint.label', { number: hintNumber })}</span>
+                {/* Focusable programmatically only (-1): revealing it moves
+                    focus here, but it never becomes a stop on the way down. */}
+                <p
+                  className="ex-hint-text"
+                  tabIndex={-1}
+                  ref={(node) => {
                     hintRefs.current[`hint${hintNumber}`] = node;
                   }}
-                  onReveal={() => {
-                    onTransition((current) => viewHint(current, hintNumber, isExit));
-                    setRevealed(`hint${hintNumber}`);
-                  }}
-                />
-              );
-            })}
-            <HintRung
-              label={t('exercise.solution.label')}
-              active={state.solutionRevealed || gate === 'SOLUTION_AVAILABLE'}
-              seen={false}
-              available={gate === 'SOLUTION_AVAILABLE'}
-              body=""
-              revealLabel={t('exercise.solution.revealLabel')}
-              lockNote={
-                state.solutionRevealed
-                  ? t('exercise.solution.revealedNote')
-                  : t('exercise.solution.lockNote')
-              }
-              onReveal={() => {
-                onTransition((current) => revealSolution(current, isExit));
-                // The rung itself only says "Revealed below.", so focus goes to
-                // the solution that appeared further down the screen.
-                setRevealed('solution');
-              }}
-            />
-          </div>
-        </>
+                >
+                  {exercise.hints[hintNumber - 1]}
+                </p>
+              </div>
+            ))}
+        </div>
+      )}
+
+      {matched ? (
+        <p className="ex-matched" role="status" tabIndex={-1} ref={matchedRef}>
+          {t('exercise.matched')}
+        </p>
+      ) : (
+        <div className="ex-actions">
+          <button
+            type="button"
+            className="btn btn-primary btn-action"
+            onClick={() => {
+              onTransition(declareMatch);
+              setRevealed('matched');
+            }}
+          >
+            {t('exercise.matchButton')}
+          </button>
+          {isExit ? (
+            <a className="btn btn-secondary btn-action" href={moduleHref}>
+              {t('exercise.comeBackLater')}
+            </a>
+          ) : (
+            nextButton()
+          )}
+        </div>
       )}
 
       {solutionShown && (

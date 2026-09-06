@@ -33,7 +33,7 @@ const KICKERS = [
   ['src/exercise.css', '.ex-kicker'],
   ['src/exercise.css', '.ex-expected-label'],
   ['src/exercise.css', '.ex-section-title'],
-  ['src/exercise.css', '.ex-rung-label'],
+  ['src/exercise.css', '.ex-hint-label'],
   ['src/exercise.css', '.ex-checklist-title'],
   ['src/home.css', '.home-current-kicker'],
   ['src/home.css', '.home-tiertitle'],

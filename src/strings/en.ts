@@ -113,40 +113,16 @@ export const en = {
       exit: 'Exit checkpoint',
       numbered: 'Exercise {index} of {total}',
     },
-    exitNote: 'EXIT CHECKPOINT — UNSCAFFOLDED. NO HINTS ON THIS ONE.',
-    matchedBanner:
-      'Output matched — checkpoint logged. Model solution below: compare approaches, not text.',
+    matched: 'Output matched.',
     matchButton: 'My output matches',
     stuckButton: 'I tried and got stuck',
     comeBackLater: 'Come back later',
-    attempts: {
-      unit: {
-        one: 'attempt',
-        other: 'attempts',
-      },
-      declared: '{count} {unit} declared.',
-      ladderSpentSuffix:
-        ' Every rung is open — the model solution is below. Compare it with yours, then mark the match whenever your output lines up.',
-      exitFirstNote:
-        'Write it on your machine, run it, compare. No hints on this one — leave and come back anytime.',
-      firstNote: 'Write it on your machine, run it, compare. Declaring an attempt unlocks the next rung.',
-      stuckSuffix: ' Next rung unlocked below.',
-      tryAgainSuffix: ' Try again to unlock the next rung.',
-    },
     hint: {
-      lockedFirst: 'Locked. Mark "I tried and got stuck" after a real attempt.',
-      lockedNext: 'Locked. Another declared attempt unlocks this.',
       label: 'HINT {number}',
       revealLabel: 'Reveal hint {number} — cracks the card',
     },
-    section: {
-      hintLadder: 'Hint ladder',
-    },
     solution: {
-      label: 'SOLUTION',
       revealLabel: 'Reveal solution',
-      revealedNote: 'Revealed below.',
-      lockNote: 'Reachable only after the full ladder — or by matching.',
       heading: 'Model solution',
     },
     checklist: {
