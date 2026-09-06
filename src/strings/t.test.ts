@@ -11,15 +11,15 @@ describe('t()', () => {
   });
 
   it('fills placeholders', () => {
-    expect(t('home.greeting', { name: 'ARMY' })).toBe('Annyeong, ARMY.');
+    expect(t('home.card.open', { number: '02' })).toBe('Open Module 02');
   });
 
   it('fills multiple placeholders', () => {
-    expect(t('home.checkpointsCount', { passed: 3, total: 12 })).toBe('3 / 12 CHECKPOINTS');
+    expect(t('home.card.count', { passed: 3, total: 12 })).toBe('3 of 12 checkpoints passed');
   });
 
   it('leaves an unfilled placeholder verbatim rather than blanking it', () => {
-    expect(t('home.greeting', {})).toBe('Annyeong, {name}.');
+    expect(t('home.card.open', {})).toBe('Open Module {number}');
   });
 
   it('throws for a key the active pack has no value for', () => {

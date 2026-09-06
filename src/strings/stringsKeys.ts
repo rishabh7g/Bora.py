@@ -9,7 +9,7 @@
  * never the reverse. A `tools/` module the app bundle imports is how a second copy of the list
  * gets born, which is the one thing this file exists to prevent.
  *
- * Keys are DOT-PATHS into a nested object (`home.kicker`), so the authored pack
+ * Keys are DOT-PATHS into a nested object (`home.tier5.title`), so the authored pack
  * (`src/strings/en.ts`) reads like a document instead of a flat table. `t()` (`src/strings/t.ts`)
  * flattens the pack once at module load and reads it back with exactly the key named here.
  *
@@ -54,13 +54,9 @@ export const STRINGS_KEYS = [
   'progressLoading.pending',
 
   // HomeMap.
-  'home.kicker',
-  'home.checkpointsCount',
-  'home.greeting',
-  'home.progressLine.next',
-  'home.progressLine.allPassed',
-  'home.status.upNext',
-  'home.status.open',
+  'home.card.count',
+  'home.card.open',
+  'home.card.allPassed',
   'home.tier5.title',
   'home.tier5.unlocked',
   'home.tier5.locked',
@@ -216,13 +212,9 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'progressLoading.stalledBody': [],
   'progressLoading.pending': [],
 
-  'home.kicker': [],
-  'home.checkpointsCount': ['passed', 'total'],
-  'home.greeting': ['name'],
-  'home.progressLine.next': ['number'],
-  'home.progressLine.allPassed': [],
-  'home.status.upNext': [],
-  'home.status.open': [],
+  'home.card.count': ['passed', 'total'],
+  'home.card.open': ['number'],
+  'home.card.allPassed': [],
   'home.tier5.title': [],
   'home.tier5.unlocked': [],
   'home.tier5.locked': [],

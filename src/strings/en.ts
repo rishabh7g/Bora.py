@@ -1,6 +1,6 @@
 /**
  * The first (and, today, only) shell-copy pack (#100) — English, authored nested so the file
- * reads like a document: `{"home":{"kicker":…}}` is the path `home.kicker` names in
+ * reads like a document: `{"home":{"tier5":{"title":…}}}` is the path `home.tier5.title` names in
  * `src/strings/stringsKeys.ts`.
  *
  * Deliberately NOT typed against `Record<StringsKey, string>`: a mapped type would make a missing
@@ -47,21 +47,15 @@ export const en = {
   },
 
   home: {
-    kicker: 'Checkpoint path',
-    checkpointsCount: '{passed} / {total} CHECKPOINTS',
-    greeting: 'Annyeong, {name}.',
-    progressLine: {
-      next: 'Next up: Module {number}.',
-      allPassed: 'Every checkpoint passed. Tier 5 is yours.',
-    },
-    status: {
-      upNext: 'UP NEXT',
-      open: 'OPEN',
+    card: {
+      count: '{passed} of {total} checkpoints passed',
+      open: 'Open Module {number}',
+      allPassed: 'Every checkpoint passed.',
     },
     tier5: {
       title: 'Tier 5 — Advanced',
-      unlocked: 'Files, APIs, classes. Unlocked — content lands later.',
-      locked: 'Files, APIs, classes. Unlocks after the capstone.',
+      unlocked: 'is open. Files, APIs, classes — content lands later.',
+      locked: 'unlocks after the capstone.',
     },
   },
 

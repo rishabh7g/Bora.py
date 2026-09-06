@@ -15,15 +15,14 @@
   margin-bottom: 20px;
 }
 
-.home-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+/* — the current checkpoint: the one card on the screen — */
+.home-current {
+  border-top: 2px solid var(--color-text);
+  padding-top: 14px;
 }
 
-.home-kicker {
+/* The count is the card's kicker: the one place the position is counted. */
+.home-current-kicker {
   margin: 0 0 10px;
   font-size: 11px;
   letter-spacing: 0.14em;
@@ -32,45 +31,53 @@
   color: var(--color-text-accent);
 }
 
-.home-count {
-  white-space: nowrap;
-  letter-spacing: 0.1em;
-  font-weight: 700;
+.home-current-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
 }
 
 .home-title {
   margin: 0;
-  font-size: clamp(30px, 5vw, 48px);
+  font-size: clamp(30px, 5vw, 40px);
   line-height: 1.05;
   letter-spacing: -0.01em;
 }
 
 .home-lede {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-size: 16px;
   color: var(--color-text-quiet);
   max-width: var(--content-max);
 }
 
+.home-current-open {
+  margin-top: 18px;
+}
+
 .home-tiers {
-  margin-top: 36px;
+  margin-top: 32px;
 }
 
 /* — tier section — */
 .home-tier {
   border-top: 2px solid var(--color-divider);
-  padding: 18px 0 8px;
-  margin-bottom: 16px;
+  padding: 14px 0 4px;
+  margin-bottom: 10px;
 }
+/* One line: the tier's name and its era, an h2 so the path still reads by
+   heading. */
 .home-tierhead {
   display: flex;
   align-items: baseline;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
+  margin: 0;
+  font-weight: 400;
 }
 .home-tiertitle {
-  margin: 0;
   font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -78,9 +85,13 @@
   font-size: 16px;
   color: var(--color-text-quiet);
 }
+/* Tier 5 is one sentence under the path, not a section: nothing to head. */
 .home-tier5 {
+  margin: 0;
   padding: 18px 0;
-  margin-bottom: 0;
+  border-top: 2px solid var(--color-divider);
+  font-size: 16px;
+  color: var(--color-text-quiet);
 }
 /* Locked reads as locked through quieter ink, never through opacity: fading the
    whole section multiplied every colour inside it down to 1.81–3.16:1 (#45).
@@ -89,9 +100,6 @@
    still recedes. */
 .home-tier5--locked {
   color: var(--color-text-locked);
-}
-.home-tier5--locked .home-tierera {
-  color: inherit;
 }
 
 /* — module rows — */
@@ -138,13 +146,14 @@
    opacity. `opacity: 0.45` here put the number at 1.28:1 and the anchor at
    1.70:1 — the map's whole information, unreadable (#45). The row keeps its
    non-interactive affordance from the markup (a <div aria-disabled>, no href)
-   and from the LOCKED chip, so legible ink cannot make it look clickable. */
+   and from its one quiet title line, so legible ink cannot make it look
+   clickable. */
 .home-row--locked {
   color: var(--color-text-locked);
   cursor: default;
-}
-.home-row--locked .home-rowanchor {
-  color: inherit;
+  /* Not a control, so not held to the 56px touch row: one line, tight. */
+  padding: 8px 8px 8px 0;
+  min-height: 40px;
 }
 
 /* The default is the locked row's number — open rows and the current one
@@ -185,13 +194,14 @@
 }
 
 /* At phone width the row keeps its three columns but the number narrows, so
-   titles and anchors stay flush-left and legible at 375px. */
+   titles and anchors stay flush-left and legible at 375px. The card's number
+   keeps its size: it is the screen's one large numeral. */
 @media (max-width: 480px) {
   .home-row {
     grid-template-columns: 40px 1fr auto;
     gap: 10px;
   }
-  .home-num {
+  .home-row .home-num {
     font-size: 20px;
   }
 }

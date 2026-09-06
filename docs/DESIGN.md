@@ -146,7 +146,7 @@ One shared dataset evolves across all modules. By the capstone she is intimate w
 
 ## 7. Screens (PWA)
 
-- **Home / Map:** checkpoint path (visual journey through "eras"), current module highlighted, photocard shelf
+- **Home / Map:** the current checkpoint as one card at the top (number, title, anchor, one button — the one statement of where she is), then the checkpoint path through the "eras": passed rows keep their anchor and link, the current row is plain, a locked row is one title line
 - **Module screen:** concept explainer → worked examples → exercise list → exit exercise (locked until practice exercises attempted)
 - **Exercise screen:** task, expected output block (copy-safe monospace), "I tried and got stuck" button, hint ladder, "My output matches" button, revealed solution + approach checklist
 - **Photocard shelf:** collected cards, cracked corners visible

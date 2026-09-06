@@ -35,7 +35,7 @@ const KICKERS = [
   ['src/exercise.css', '.ex-section-title'],
   ['src/exercise.css', '.ex-rung-label'],
   ['src/exercise.css', '.ex-checklist-title'],
-  ['src/home.css', '.home-kicker'],
+  ['src/home.css', '.home-current-kicker'],
   ['src/home.css', '.home-tiertitle'],
   ['src/module.css', '.mod-kicker'],
   ['src/module.css', '.mod-section-title'],
