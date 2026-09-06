@@ -137,12 +137,10 @@ export const STRINGS_KEYS = [
   'shelf.kicker',
   'shelf.headline.empty',
   'shelf.headline.collected',
-  'shelf.lede',
-  'shelf.card.notEarned',
+  'shelf.path.label',
   'shelf.card.captionMint',
   'shelf.card.captionOneCrack',
   'shelf.card.captionCracks',
-  'shelf.card.unearnedCaption',
 
   // SetupGuide (the component's own chrome — step content stays in content/setup.ts, see above).
   'setup.osLegend',
@@ -259,12 +257,10 @@ export const STRINGS_PLACEHOLDERS: Record<StringsKey, readonly string[]> = {
   'shelf.kicker': [],
   'shelf.headline.empty': [],
   'shelf.headline.collected': ['count', 'total'],
-  'shelf.lede': [],
-  'shelf.card.notEarned': [],
+  'shelf.path.label': [],
   'shelf.card.captionMint': [],
   'shelf.card.captionOneCrack': [],
   'shelf.card.captionCracks': ['count'],
-  'shelf.card.unearnedCaption': [],
 
   'setup.osLegend': [],
   'setup.section.installSteps': [],

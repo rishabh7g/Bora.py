@@ -1,7 +1,7 @@
-// PhotocardShelf render contract — the prototype's shelf: one card per module,
-// unearned cards as placeholders, earned cards in full with one crack per hint
-// used (ENGINEERING.md §4/§7, DESIGN.md §4). Cracks are a visible cost only:
-// they never change what is reachable.
+// PhotocardShelf render contract: the earned cards in full, one crack per hint
+// used (ENGINEERING.md §4/§7, DESIGN.md §4), and one strip of numbered slots
+// for what is still ahead. Cracks are a visible cost only: they never change
+// what is reachable.
 import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import PhotocardShelf, { crackNote, MAX_DRAWN_CRACKS } from './PhotocardShelf';
@@ -48,24 +48,28 @@ function cracksIn(html: string): number {
   return html.match(/shelf-crack shelf-crack--/g)?.length ?? 0;
 }
 
-it('renders one card per module with its photocard title', () => {
-  const html = render();
+it('renders every module once — as a card when earned, as a numbered slot until then', () => {
   expect(modules).toHaveLength(13);
-  for (const module of modules) {
-    expect(html).toContain(module.photocard.title);
-  }
-});
+  const fresh = render();
+  expect(fresh).not.toContain('shelf-card');
+  expect(fresh.match(/shelf-path-slot"/g)).toHaveLength(13);
+  for (const module of modules) expect(fresh).not.toContain(module.photocard.title);
 
-it('shows unearned cards as locked placeholders and earned cards in full', () => {
   const html = render(passModule(emptyProgress(), 'm1'));
-  expect(html).toContain('shelf-card--earned');
-  expect(html).toContain('shelf-card--locked');
-  // Earned: the module title is revealed on the card face and the card links
-  // back to its module. Unearned: a placeholder caption, no link.
-  expect(html).toContain('href="#/module/m1"');
-  expect(html).toContain('Pass the checkpoint to earn it');
   expect(html.match(/shelf-card--earned/g)).toHaveLength(1);
-  expect(html.match(/shelf-card--locked/g)).toHaveLength(modules.length - 1);
+  expect(html.match(/shelf-path-slot"/g)).toHaveLength(12);
+  // Earned: the card face, the module title, a link back to its module.
+  expect(html).toContain(modules[1].photocard.title);
+  expect(html).toContain('href="#/module/m1"');
+  // Ahead: the number and nothing else — no face, no caption, no link.
+  expect(html).not.toContain(modules[2].photocard.title);
+  expect(html).not.toContain('Pass the checkpoint');
+  expect(html).not.toContain('Not earned');
+  expect(html).not.toContain('href="#/module/m2"');
+  expect(html).toContain('Still on the path');
+  // Nothing left for the strip once every card is earned.
+  const all = modules.reduce((acc, module) => passModule(acc, module.id), emptyProgress());
+  expect(render(all)).not.toContain('shelf-path');
 });
 
 it('counts the collection in the headline, never a streak or a percentage', () => {
@@ -110,6 +114,12 @@ it('never lets cracks change what is reachable', () => {
   expect(strip(render(cracked)).replace(/4 cracks/, 'Mint — no hints used')).toBe(
     strip(render(clean)),
   );
+});
+
+it('says the crack rule once — on the card that has cracks, not in a lede', () => {
+  const html = render(useHints(passModule(emptyProgress(), 'm1'), 'm1', 2));
+  expect(html).not.toContain('Hints crack corners');
+  expect(html.match(/2 cracks/g)).toHaveLength(1);
 });
 
 it('gives every card original local SVG art', () => {

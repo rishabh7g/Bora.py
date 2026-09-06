@@ -173,13 +173,13 @@ export const en = {
       empty: 'Empty shelf. For now.',
       collected: '{count} of {total} collected.',
     },
-    lede: 'One original card per checkpoint. Hints crack corners — a visible cost, never a wall.',
+    path: {
+      label: 'Still on the path',
+    },
     card: {
-      notEarned: 'Not earned',
       captionMint: 'Mint — no hints used',
       captionOneCrack: '1 crack',
       captionCracks: '{count} cracks',
-      unearnedCaption: 'Pass the checkpoint to earn it',
     },
   },
 

@@ -28,18 +28,45 @@
   letter-spacing: -0.01em;
 }
 
-.shelf-lede {
-  margin: 10px 0 0;
-  font-size: 16px;
-  color: var(--color-text-quiet);
-  max-width: var(--content-max);
-}
-
 .shelf-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
   gap: 20px;
-  margin-top: 36px;
+  margin-top: 28px;
+}
+
+/* — the checkpoints still ahead: one strip of numbered slots — */
+.shelf-path {
+  margin-top: 28px;
+  border-top: 2px solid var(--color-divider);
+  padding-top: 14px;
+}
+.shelf-path-label {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: var(--color-text-quiet);
+}
+.shelf-path-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The slot reads as empty from its hairline and its quiet ink — the locked
+   role (src/tokens.css), 5.83:1, never opacity (#45). */
+.shelf-path-slot {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-divider);
+  color: var(--color-text-locked);
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 16px;
 }
 
 .shelf-slot {
@@ -84,17 +111,6 @@
   outline-offset: -4px;
 }
 
-/* An unearned card is a placeholder, not a disabled control: its number, era
-   title and foot are the only preview of what the checkpoint pays out, so they
-   have to be readable. --color-neutral-400 measured 1.80:1 (#45); the ink is
-   now the locked role (src/tokens.css) at 5.83:1, and the card still reads as
-   empty from its transparent ground and hairline border. */
-.shelf-card--locked {
-  background: transparent;
-  border: 1px solid var(--color-divider);
-  color: var(--color-text-locked);
-}
-
 .shelf-num {
   font-family: var(--font-heading);
   font-weight: 900;
@@ -115,10 +131,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-/* On the earned card the red ground carries the hierarchy, so the caption can
-   sit back off it. On an unearned card there is nothing to sit back from —
-   0.75 opacity over --color-neutral-400 was 1.53:1, the worst text in the app
-   (#45) — so the locked card's quieter ink is the whole treatment. */
+/* The red ground carries the hierarchy, so the caption can sit back off it. */
 .shelf-card--earned .shelf-foot {
   opacity: 0.75;
 }

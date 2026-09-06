@@ -149,7 +149,7 @@ One shared dataset evolves across all modules. By the capstone she is intimate w
 - **Home / Map:** the current checkpoint as one card at the top (number, title, anchor, one button — the one statement of where she is), then the checkpoint path through the "eras": passed rows keep their anchor and link, the current row is plain, a locked row is one title line
 - **Module screen:** concept explainer → worked examples → exercise list (a row is its title, and MATCHED once it is) → exit exercise row (locked until every practice exercise is matched or its solution seen; a link once it is). The kicker names the module; the tier is the map's to say
 - **Exercise screen:** task, expected output block (copy-safe monospace), the hints revealed so far as text, then two buttons — "My output matches" and the one move the effort gate allows next ("I tried and got stuck", "Reveal hint n", "Reveal solution") — and the revealed solution + approach checklist. The ladder is never drawn; the gate is consumed, not narrated
-- **Photocard shelf:** collected cards, cracked corners visible
+- **Photocard shelf:** the collected cards at full size, cracked corners visible; the checkpoints still ahead as one strip of numbered slots, no card face and no caption
 - **Setup guide (Module 0):** OS picker → step-by-step, per OS path. A step is the doing — title, body, the command and what it prints; the window in words and the screenshot sit behind one closed "What you'll see" disclosure per step
 
 ### 7b. What a setup step may show
