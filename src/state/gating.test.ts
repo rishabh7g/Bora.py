@@ -33,6 +33,7 @@ function makeExercise(id: string, isExit = false): Exercise {
 function makeModule(id: string): Module {
   return {
     id,
+    number: id.replace(/\D/g, '').padStart(2, '0'),
     title: id,
     anchor: '',
     concept: { intro: '', examples: [] },

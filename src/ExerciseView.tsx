@@ -28,7 +28,7 @@ import './exercise.css';
 
 export type ExerciseViewProps = {
   module: Module;
-  /** "01" — from content/load.moduleNumberOf; the back link names it. */
+  /** "01" — Module.number; the back link names it. */
   moduleNumber: string;
   exercise: Exercise;
   isExit: boolean;

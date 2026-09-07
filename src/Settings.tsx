@@ -13,8 +13,8 @@
 // Tone (DESIGN.md §2: no guilt mechanics): reset is a safety net, so it is
 // described plainly — what it clears, what it leaves — and never dramatised.
 import { useEffect, useRef, useState } from 'react';
-import { flatModules, moduleNumberOf } from './content/load';
-import type { Curriculum } from './content/types';
+import { flatModules } from './content/load';
+import type { Curriculum, Module } from './content/types';
 import Notice from './Notice';
 import { BACKUP_FILENAME, parseBackup, serializeProgress } from './state/backup';
 import { moduleStateOf } from './state/gating';
@@ -144,11 +144,11 @@ export default function Settings({
     setFocusAfter({ kind: 'notice' });
   }
 
-  function onConfirmReset(moduleId: string) {
+  function onConfirmReset(module: Module) {
     clearMessages();
-    onResetModule(moduleId);
+    onResetModule(module.id);
     setConfirmingResetOf(null);
-    setNotice(t('settings.reset.confirmedNotice', { number: moduleNumberOf(curriculum, moduleId) }));
+    setNotice(t('settings.reset.confirmedNotice', { number: module.number }));
     // The row itself goes with the progress it held, so the fact of the reset is
     // what focus lands on.
     setFocusAfter({ kind: 'notice' });
@@ -249,7 +249,7 @@ export default function Settings({
         ) : (
           <ul className="set-list">
             {started.map((module) => {
-              const number = moduleNumberOf(curriculum, module.id);
+              const number = module.number;
               const passed = moduleStateOf(curriculum, module.id, progress) === 'passed';
               return (
                 <li key={module.id} className="set-row">
@@ -266,7 +266,7 @@ export default function Settings({
                         type="button"
                         ref={confirmResetRef}
                         className="btn btn-primary set-btn"
-                        onClick={() => onConfirmReset(module.id)}
+                        onClick={() => onConfirmReset(module)}
                       >
                         {t('settings.reset.button', { number })}
                       </button>

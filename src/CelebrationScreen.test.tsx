@@ -8,7 +8,7 @@ import CelebrationScreen, {
   CELEBRATION_LINES,
   celebrationTriggered,
 } from './CelebrationScreen';
-import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
+import { findModule, loadCurriculum } from './content/load';
 import { declareAttempt, declareMatch, initialExerciseState } from './state/effortGate';
 import { emptyProgress, updateExerciseState } from './state/progress';
 import { moduleStateOf, tier5Unlocked } from './state/gating';
@@ -22,7 +22,7 @@ function render(module = m7, capstone = false) {
   return renderToString(
     <CelebrationScreen
       module={module}
-      moduleNumber={moduleNumberOf(curriculum, module.id)}
+      moduleNumber={module.number}
       tier5Unlocked={capstone}
       onContinue={noop}
     />,

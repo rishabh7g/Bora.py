@@ -9,8 +9,7 @@
 // are a pure projection of the persisted ExerciseState. This component only
 // renders — it never mutates progress.
 import { useEffect, useRef, useState } from 'react';
-import { moduleNumberOf } from './content/load';
-import type { Curriculum, Module, WorkedExample } from './content/types';
+import type { Module, WorkedExample } from './content/types';
 import PythonCode from './PythonCode';
 import type { ExerciseState } from './state/effortGate';
 import { exitUnlocked } from './state/gating';
@@ -108,13 +107,12 @@ function WorkedExampleBlock({ example, number }: { example: WorkedExample; numbe
 }
 
 export type ModuleViewProps = {
-  curriculum: Curriculum;
   module: Module;
   progress: Progress;
 };
 
-export default function ModuleView({ curriculum, module, progress }: ModuleViewProps) {
-  const moduleNumber = moduleNumberOf(curriculum, module.id);
+export default function ModuleView({ module, progress }: ModuleViewProps) {
+  const moduleNumber = module.number;
   const exitOpen = exitUnlocked(module, progress);
   const exitState = exerciseStateOf(progress, module.id, module.exitExercise.id);
   const exitTitle = module.exitExercise.title ?? t('common.exitCheckpointTitle');

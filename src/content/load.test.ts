@@ -65,6 +65,11 @@ describe('photocard art', () => {
   it('resolves an unknown art file name to an empty ref (content lint blocks it)', () => {
     expect(photocardArtUrl('not-a-real-card.svg')).toBe('');
   });
+
+  it('numbers every module by its position in curriculum order, two digits, m0 as 00 (#128)', () => {
+    const numbers = curriculum.tiers.flatMap((tier) => tier.modules.map((module) => module.number));
+    expect(numbers).toEqual(['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']);
+  });
 });
 
 describe('a curriculum whose content will not load (#96)', () => {

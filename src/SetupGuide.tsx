@@ -19,7 +19,6 @@
 //   page, never an image of a terminal, and there is one block that renders it
 //   (#61).
 import { useState } from 'react';
-import { moduleNumberOf } from './content/load';
 import {
   CHECKED_AGAINST,
   SETUP_OS_LABELS,
@@ -29,7 +28,7 @@ import {
   type SetupShot,
   type SetupStep,
 } from './content/setup';
-import type { Curriculum, Module } from './content/types';
+import type { Module } from './content/types';
 import ExpectedOutput from './ExpectedOutput';
 import { HOME_ROUTE } from './HomeMap';
 import PythonCode from './PythonCode';
@@ -40,7 +39,6 @@ import { t } from './strings/t';
 import './setup.css';
 
 export type SetupGuideProps = {
-  curriculum: Curriculum;
   /** Module 0 — its exit exercise is the checkpoint at the end of the guide. */
   module: Module;
   progress: Progress;
@@ -114,7 +112,7 @@ function StepRow({ step, number }: { step: SetupStep; number: number }) {
   );
 }
 
-export default function SetupGuide({ curriculum, module, progress, onTransition }: SetupGuideProps) {
+export default function SetupGuide({ module, progress, onTransition }: SetupGuideProps) {
   // Read synchronously on first render so the stepper never flashes the wrong
   // OS; the write-through keeps the choice across visits and reloads.
   const [os, setOs] = useState<SetupOs>(loadSetupOs);
@@ -127,7 +125,7 @@ export default function SetupGuide({ curriculum, module, progress, onTransition 
   const state = exerciseStateOf(progress, module.id, exit.id);
   // Exit variant of the gate: MATCHED or EXIT_OPEN, nothing in between.
   const matched = gateStateOf(state, true) === 'MATCHED';
-  const kicker = t('module.kicker.plain', { number: moduleNumberOf(curriculum, module.id) });
+  const kicker = t('module.kicker.plain', { number: module.number });
 
   return (
     <div className="setup-screen">

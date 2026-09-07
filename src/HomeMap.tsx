@@ -11,7 +11,7 @@
 // completion percentage (DESIGN.md §3.1). Tiers and modules come from
 // curriculum.json via content/load; every state decision is read from the §6
 // owner src/state/gating.ts. This component only renders.
-import { flatModules, moduleNumberOf } from './content/load';
+import { flatModules } from './content/load';
 import type { Curriculum, Module, Tier } from './content/types';
 import { currentModule, moduleStateOf, tier5Unlocked, type ModuleState } from './state/gating';
 import type { Progress } from './state/progress';
@@ -35,17 +35,15 @@ export function moduleHref(moduleId: string): string {
 }
 
 function ModuleRow({
-  curriculum,
   module,
   state,
   isCurrent,
 }: {
-  curriculum: Curriculum;
   module: Module;
   state: ModuleState;
   isCurrent: boolean;
 }) {
-  const number = moduleNumberOf(curriculum, module.id);
+  const number = module.number;
 
   // A locked module is not navigable: it is rendered as plain text, with no
   // href and nothing focusable — the chain rule (§6) is the only way in. One
@@ -100,7 +98,6 @@ function TierSection({
         {tier.modules.map((module) => (
           <ModuleRow
             key={module.id}
-            curriculum={curriculum}
             module={module}
             state={moduleStateOf(curriculum, module.id, progress)}
             isCurrent={module.id === currentId}
@@ -113,12 +110,10 @@ function TierSection({
 
 /** The checkpoint she is on, or the one line for when there is none left. */
 function CurrentCard({
-  curriculum,
   current,
   passed,
   total,
 }: {
-  curriculum: Curriculum;
   current: Module | undefined;
   passed: number;
   total: number;
@@ -132,7 +127,7 @@ function CurrentCard({
       </section>
     );
   }
-  const number = moduleNumberOf(curriculum, current.id);
+  const number = current.number;
   return (
     <section className="home-current">
       <p className="home-current-kicker">{count}</p>
@@ -169,7 +164,6 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
       <Wordmark className="home-wordmark" />
 
       <CurrentCard
-        curriculum={curriculum}
         current={current}
         passed={passedCount}
         total={modules.length}

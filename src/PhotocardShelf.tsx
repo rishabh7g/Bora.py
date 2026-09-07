@@ -12,7 +12,7 @@
 // Art is original, abstract and named after the concept ("The Loop Era") —
 // no official imagery (DESIGN.md §4 content safety); the SVGs live in
 // src/art/photocards and are wired through content/load.
-import { flatModules, moduleNumberOf } from './content/load';
+import { flatModules } from './content/load';
 import type { Curriculum, Module } from './content/types';
 import { moduleHref } from './HomeMap';
 import PhotocardArt from './PhotocardArt';
@@ -33,15 +33,13 @@ export function crackNote(cracks: number): string {
 }
 
 function ShelfCard({
-  curriculum,
   module,
   cracks,
 }: {
-  curriculum: Curriculum;
   module: Module;
   cracks: number;
 }) {
-  const number = moduleNumberOf(curriculum, module.id);
+  const number = module.number;
   const drawnCracks = Math.min(cracks, MAX_DRAWN_CRACKS);
   return (
     <div className="shelf-slot">
@@ -87,7 +85,6 @@ export default function PhotocardShelf({ curriculum, progress }: PhotocardShelfP
           {earned.map((module) => (
             <ShelfCard
               key={module.id}
-              curriculum={curriculum}
               module={module}
               cracks={moduleCracksOf(progress, module.id)}
             />
@@ -104,7 +101,7 @@ export default function PhotocardShelf({ curriculum, progress }: PhotocardShelfP
           <ol className="shelf-path-slots">
             {ahead.map((module) => (
               <li key={module.id} className="shelf-path-slot" aria-disabled="true">
-                {moduleNumberOf(curriculum, module.id)}
+                {module.number}
               </li>
             ))}
           </ol>

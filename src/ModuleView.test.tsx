@@ -20,7 +20,7 @@ const curriculum = loadCurriculum();
 const m1 = findModule(curriculum, 'm1')!;
 
 function render(progress: Progress = emptyProgress()) {
-  return renderToString(<ModuleView curriculum={curriculum} module={m1} progress={progress} />);
+  return renderToString(<ModuleView module={m1} progress={progress} />);
 }
 
 function apply(
@@ -125,7 +125,7 @@ it('exit is LOCKED (no link, no explanation) until every formative is matched or
   expect(html).not.toContain('#/module/m1/exit');
 
   const oneShort = apply(apply(emptyProgress(), 'e1', declareMatch), 'e2', declareMatch);
-  expect(renderToString(<ModuleView curriculum={curriculum} module={m1} progress={oneShort} />))
+  expect(renderToString(<ModuleView module={m1} progress={oneShort} />))
     .not.toContain('#/module/m1/exit');
 });
 

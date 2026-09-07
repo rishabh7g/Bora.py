@@ -10,7 +10,7 @@
 /** Top-level keys of the raw curriculum with no reader in src/. */
 export const PIPELINE_ONLY_ROOT_KEYS = ['version', 'brand'] as const;
 /** Module keys with no reader: `num` and `tier` restate the position the
- *  tiers array already gives (content/load.moduleNumberOf, findTierOf). */
+ *  tiers array already gives (content/load.toModule sets Module.number; findTierOf). */
 export const PIPELINE_ONLY_MODULE_KEYS = ['num', 'tier'] as const;
 /** Exercise keys with no reader: `inputsToType` is the lint's (rule 2). */
 export const PIPELINE_ONLY_EXERCISE_KEYS = ['inputsToType'] as const;

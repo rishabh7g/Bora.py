@@ -85,9 +85,14 @@ function toExercise(rawExercise: RawExercise): Exercise {
   };
 }
 
-function toModule(rawModule: RawModule): Module {
+/** `position` is the module's index in curriculum order (tiers ordered, modules
+ *  within each tier ordered); the two-digit number is the handoff numbering,
+ *  where m0 is 00. The authored `num` restates it and is stripped from the
+ *  bundle (src/content/pipelineKeys.ts), so it is derived, never read. */
+function toModule(rawModule: RawModule, position: number): Module {
   return {
     id: rawModule.id,
+    number: String(position).padStart(2, '0'),
     title: rawModule.title,
     anchor: rawModule.anchor,
     concept: rawModule.concept,
@@ -107,6 +112,7 @@ function toModule(rawModule: RawModule): Module {
  *  content/curriculum.json on disk. loadCurriculum() below is the one real
  *  caller: the bundled data, mapped through this. */
 export function buildCurriculum(data: RawCurriculum): Curriculum {
+  let position = 0;
   const tiers: Tier[] = data.tiers.map((tier) => ({
     id: tier.id,
     title: tier.title,
@@ -119,7 +125,7 @@ export function buildCurriculum(data: RawCurriculum): Curriculum {
           reason: `Tier "${tier.id}" references unknown module "${moduleId}"`,
         });
       }
-      return toModule(rawModule);
+      return toModule(rawModule, position++);
     }),
   }));
   return { tiers };
@@ -145,11 +151,4 @@ export function flatModules(curriculum: Curriculum): Module[] {
 
 export function findTierOf(curriculum: Curriculum, moduleId: string): Tier | undefined {
   return curriculum.tiers.find((tier) => tier.modules.some((module) => module.id === moduleId));
-}
-
-/** Two-digit module number by curriculum position ("00", "01", …) — matches
- *  the handoff numbering, where m0 is 00. */
-export function moduleNumberOf(curriculum: Curriculum, moduleId: string): string {
-  const index = flatModules(curriculum).findIndex((module) => module.id === moduleId);
-  return String(Math.max(0, index)).padStart(2, '0');
 }

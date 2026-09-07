@@ -10,7 +10,7 @@ import {
 } from 'react';
 import BottomNav from './BottomNav';
 import CelebrationScreen, { celebrationTriggered } from './CelebrationScreen';
-import { findModule, loadCurriculum, moduleNumberOf } from './content/load';
+import { findModule, loadCurriculum } from './content/load';
 import type { Curriculum, Exercise, Module } from './content/types';
 import ExerciseView from './ExerciseView';
 import HomeMap, {
@@ -249,7 +249,6 @@ export default function App() {
       return (
         <Shell>
           <SetupGuide
-            curriculum={curriculum}
             module={setupModule}
             progress={progress}
             onTransition={(transition) => {
@@ -263,7 +262,7 @@ export default function App() {
           {celebratingModuleId === setupModule.id && (
             <CelebrationScreen
               module={setupModule}
-              moduleNumber={moduleNumberOf(curriculum, setupModule.id)}
+              moduleNumber={setupModule.number}
               tier5Unlocked={tier5Unlocked(curriculum, progress)}
               onContinue={() => {
                 setCelebratingModuleId(null);
@@ -300,7 +299,7 @@ export default function App() {
       if (route.isExit && !exitUnlocked(module, progress)) {
         return (
           <Shell>
-            <ModuleView curriculum={curriculum} module={module} progress={progress} />
+            <ModuleView module={module} progress={progress} />
           </Shell>
         );
       }
@@ -310,7 +309,7 @@ export default function App() {
         <Shell>
           <ExerciseView
             module={module}
-            moduleNumber={moduleNumberOf(curriculum, module.id)}
+            moduleNumber={module.number}
             exercise={exercise}
             isExit={route.isExit}
             state={state}
@@ -326,7 +325,7 @@ export default function App() {
           {celebratingModuleId === module.id && (
             <CelebrationScreen
               module={module}
-              moduleNumber={moduleNumberOf(curriculum, module.id)}
+              moduleNumber={module.number}
               tier5Unlocked={tier5Unlocked(curriculum, progress)}
               onContinue={() => {
                 setCelebratingModuleId(null);
@@ -340,7 +339,7 @@ export default function App() {
 
     return (
       <Shell>
-        <ModuleView curriculum={curriculum} module={module} progress={progress} />
+        <ModuleView module={module} progress={progress} />
       </Shell>
     );
   }

@@ -69,7 +69,7 @@ function Confetti() {
 
 export type CelebrationScreenProps = {
   module: Module;
-  moduleNumber: string; // "07" — from content/load.moduleNumberOf
+  moduleNumber: string; // "07" — Module.number
   tier5Unlocked: boolean; // §6: the capstone pass opens Tier 5 (Advanced)
   onContinue: () => void;
 };

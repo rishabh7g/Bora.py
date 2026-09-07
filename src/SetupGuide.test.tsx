@@ -46,7 +46,6 @@ function escaped(text: string): string {
 function render(progress: Progress = emptyProgress()) {
   return renderToString(
     <SetupGuide
-      curriculum={curriculum}
       module={m0}
       progress={progress}
       onTransition={() => {}}

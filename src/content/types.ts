@@ -12,6 +12,7 @@ export type Tier = {
 
 export type Module = {
   id: string; // "m5-lists"
+  number: string; // "05" — two-digit position in curriculum order; matches the handoff numbering (m0 is 00)
   title: string; // "Lists — The Members"
   anchor: string; // one-line "what you'll build" hook; authored, shown on the Home map
   concept: ConceptDoc; // explainer markdown + worked examples
