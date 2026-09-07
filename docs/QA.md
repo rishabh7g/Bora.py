@@ -50,7 +50,7 @@ Measures the **real rendered** contrast of the app's quiet, dimmed and interacti
 reads computed styles in the page, folds every ancestor `opacity` into the ink, composites
 that over the backdrop actually behind it, and picks the AA threshold from the measured size
 and weight (3:1 for large text, else 4.5:1). One line per style, `RESULT ok` / `RESULT FAIL`
-(exit 0 / 1). **54 rows** today, green at 390px and 1280px.
+(exit 0 / 1). **41 rows** today (the said-once pass retired the rows for chips, notes and back links that no longer exist), green at 390px and 1280px.
 
 This exists because the failures in #45 are invisible to a static read of the CSS — the
 tokens look fine on their own and only fail once a `0.45` ancestor opacity multiplies them.
@@ -113,6 +113,30 @@ Dated passes live in `docs/qa/`:
 - [`docs/qa/2026-08-13-live-qa.md`](qa/2026-08-13-live-qa.md) — first full live pass
   (#28): every screen at 390px and 1280px, effort gate, persistence, offline,
   PWA metadata; 8 findings filed as #40–#47.
+- [`docs/SIMPLIFY.md`](SIMPLIFY.md) — the said-once pass (2026-09-06): every screen
+  measured at 360px before and after, in screens tall and where the one button sits.
+
+## Screenshot index
+
+`docs/qa/screenshots/360-*.png`, the current screens at 360×740 (2× DPR), taken against
+`npm run dev` after the said-once pass. `scripts/measure-screens.mjs` is the audit that
+produced the numbers in `docs/SIMPLIFY.md`; retake these whenever a screen changes.
+
+| file | what |
+| --- | --- |
+| `360-home-fresh.png` | Home — the Module 00 card on top, every later row locked |
+| `360-home-progress.png` | Home with two checkpoints passed — the Module 02 card, two passed rows |
+| `360-setup-guide.png`, `360-setup-guide-door-open.png` | Setup guide, doors closed; step 2's "What you'll see" open |
+| `360-celebration.png` | Celebration, viewport-sized |
+| `360-module.png` | Module — worked examples, exercise rows, locked exit row |
+| `360-exercise-fresh.png` | Exercise — two buttons, nothing revealed |
+| `360-exercise-hint-1.png` | Hint 1 revealed above the buttons |
+| `360-exercise-solution.png` | Model solution + approach checklist after the full ladder |
+| `360-exercise-matched.png` | Matched — one line where the buttons were |
+| `360-exit-checkpoint.png` | Exit checkpoint — match or come back later |
+| `360-expected-output-whitespace.png` | Whitespace markers and legend on (#14) |
+| `360-shelf-fresh.png`, `360-shelf.png` | Shelf — thirteen slots; two cards earned, one crack |
+| `360-settings.png` | Settings with two modules of saved work |
 
 ## What does NOT work
 

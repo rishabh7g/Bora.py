@@ -39,7 +39,8 @@ it('offers export and import of the file named in the design handoff', () => {
   const html = render();
   expect(BACKUP_FILENAME).toBe('bora-py-progress.json');
   expect(html).toContain('Export progress');
-  expect(html.match(/bora-py-progress\.json/g)?.length).toBeGreaterThanOrEqual(2);
+  // The file is named once, where it is written; Import reads "a saved file".
+  expect(html.match(/bora-py-progress\.json/g)?.length).toBe(1);
   expect(html).toContain('type="file"');
 });
 

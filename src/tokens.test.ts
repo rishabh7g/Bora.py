@@ -18,11 +18,9 @@ const audit = readFileSync(join(repoRoot, 'scripts/contrast-audit.mjs'), 'utf8')
 
 // Every link and ghost button in the app, by the class its screen gives it.
 const linkClasses = [
-  // Only the deep screens keep a back link: the three nav destinations reach
-  // each other from the bar, never from a body link (#83).
-  'mod-back',
+  // One back link in the app: the exercise's, to its module — the one parent
+  // the nav does not list (#83). Module and setup go back through the bar.
   'ex-back',
-  'setup-back',
   // The bottom nav's three destinations are links too (#75), on every screen —
   // measured as icons rather than as text, see below (#76).
   'bottomnav-item',
@@ -114,11 +112,3 @@ it('states the audit’s real row count in docs/QA.md', () => {
   expect(qa).toContain(`**${count} rows** today`);
 });
 
-it('routes the UP NEXT chip label through the accent text role, border unmoved (#59)', () => {
-  // The design system paints .tag-outline's label and border in --color-accent
-  // (3.76:1). The label is 11px/400 and needs the 4.5:1 text floor, so it joins
-  // --color-text-accent. The border is a non-text UI boundary held to 3:1,
-  // which --color-accent already clears, so only `color` moves here.
-  expect(tokens).toMatch(/\.tag-outline\s*\{\s*color:\s*var\(--color-text-accent\);\s*\}/);
-  expect(audit).toContain('.home-row--current .home-chip');
-});

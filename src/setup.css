@@ -11,18 +11,8 @@
   padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
 }
 
-/* Back link — ghost button as anchor, flush left, ≥44px both ways ("← Map" is
-   narrower than 44px on its own). */
-.setup-back {
-  padding-inline: 0;
-  white-space: nowrap;
-  min-height: 44px;
-  min-width: 44px;
-  justify-content: flex-start;
-}
-
 .setup-kicker {
-  margin: 18px 0 8px;
+  margin: 0 0 8px;
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -81,13 +71,11 @@
   padding-top: 16px;
 }
 
-/* Checked-against line (#69) — the prose's provenance date, opening the steps
-   section it dates (#88 put a heading above it). Quiet supporting text:
-   --color-text-quiet is a §7a role token that clears AA at this size, and no
-   ancestor opacity multiplies it. Measured by its own contrast-audit row
-   (docs/QA.md). */
+/* Checked-against line (#69) — the prose's provenance date, beside the
+   screenshot it dates, inside that step's disclosure. Quiet supporting text:
+   --color-text-quiet is a §7a role token that clears AA at this size. */
 .setup-checked {
-  margin: 22px 0 0;
+  margin: 0;
   font-size: 16px;
   line-height: 1.6;
   max-width: var(--content-max);
@@ -104,7 +92,7 @@
   display: grid;
   grid-template-columns: 40px 1fr;
   gap: 16px;
-  padding: 22px 0;
+  padding: 16px 0;
   border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
 }
 .setup-step-num {
@@ -186,25 +174,56 @@
   font-size: 16px;
   color: var(--color-text-quiet);
 }
-/* "What you'll see" — the words that stand in for a screenshot there is no
-   Windows/Mac pair for (#62). It replaces a picture, so it is styled as real
-   instructions with a solid edge, not as a dashed "something is missing" box:
-   same 1px divider frame as the TYPE THIS block, and body-weight ink. Markers
-   are the browser's own `square` — no pseudo-element content, which would reach
-   the accessibility tree (see the #14 note in ExpectedOutput.tsx). */
-.setup-look {
+/* "What you'll see" — one closed door per step, holding the window in words
+   (#62) and the screenshot where a pair exists. The summary wears the
+   secondary button's shape from the same screen, plus the one thing a
+   disclosure needs that a button does not: a chevron, down when closed and up
+   when open. */
+.setup-more {
+  margin: 0;
+}
+.setup-more-summary {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  border: 1px solid var(--color-divider);
-  padding: 12px 14px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--color-text);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
-.setup-look-label {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  font-weight: 800;
-  color: var(--color-text-quiet);
+.setup-more-summary::-webkit-details-marker {
+  display: none;
 }
+.setup-more-summary::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  flex: none;
+}
+.setup-more[open] .setup-more-summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+.setup-more-summary:hover {
+  background: color-mix(in srgb, var(--color-text) 5%, transparent);
+}
+.setup-more-summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.setup-more > :not(summary) {
+  margin-top: 12px;
+}
+/* Markers are the browser's own `square` — no pseudo-element content, which
+   would reach the accessibility tree (see the #14 note in ExpectedOutput.tsx). */
 .setup-look-list {
   margin: 0;
   padding-left: 18px;
@@ -230,12 +249,6 @@
   flex-direction: column;
   gap: 12px;
 }
-.setup-exit-label {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  font-weight: 800;
-  color: var(--color-text-accent);
-}
 .setup-exit-title {
   margin: 0;
   font-size: 20px;
@@ -257,11 +270,6 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-}
-.setup-exit-note {
-  margin: 0;
-  font-size: 16px;
-  color: var(--color-text-quiet);
 }
 .setup-exit-passed {
   margin: 0;

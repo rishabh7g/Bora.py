@@ -16,39 +16,39 @@ describe('checkStrings', () => {
 
   it('reports a missing key', () => {
     const flat = flattenStrings(en);
-    flat.delete('home.kicker');
+    flat.delete('home.card.open');
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
-    expect(issues).toContain('en pack: missing key "home.kicker"');
+    expect(issues).toContain('en pack: missing key "home.card.open"');
   });
 
   it('reports a present-but-empty key', () => {
     const flat = flattenStrings(en);
-    flat.set('home.kicker', '   ');
+    flat.set('home.card.open', '   ');
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
-    expect(issues.some((issue) => issue.includes('"home.kicker" must be a non-empty string'))).toBe(
+    expect(issues.some((issue) => issue.includes('"home.card.open" must be a non-empty string'))).toBe(
       true,
     );
   });
 
   it('reports an unknown key', () => {
     const flat = flattenStrings(en);
-    flat.set('home.kickerTypo', 'stray');
+    flat.set('home.card.openTypo', 'stray');
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
     expect(issues).toContain(
-      'en pack: unknown key "home.kickerTypo" — not in the canonical list (src/strings/stringsKeys.ts)',
+      'en pack: unknown key "home.card.openTypo" — not in the canonical list (src/strings/stringsKeys.ts)',
     );
   });
 
   it('reports a placeholder mismatch', () => {
     const flat = flattenStrings(en);
-    flat.set('home.greeting', 'Annyeong, {learner}.'); // canonical name is {name}
+    flat.set('home.card.open', 'Open Module {n}'); // canonical name is {number}
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
     expect(
-      issues.some((issue) => issue.includes('"home.greeting" placeholders — expected name')),
+      issues.some((issue) => issue.includes('"home.card.open" placeholders — expected number')),
     ).toBe(true);
   });
 

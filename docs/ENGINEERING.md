@@ -136,7 +136,7 @@ Rules:
 
 **Route fallbacks (`src/App.tsx`):** there is exactly one fallback for a hash the app cannot honour — the Home map, the app's root, which always offers a way on. A hash the router does not recognise, a module id the curriculum does not have and an exercise id the module does not have all land there; a `Route` therefore carries the resolved `Module`/`Exercise`, not their ids, so no screen can be reached without real content behind it and no screen renders an "Unknown …" dead end. Gated-but-real routes are different, and fall back to the nearest screen that explains the gate: a locked module → the map (its row says why), a locked exit checkpoint → its module screen (its exit row says why).
 
-**Expected-output block detail:** render with a "show whitespace" toggle (·  for spaces, ⏎ for newlines). The #1 beginner frustration with output matching is invisible trailing spaces/newlines — surface it, and the concept doc for Module 1 explicitly teaches "outputs must match exactly, here's how to check."
+**Expected-output block detail:** render with a "show whitespace" toggle (·  for spaces, ⏎ for newlines). The #1 beginner frustration with output matching is invisible trailing spaces/newlines — surface it. The concept doc for Module 1 teaches "outputs must match exactly"; how to check is the block's own legend, shown when the toggle is on — said once, where the control is.
 
 ## 8. Syntax Highlighting
 
@@ -181,7 +181,7 @@ Steps 1–2 ≈ 20% of the work and deliver 80% of the product's value. Everythi
 
 ## 12. Risks
 
-- **Output-match false negatives** (whitespace/newlines) → whitespace toggle + Module 1 teaches exact-matching explicitly
+- **Output-match false negatives** (whitespace/newlines) → whitespace toggle with its legend + Module 1 teaches exact-matching explicitly
 - **Content authoring is the real cost** — ~12 modules × ~10 examples + ~6 exercises each. Budget accordingly; the app is small, the curriculum is the project
 - **Copyright** — content lint blocks lyrics; photocard art is original
 - **Motivation cliff at Module 0** (install friction) → over-invest in SetupGuide screenshots; this is where beginners quit

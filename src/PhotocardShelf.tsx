@@ -2,11 +2,12 @@
 // §4 `cardCracks`, §11 step 4; DESIGN.md §4; prototype:
 // design/PyLearn Prototype.dc.html → Photocard shelf screen).
 //
-// One card per module. A card is earned when its module passed (§6 owner
-// gating.moduleStateOf); every hint used in that module draws one crack on it
-// (progress.moduleCracksOf — the count is computed and persisted by the state
-// owner, never recounted here). Cracks are a visible cost only: they never
-// gate, hide or reverse anything.
+// The cards she has earned, at full size, and one compact strip of numbered
+// slots for the checkpoints still on the path. A card is earned when its
+// module passed (§6 owner gating.moduleStateOf); every hint used in that
+// module draws one crack on it (progress.moduleCracksOf — the count is
+// computed and persisted by the state owner, never recounted here). Cracks
+// are a visible cost only: they never gate, hide or reverse anything.
 //
 // Art is original, abstract and named after the concept ("The Loop Era") —
 // no official imagery (DESIGN.md §4 content safety); the SVGs live in
@@ -34,46 +35,28 @@ export function crackNote(cracks: number): string {
 function ShelfCard({
   curriculum,
   module,
-  earned,
   cracks,
 }: {
   curriculum: Curriculum;
   module: Module;
-  earned: boolean;
   cracks: number;
 }) {
   const number = moduleNumberOf(curriculum, module.id);
-  // Cracks belong to the card, so they appear once the card is earned — an
-  // unearned slot is a placeholder, never a tally of hints already used.
-  const drawnCracks = earned ? Math.min(cracks, MAX_DRAWN_CRACKS) : 0;
-  const face = (
-    <>
-      {earned ? <PhotocardArt art={module.photocard.art} className="shelf-art" /> : null}
-      <span className="shelf-num">{number}</span>
-      <span className="shelf-cardtitle">{module.photocard.title}</span>
-      <span className="shelf-foot">{earned ? module.title : t('shelf.card.notEarned')}</span>
-      {Array.from({ length: drawnCracks }, (_, index) => (
-        <span key={index} className={`shelf-crack shelf-crack--${index + 1}`} aria-hidden="true" />
-      ))}
-    </>
-  );
-
-  const caption = earned ? crackNote(cracks) : t('shelf.card.unearnedCaption');
-
+  const drawnCracks = Math.min(cracks, MAX_DRAWN_CRACKS);
   return (
     <div className="shelf-slot">
-      {earned ? (
-        // An earned card opens its module again — the concept stays readable
-        // forever. Unearned cards are placeholders: not links, not focusable.
-        <a className="shelf-card shelf-card--earned" href={moduleHref(module.id)}>
-          {face}
-        </a>
-      ) : (
-        <div className="shelf-card shelf-card--locked" aria-disabled="true">
-          {face}
-        </div>
-      )}
-      <span className="shelf-note">{caption}</span>
+      {/* An earned card opens its module again — the concept stays readable
+          forever. */}
+      <a className="shelf-card shelf-card--earned" href={moduleHref(module.id)}>
+        <PhotocardArt art={module.photocard.art} className="shelf-art" />
+        <span className="shelf-num">{number}</span>
+        <span className="shelf-cardtitle">{module.photocard.title}</span>
+        <span className="shelf-foot">{module.title}</span>
+        {Array.from({ length: drawnCracks }, (_, index) => (
+          <span key={index} className={`shelf-crack shelf-crack--${index + 1}`} aria-hidden="true" />
+        ))}
+      </a>
+      <span className="shelf-note">{crackNote(cracks)}</span>
     </div>
   );
 }
@@ -88,6 +71,7 @@ export default function PhotocardShelf({ curriculum, progress }: PhotocardShelfP
   const earned = modules.filter(
     (module) => moduleStateOf(curriculum, module.id, progress) === 'passed',
   );
+  const ahead = modules.filter((module) => !earned.includes(module));
   const headline =
     earned.length === 0
       ? t('shelf.headline.empty')
@@ -97,19 +81,35 @@ export default function PhotocardShelf({ curriculum, progress }: PhotocardShelfP
     <div className="shelf-screen">
       <p className="shelf-kicker">{t('shelf.kicker')}</p>
       <h1 className="shelf-title">{headline}</h1>
-      <p className="shelf-lede">{t('shelf.lede')}</p>
 
-      <div className="shelf-grid">
-        {modules.map((module) => (
-          <ShelfCard
-            key={module.id}
-            curriculum={curriculum}
-            module={module}
-            earned={earned.includes(module)}
-            cracks={moduleCracksOf(progress, module.id)}
-          />
-        ))}
-      </div>
+      {earned.length > 0 && (
+        <div className="shelf-grid">
+          {earned.map((module) => (
+            <ShelfCard
+              key={module.id}
+              curriculum={curriculum}
+              module={module}
+              cracks={moduleCracksOf(progress, module.id)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* What is still ahead: one numbered slot per checkpoint, no card face,
+          no caption — a placeholder is not a tally of what she has not done.
+          Not controls: the map is where a checkpoint is opened. */}
+      {ahead.length > 0 && (
+        <section className="shelf-path" aria-label={t('shelf.path.label')}>
+          <p className="shelf-path-label">{t('shelf.path.label')}</p>
+          <ol className="shelf-path-slots">
+            {ahead.map((module) => (
+              <li key={module.id} className="shelf-path-slot" aria-disabled="true">
+                {moduleNumberOf(curriculum, module.id)}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
     </div>
   );
 }

@@ -35,7 +35,10 @@ manifest all work under the repo subpath.
 
 ## Status
 
-Design package complete. Implementation in progress.
+Every screen ships. The said-once pass of 2026-09-06 (`docs/SIMPLIFY.md`) measured each
+one at 360px and cut what it said twice: the map leads with the current checkpoint, an
+exercise is two buttons, the setup guide keeps its windows behind a door per step, the
+shelf shows the cards she has. The canonical string list went from 133 keys to 94.
 
 ## Naming
 

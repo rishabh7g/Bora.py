@@ -29,14 +29,6 @@
   gap: 18px;
 }
 
-.celebrate-kicker {
-  margin: 0;
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
 .celebrate-title {
   margin: 0;
   font-size: clamp(40px, 8vw, 88px);
@@ -80,14 +72,6 @@
 .celebrate-cardtitle {
   font-weight: 800;
   font-size: 16px;
-}
-
-.celebrate-cardfoot {
-  font-size: 16px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.8;
-  white-space: nowrap;
 }
 
 /* The module's own SVG art, painted as a mask so it takes the field's ink —

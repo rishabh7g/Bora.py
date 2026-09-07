@@ -1,7 +1,7 @@
 // ModuleView render contract — the prototype Module screen: concept doc,
-// worked examples with highlighted code + copy buttons (outputs get none),
-// exercise state chips derived from Progress, and the §6 exit lock consumed
-// from src/state/gating.ts.
+// worked examples with highlighted code + copy buttons (outputs get none), an
+// exercise list whose rows say matched or nothing, and the §6 exit lock
+// consumed from src/state/gating.ts.
 import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import ModuleView, { copyLabelOf, copyStatusOf, exerciseChipOf } from './ModuleView';
@@ -36,12 +36,15 @@ function apply(
 
 const allMatched = m1.exercises.reduce((acc, e) => apply(acc, e.id, declareMatch), emptyProgress());
 
-it('renders kicker, title, and concept intro', () => {
+it('renders the module kicker once, the title, and the concept intro — no tier, no back link', () => {
   const html = render();
-  expect(html).toContain('Module 01');
-  expect(html).toContain('Tier 1 — Basics');
+  expect(html.match(/Module 01/g)).toHaveLength(1);
+  expect(html).not.toContain('Tier 1');
+  expect(html).not.toContain('href="#/"');
   expect(html).toContain('Variables + print');
   expect(html).toContain('A variable is a named box');
+  // The whitespace toggle is explained by the block that has it, not here.
+  expect(html).not.toContain('Show whitespace');
 });
 
 it('worked examples: highlighted code with a copy button each; output blocks get none', () => {
@@ -49,7 +52,6 @@ it('worked examples: highlighted code with a copy button each; output blocks get
   expect(html).toContain('class="token'); // Prism python highlighting
   expect(html).toContain('My bias is V'); // example output text
   const copyButtons = html.match(/COPY/g) ?? [];
-  // Exactly one copy button per example — none on outputs or anywhere else.
   expect(copyButtons.length).toBe(m1.concept.examples.length);
 });
 
@@ -62,16 +64,12 @@ it('a refused clipboard write resolves to failed — it never rejects', async ()
     writeText: () => Promise.reject(new Error("Failed to execute 'writeText': Write permission denied.")),
   };
   await expect(copyStatusOf('bias = "Jungkook"', refused)).resolves.toBe('failed');
-
-  // Some browsers throw synchronously rather than returning a rejected promise.
   const throwing = {
     writeText: () => {
       throw new Error('Write permission denied.');
     },
   };
   await expect(copyStatusOf('bias = "Jungkook"', throwing)).resolves.toBe('failed');
-
-  // No clipboard API at all is the same class of failure: say so, do not no-op.
   await expect(copyStatusOf('bias = "Jungkook"', undefined)).resolves.toBe('failed');
 });
 
@@ -94,41 +92,36 @@ it('each copy status has its own label — the failure is visible on the button'
   expect(copyLabelOf('failed')).toBe('COPY FAILED');
 });
 
-it('exercise rows link to the exercise route and start NOT STARTED', () => {
+it('exercise rows link to the exercise route and carry no chip until matched', () => {
   const html = render();
   for (const exercise of m1.exercises) {
     expect(html).toContain(`#/module/m1/exercise/${exercise.id}`);
     expect(html).toContain(exercise.title!);
   }
-  expect(html.match(/NOT STARTED/g)?.length).toBe(m1.exercises.length);
+  expect(html).not.toContain('NOT STARTED');
+  expect(html).not.toContain('MATCHED');
 });
 
-it('chips project the persisted exercise state', () => {
-  expect(exerciseChipOf(initialExerciseState()).label).toBe('NOT STARTED');
-  expect(exerciseChipOf({ ...initialExerciseState(), attempts: 2, stuck: true }).label).toBe(
-    'TRIED ×2',
-  );
-  expect(exerciseChipOf({ ...initialExerciseState(), attempts: 1, hintsUnlocked: 1 }).label).toBe(
-    'HINT 1 USED',
-  );
-  expect(exerciseChipOf({ ...initialExerciseState(), solutionRevealed: true }).label).toBe(
-    'SOLUTION SEEN',
-  );
-  expect(exerciseChipOf({ ...initialExerciseState(), matched: true }).label).toBe('MATCHED');
-});
+it('a row is MATCHED or nothing — attempts, hints and a seen solution stay off the list', () => {
+  expect(exerciseChipOf(initialExerciseState())).toBeNull();
+  expect(exerciseChipOf({ ...initialExerciseState(), attempts: 2, stuck: true })).toBeNull();
+  expect(exerciseChipOf({ ...initialExerciseState(), attempts: 1, hintsUnlocked: 1 })).toBeNull();
+  expect(exerciseChipOf({ ...initialExerciseState(), solutionRevealed: true })).toBeNull();
+  expect(exerciseChipOf({ ...initialExerciseState(), matched: true })?.label).toBe('MATCHED');
 
-it('renders TRIED and HINT USED chips from real transitions', () => {
   let p = apply(emptyProgress(), 'e1', (s) => declareAttempt(s, false));
   p = apply(p, 'e2', (s) => declareAttempt(s, false), (s) => viewHint(s, 1, false));
+  p = apply(p, 'e3', declareMatch);
   const html = render(p);
-  expect(html).toContain('TRIED ×1');
-  expect(html).toContain('HINT 1 USED');
+  expect(html).not.toMatch(/TRIED|HINT 1 USED|SOLUTION SEEN/);
+  expect(html.match(/MATCHED/g)).toHaveLength(1);
 });
 
-it('exit is LOCKED (no link) until every formative is matched or solution-seen', () => {
+it('exit is LOCKED (no link, no explanation) until every formative is matched or solution-seen', () => {
   const html = render();
   expect(html).toContain('LOCKED');
-  expect(html).toContain('Unlocks when every practice exercise is matched or its solution seen.');
+  expect(html).not.toContain('Unlocks when');
+  expect(html).not.toContain('Summative');
   expect(html).not.toContain('#/module/m1/exit');
 
   const oneShort = apply(apply(emptyProgress(), 'e1', declareMatch), 'e2', declareMatch);
@@ -136,11 +129,12 @@ it('exit is LOCKED (no link) until every formative is matched or solution-seen',
     .not.toContain('#/module/m1/exit');
 });
 
-it('exit unlocks (READY, linked) when all formatives are matched', () => {
+it('exit unlocks as a plain link when all formatives are matched — no READY chip', () => {
   const html = render(allMatched);
   expect(html).toContain('#/module/m1/exit');
-  expect(html).toContain('READY');
+  expect(html).not.toContain('READY');
   expect(html).not.toContain('LOCKED');
+  expect(html).not.toContain('PASSED');
 });
 
 it('a solution revealed via the full ladder counts as engagement — no dead ends', () => {
@@ -155,12 +149,10 @@ it('a solution revealed via the full ladder counts as engagement — no dead end
     (s) => declareAttempt(s, false),
     (s) => revealSolution(s, false),
   );
-  const html = render(p);
-  expect(html).toContain('#/module/m1/exit');
-  expect(html).toContain('SOLUTION SEEN');
+  expect(render(p)).toContain('#/module/m1/exit');
 });
 
-it('exit chip flips to PASSED once the exit exercise is matched', () => {
+it('the exit row says PASSED once the exit exercise is matched', () => {
   const p = updateExerciseState(allMatched, 'm1', m1.exitExercise.id, true, declareMatch);
   const html = render(p);
   expect(html).toContain('PASSED');

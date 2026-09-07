@@ -56,10 +56,10 @@ function render(progress: Progress = emptyProgress()) {
 
 const passed = updateExerciseState(emptyProgress(), m0.id, m0.exitExercise.id, true, declareMatch);
 
-it('renders Module 00 with its authored title, tier and intro', () => {
+it('renders Module 00 with its authored title and intro — the tier stays on the map', () => {
   const html = render();
   expect(html).toContain('Module 00');
-  expect(html).toContain('Tier 0 — Setup');
+  expect(html).not.toContain('Tier 0');
   expect(html).toContain(m0.title);
   expect(html).toContain('run one file from the terminal');
 });
@@ -133,15 +133,34 @@ it('renders a step’s output with the shared block, not a second implementation
   const html = render();
   // One owner: src/ExpectedOutput.tsx. No local markup for an output block.
   expect(html).not.toContain('setup-term-output');
-  // The stepper's IT PRINTS and the checkpoint's EXPECTED OUTPUT are the same
-  // component, so the whitespace toggle (#14) renders in both.
+  // The stepper's IT PRINTS is the shared block in its plain form — a
+  // transcript to read — and the checkpoint's EXPECTED OUTPUT is the full one,
+  // whitespace toggle (#14) included: one toggle on the page, on the output
+  // she checks her own against.
   expect(html).toContain('IT PRINTS');
   expect(html).toContain('EXPECTED OUTPUT');
-  expect(html.match(/Show whitespace/g)?.length).toBe(2);
-  expect(html.match(/class="ex-expected"/g)?.length).toBe(2);
+  expect(html.match(/Show whitespace/g)?.length).toBe(1);
+  expect(html.match(/class="ex-expected[" ]/g)?.length).toBe(2);
+  expect(html).toContain('ex-expected--plain');
   // …and the printed name is text in the block, machine-verifiable and copyable.
   const last = setupStepsFor(DEFAULT_SETUP_OS).slice(-1)[0];
   expect(html).toContain(`<pre>${last.output}</pre>`);
+});
+
+it('keeps the window behind one closed door per step — the doing reads whole without it', () => {
+  const html = render();
+  const steps = setupStepsFor(DEFAULT_SETUP_OS);
+  const doors = steps.filter((step) => step.look || step.shot).length;
+  expect(html.match(/<details class="setup-more">/g)?.length).toBe(doors);
+  expect(html).not.toContain('<details class="setup-more" open');
+  expect(html.match(/What you’ll see/g)?.length).toBe(doors);
+  // The landmarks and the screenshot are inside the door; the body and the
+  // command are outside it.
+  const firstDoor = html.indexOf('<details');
+  expect(html.indexOf(escaped(steps[0].body))).toBeLessThan(firstDoor);
+  expect(html.indexOf('<img')).toBeGreaterThan(firstDoor);
+  const withLook = steps.find((step) => step.look)!;
+  expect(html.indexOf(escaped(withLook.look![0]))).toBeGreaterThan(firstDoor);
 });
 
 it('never points at a screenshot of a terminal, a command or its output (#61)', () => {
@@ -219,7 +238,7 @@ it('never renders a placeholder — an unpaired step gets instructions instead (
       expect(step.look, `step "${step.title}" has neither a picture nor a command`).toBeDefined();
     }
   }
-  expect(render()).toContain('WHAT YOU’LL SEE');
+  expect(render()).toContain('What you’ll see');
 });
 
 it('describes the terminal window itself on both paths, not just the command (#67)', () => {
@@ -282,19 +301,26 @@ it('names the Python version in prose from one constant, so sentences cannot dri
   // caption (asserted above) even after the constant moves.
 });
 
-it('shows the dated checked-against line above the stepper (#69)', () => {
+it('shows the dated checked-against line beside the screenshot it dates (#69)', () => {
   // The screenshots carry `captured <date>` (#62); this line is the same
   // staleness signal for the prose — plus what to do when python.org shows a
   // different 3.x, which is the failure mode a beginner actually hits.
   expect(CHECKED_AGAINST).toMatch(/checked against python\.org on \d{4}-\d{2}-\d{2}/);
   expect(CHECKED_AGAINST).toMatch(/different 3\.x/);
   const html = render();
-  expect(html).toContain(`<p class="setup-checked">${escaped(CHECKED_AGAINST)}</p>`);
+  const line = `<p class="setup-checked">${escaped(CHECKED_AGAINST)}</p>`;
+  expect(html).toContain(line);
+  // Once, inside the door of the step with the picture — not over the guide.
+  expect(html.match(/setup-checked/g)?.length).toBe(1);
+  expect(html.indexOf(line)).toBeGreaterThan(html.indexOf('<img'));
+  expect(html.indexOf(line)).toBeLessThan(html.indexOf('</details>'));
 });
 
-it('ends in the exit checkpoint: expected output, match or come back later, no hints', () => {
+it('ends in the exit checkpoint: title, task, output, match or come back later — nothing narrated', () => {
   const html = render();
-  expect(html).toContain('EXIT CHECKPOINT');
+  expect(html).toContain(escaped(m0.exitExercise.title!));
+  expect(html).not.toContain('EXIT CHECKPOINT');
+  expect(html).not.toMatch(/No hints|leave whenever|Your place is kept/);
   expect(html).toContain(escaped(m0.exitExercise.prompt));
   expect(html).toContain('EXPECTED OUTPUT');
   expect(html).toContain(m0.exitExercise.expectedOutput);
@@ -309,7 +335,7 @@ it('ends in the exit checkpoint: expected output, match or come back later, no h
 it('shows the passed state once the checkpoint is matched — no guilt copy', () => {
   const html = render(passed);
   expect(html).toContain('PASSED');
-  expect(html).toContain('Module 01 is open');
+  expect(html).toContain('setup-exit-solution');
   expect(html).not.toContain('My output matches');
   expect(html).not.toMatch(/\b(streaks?|XP|days?|percent)\b/i);
 });
@@ -318,5 +344,5 @@ it('keeps hit targets ≥44px and buttons flush left, from shared classes', () =
   const html = render();
   expect(html).toContain('btn btn-primary btn-action'); // .btn-action: min-height 46px
   expect(html).toContain('btn btn-secondary btn-action');
-  expect(html).toContain('btn btn-ghost setup-back');
+  expect(html).not.toContain('setup-back'); // the map is the bar's first item (#83)
 });

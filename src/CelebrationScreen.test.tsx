@@ -29,12 +29,12 @@ function render(module = m7, capstone = false) {
   );
 }
 
-it('names the checkpoint, the photocard just earned, and its art', () => {
+it('names the checkpoint once, the photocard just earned, and its art', () => {
   const html = render();
-  expect(html).toContain('CHECKPOINT PASSED');
+  expect(html).not.toContain('CHECKPOINT PASSED');
   expect(html).toContain('Module 07 cleared.');
   expect(html).toContain(m7.photocard.title);
-  expect(html).toContain('Photocard added to shelf');
+  expect(html).not.toContain('Photocard added to shelf');
   expect(html).toContain('celebrate-art'); // the module's own SVG, as a mask
   expect(html).toContain('card-m7.svg');
 });

@@ -29,13 +29,12 @@ const repoRoot = resolve(srcDir, '..');
  * section eyebrow.
  */
 const KICKERS = [
-  ['src/celebration.css', '.celebrate-kicker'],
   ['src/exercise.css', '.ex-kicker'],
   ['src/exercise.css', '.ex-expected-label'],
   ['src/exercise.css', '.ex-section-title'],
-  ['src/exercise.css', '.ex-rung-label'],
+  ['src/exercise.css', '.ex-hint-label'],
   ['src/exercise.css', '.ex-checklist-title'],
-  ['src/home.css', '.home-kicker'],
+  ['src/home.css', '.home-current-kicker'],
   ['src/home.css', '.home-tiertitle'],
   ['src/module.css', '.mod-kicker'],
   ['src/module.css', '.mod-section-title'],
@@ -47,8 +46,6 @@ const KICKERS = [
   ['src/setup.css', '.setup-os-legend'],
   ['src/setup.css', '.setup-section-title'],
   ['src/setup.css', '.setup-term-label'],
-  ['src/setup.css', '.setup-look-label'],
-  ['src/setup.css', '.setup-exit-label'],
   ['src/shelf.css', '.shelf-kicker'],
 ] as const;
 

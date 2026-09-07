@@ -23,14 +23,6 @@
   line-height: 1.1;
 }
 
-.ex-exit-note {
-  margin: 12px 0 0;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--color-text-accent);
-}
-
 .ex-prompt {
   margin: 14px 0 0;
   font-size: 16px;
@@ -57,10 +49,6 @@
   letter-spacing: 0.12em;
   font-weight: 800;
 }
-.ex-expected-sub {
-  font-size: 16px;
-  color: var(--color-text-quiet);
-}
 .ex-expected pre {
   margin: 0;
   padding: 16px;
@@ -69,6 +57,12 @@
   overflow-wrap: break-word;
   /* #102: belt-and-braces alongside the wrap above — see src/code.css. */
   overflow-x: auto;
+}
+
+/* The plain form (a transcript in the setup stepper): the head is the label
+   alone, so it sits on one short line. */
+.ex-expected--plain .ex-expected-head {
+  padding: 8px 14px;
 }
 
 /* — "show whitespace" toggle (ENGINEERING.md §7, §12) —
@@ -143,8 +137,9 @@
   white-space: nowrap;
 }
 
-.ex-matched-banner {
-  margin-top: 20px;
+/* One line where the buttons were: the pass, stated once. */
+.ex-matched {
+  margin: 22px 0 0;
   padding: 14px 16px;
   background: var(--color-accent-100);
   color: var(--color-accent-800);
@@ -172,12 +167,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.ex-note {
-  margin: 10px 0 0;
-  font-size: 16px;
-  color: var(--color-text-quiet);
-}
-
 .ex-section-title {
   margin: 36px 0 0;
   font-size: 13px;
@@ -186,48 +175,34 @@
   border-top: 2px solid var(--color-divider);
   padding-top: 16px;
 }
-.ex-ladder {
+
+/* The hints she has revealed, stacked above the buttons: a label and the
+   text, hairline-separated. No ladder, no locked rows. */
+.ex-hints {
   display: flex;
   flex-direction: column;
-  margin-top: 12px;
-}
-.ex-rung {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 12px;
-  align-items: start;
-  padding: 14px 0;
+  margin-top: 22px;
   border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
 }
-/* A rung she has not reached yet is quiet, not invisible: --color-neutral-500
-   measured 2.59:1 at 11.5px (#45). The active rung stays accent-red, so the
-   ladder's position still reads at a glance. */
-.ex-rung-label {
+.ex-hint {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+.ex-hint-label {
   font-size: 11.5px;
   letter-spacing: 0.1em;
   font-weight: 800;
   padding-top: 4px;
-  color: var(--color-text-locked);
-}
-.ex-rung-label--active {
   color: var(--color-text-accent);
-}
-.ex-rung-body {
-  min-width: 0;
 }
 .ex-hint-text {
   margin: 0;
   font-size: 16px;
   line-height: 1.6;
-}
-/* The lock note is the app stating its own rule ("Locked. Mark 'I tried and got
-   stuck' after a real attempt."), so it is copy she must be able to read — it
-   measured 2.59:1 (#45). */
-.ex-lock-note {
-  margin: 0;
-  font-size: 16px;
-  color: var(--color-text-locked);
-  padding-top: 6px;
 }
 
 /* Model solution — the shared .py-code block (src/code.css) carries the dark

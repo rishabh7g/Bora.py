@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { lintCurriculum, type RawCurriculum } from './lint';
+import { INTRO_MAX_CHARS, lintCurriculum, type RawCurriculum } from './lint';
 
 type TestExercise = RawCurriculum['modules'][string]['exercises'][number];
 
@@ -133,6 +133,14 @@ describe('lintCurriculum', () => {
       }),
     );
     expect(violations).toEqual([]);
+  });
+
+  it('flags a concept intro over the ceiling, and passes one at it', () => {
+    const atCeiling = lintCurriculum(makeCurriculum({ intro: 'x'.repeat(INTRO_MAX_CHARS) }));
+    expect(atCeiling).toEqual([]);
+    const over = lintCurriculum(makeCurriculum({ intro: 'x'.repeat(INTRO_MAX_CHARS + 1) }));
+    expect(over).toHaveLength(1);
+    expect(over[0].message).toContain(`ceiling is ${INTRO_MAX_CHARS}`);
   });
 
   it('flags photocard art that references official imagery', () => {

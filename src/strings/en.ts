@@ -1,6 +1,6 @@
 /**
  * The first (and, today, only) shell-copy pack (#100) — English, authored nested so the file
- * reads like a document: `{"home":{"kicker":…}}` is the path `home.kicker` names in
+ * reads like a document: `{"home":{"tier5":{"title":…}}}` is the path `home.tier5.title` names in
  * `src/strings/stringsKeys.ts`.
  *
  * Deliberately NOT typed against `Record<StringsKey, string>`: a mapped type would make a missing
@@ -13,7 +13,6 @@
 export const en = {
   common: {
     backArrow: '←',
-    backToMap: '← Map',
     reload: 'Reload',
     tryAgain: 'Try again',
     cancel: 'Cancel',
@@ -47,21 +46,15 @@ export const en = {
   },
 
   home: {
-    kicker: 'Checkpoint path',
-    checkpointsCount: '{passed} / {total} CHECKPOINTS',
-    greeting: 'Annyeong, {name}.',
-    progressLine: {
-      next: 'Next up: Module {number}.',
-      allPassed: 'Every checkpoint passed. Tier 5 is yours.',
-    },
-    status: {
-      upNext: 'UP NEXT',
-      open: 'OPEN',
+    card: {
+      count: '{passed} of {total} checkpoints passed',
+      open: 'Open Module {number}',
+      allPassed: 'Every checkpoint passed.',
     },
     tier5: {
       title: 'Tier 5 — Advanced',
-      unlocked: 'Files, APIs, classes. Unlocked — content lands later.',
-      locked: 'Files, APIs, classes. Unlocks after the capstone.',
+      unlocked: 'is open. Files, APIs, classes — content lands later.',
+      locked: 'unlocks after the capstone.',
     },
   },
 
@@ -82,8 +75,7 @@ export const en = {
     },
     import: {
       h2: 'Import',
-      bodyBeforeFile: 'Reads a ',
-      bodyAfterFile: ' file back in.',
+      body: 'Reads a saved file back in.',
       label: 'Backup file',
       failedTitle: 'Import failed.',
       replaceWarning: "Importing replaces the progress saved in this browser with the file's.",
@@ -92,7 +84,7 @@ export const en = {
     },
     reset: {
       h2: 'Reset a module',
-      body: 'Clears the attempts, hints and checkpoint of one module so it can be worked through again. Every other module keeps its progress, and checkpoints already passed stay open — this one simply becomes the one you are on.',
+      body: 'Clears one module’s attempts, hints and checkpoint. Every other module keeps its progress.',
       empty: 'No module has saved progress yet.',
       passed: 'Passed',
       inProgress: 'In progress',
@@ -103,7 +95,6 @@ export const en = {
   },
 
   expectedOutput: {
-    defaultSub: 'your terminal should print this',
     defaultLabel: 'EXPECTED OUTPUT',
     showWhitespace: 'Show whitespace',
     legend: {
@@ -119,40 +110,16 @@ export const en = {
       exit: 'Exit checkpoint',
       numbered: 'Exercise {index} of {total}',
     },
-    exitNote: 'EXIT CHECKPOINT — UNSCAFFOLDED. NO HINTS ON THIS ONE.',
-    matchedBanner:
-      'Output matched — checkpoint logged. Model solution below: compare approaches, not text.',
+    matched: 'Output matched.',
     matchButton: 'My output matches',
     stuckButton: 'I tried and got stuck',
     comeBackLater: 'Come back later',
-    attempts: {
-      unit: {
-        one: 'attempt',
-        other: 'attempts',
-      },
-      declared: '{count} {unit} declared.',
-      ladderSpentSuffix:
-        ' Every rung is open — the model solution is below. Compare it with yours, then mark the match whenever your output lines up.',
-      exitFirstNote:
-        'Write it on your machine, run it, compare. No hints on this one — leave and come back anytime.',
-      firstNote: 'Write it on your machine, run it, compare. Declaring an attempt unlocks the next rung.',
-      stuckSuffix: ' Next rung unlocked below.',
-      tryAgainSuffix: ' Try again to unlock the next rung.',
-    },
     hint: {
-      lockedFirst: 'Locked. Mark "I tried and got stuck" after a real attempt.',
-      lockedNext: 'Locked. Another declared attempt unlocks this.',
       label: 'HINT {number}',
       revealLabel: 'Reveal hint {number} — cracks the card',
     },
-    section: {
-      hintLadder: 'Hint ladder',
-    },
     solution: {
-      label: 'SOLUTION',
       revealLabel: 'Reveal solution',
-      revealedNote: 'Revealed below.',
-      lockNote: 'Reachable only after the full ladder — or by matching.',
       heading: 'Model solution',
     },
     checklist: {
@@ -171,7 +138,6 @@ export const en = {
     },
     kicker: {
       plain: 'Module {number}',
-      withTier: 'Module {number} — {tier}',
     },
     section: {
       workedExamples: 'Worked examples',
@@ -179,26 +145,15 @@ export const en = {
     },
     exit: {
       badge: 'EX',
-      summativeNote: 'Summative. No hints, no examples on screen. Passing awards the photocard.',
-      lockedNote: 'Unlocks when every practice exercise is matched or its solution seen.',
     },
     status: {
       matched: 'MATCHED',
-      solutionSeen: 'SOLUTION SEEN',
-      hintUsed: 'HINT {number} USED',
-      tried: 'TRIED ×{count}',
-      notStarted: 'NOT STARTED',
-      ready: 'READY',
     },
   },
 
   celebration: {
     dialogLabel: 'Checkpoint passed',
-    kicker: 'CHECKPOINT PASSED',
     title: 'Module {number} cleared.',
-    card: {
-      foot: 'Photocard added to shelf',
-    },
     unlockTier5: 'That was the capstone — Tier 5 (Advanced) is open.',
     continueLabel: 'Continue →',
     line1: 'Borahae. On to the next era.',
@@ -213,13 +168,13 @@ export const en = {
       empty: 'Empty shelf. For now.',
       collected: '{count} of {total} collected.',
     },
-    lede: 'One original card per checkpoint. Hints crack corners — a visible cost, never a wall.',
+    path: {
+      label: 'Still on the path',
+    },
     card: {
-      notEarned: 'Not earned',
       captionMint: 'Mint — no hints used',
       captionOneCrack: '1 crack',
       captionCracks: '{count} cracks',
-      unearnedCaption: 'Pass the checkpoint to earn it',
     },
   },
 
@@ -228,21 +183,12 @@ export const en = {
     section: {
       installSteps: 'Install steps',
     },
-    look: {
-      label: 'WHAT YOU’LL SEE',
-    },
     term: {
       label: 'TYPE THIS',
     },
     itPrints: {
       label: 'IT PRINTS',
-      sub: "your chosen member's name, on its own line",
     },
-    exit: {
-      label: 'EXIT CHECKPOINT',
-      sub: "the shape — your chosen member's name, on its own line",
-      passedNote: 'Module 01 is open. Nothing here expires.',
-      note: 'No hints on this one, and no rush — leave whenever. Your place is kept.',
-    },
+    more: 'What you’ll see',
   },
 };

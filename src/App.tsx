@@ -310,6 +310,7 @@ export default function App() {
         <Shell>
           <ExerciseView
             module={module}
+            moduleNumber={moduleNumberOf(curriculum, module.id)}
             exercise={exercise}
             isExit={route.isExit}
             state={state}

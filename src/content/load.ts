@@ -33,7 +33,9 @@ export function photocardArtUrl(fileName: string): string {
   return ART_URLS[`../art/photocards/${fileName}`] ?? '';
 }
 
-// Shape of design/content/curriculum.json as delivered by the design handoff.
+// Shape of content/curriculum.json as delivered by the design handoff. The
+// keys marked optional are pipeline-only (src/content/pipelineKeys.ts): the
+// authored file has them, the bundled module does not.
 type RawExercise = {
   id: string;
   title?: string;
@@ -48,8 +50,8 @@ type RawExercise = {
 
 type RawModule = {
   id: string;
-  num: string;
-  tier: number;
+  num?: string;
+  tier?: number;
   title: string;
   anchor: string;
   photocard: { id: string; title: string; art?: string };
@@ -61,8 +63,8 @@ type RawModule = {
 type RawTier = { id: string; title: string; era: string; modules: string[] };
 
 type RawCurriculum = {
-  version: number;
-  brand: string;
+  version?: number;
+  brand?: string;
   tiers: RawTier[];
   modules: Record<string, RawModule>;
 };
