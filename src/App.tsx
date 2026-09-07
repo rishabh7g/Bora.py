@@ -25,8 +25,9 @@ import PhotocardShelf from './PhotocardShelf';
 import ProgressLoading from './ProgressLoading';
 import Settings from './Settings';
 import SetupGuide from './SetupGuide';
+import type { ExerciseState } from './state/effortGate';
 import { exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './state/gating';
-import { exerciseStateOf } from './state/progress';
+import { exerciseStateOf, type Progress } from './state/progress';
 import { useProgress } from './state/useProgress';
 import './app.css';
 
@@ -109,7 +110,7 @@ export function canonicalHash(hash: string): string {
 /** The screen the shell's chrome marks as current. This app has no
  *  react-router and so no location context of its own; the route App already
  *  resolved is the one source of that state, and the shell reads it here
- *  rather than through a prop repeated at every `<Shell>` (#75). */
+ *  rather than taking it as a prop (#75). */
 const ScreenContext = createContext<Route['screen']>('home');
 
 /** The canonical hash the shell is currently rendering — the app's "which page
@@ -127,7 +128,8 @@ const RouteHashContext = createContext<string>(HOME_ROUTE);
  *  and no screen has to pad for it. The bottom nav (#75) is that column's last
  *  child: a `flex: none` sibling of the screen, never a fixed bar over it, and
  *  it is there on every screen including Exercise. There is exactly one
- *  `<main>` in this file; every branch below returns `<Shell>…</Shell>`. */
+ *  `<main>` in this file, and App renders this shell once, around whichever
+ *  screen the route picks — so no screen can be rendered outside it. */
 function Shell({ children }: { children: ReactNode }) {
   const screen = useContext(ScreenContext);
   const hash = useContext(RouteHashContext);
@@ -137,8 +139,8 @@ function Shell({ children }: { children: ReactNode }) {
   //
   // The browser resets the scroll offset for us when the *document* scrolls,
   // but since #73 the document does not: the element below does, React reuses
-  // that one node for all nine branches, and its scrollTop survives into the
-  // next screen (clamped to that screen's height). So "Continue →" out of the
+  // that one node for every screen, and its scrollTop survives into the next
+  // screen (clamped to that screen's height). So "Continue →" out of the
   // celebration landed the learner at the bottom of the map instead of on the
   // module it had just unlocked. It belongs here, once, in the shell that owns
   // the scroll container — not repeated in the screens that happen to be tall.
@@ -160,6 +162,47 @@ function Shell({ children }: { children: ReactNode }) {
   );
 }
 
+/** What a checkpoint screen's buttons hand back: a pure step on the exercise's
+ *  state (state/effortGate.ts), which App applies to the stored progress. */
+type TransitionHandler = (transition: (state: ExerciseState) => ExerciseState) => void;
+
+type ModuleRoute = Extract<Route, { screen: 'module' }>;
+
+type CelebrationOverlayProps = {
+  module: Module;
+  curriculum: Curriculum;
+  progress: Progress;
+  /** App's transient pass-edge state: the module celebrating right now, if any. */
+  celebratingModuleId: string | null;
+  onDismiss: () => void;
+};
+
+/** The red field over a checkpoint screen while its module is the one
+ *  celebrating, and nothing at all otherwise. Both checkpoint screens — the
+ *  setup guide's inline exit and ExerciseView's — render this same overlay;
+ *  "Continue →" dismisses it and goes on to the map, where the next checkpoint
+ *  is open. */
+function CelebrationOverlay({
+  module,
+  curriculum,
+  progress,
+  celebratingModuleId,
+  onDismiss,
+}: CelebrationOverlayProps) {
+  if (celebratingModuleId !== module.id) return null;
+  return (
+    <CelebrationScreen
+      module={module}
+      moduleNumber={module.number}
+      tier5Unlocked={tier5Unlocked(curriculum, progress)}
+      onContinue={() => {
+        onDismiss();
+        window.location.hash = HOME_ROUTE;
+      }}
+    />
+  );
+}
+
 export default function App() {
   // Was module scope (#96): a throw there happens before createRoot(...).render()
   // ever runs, so nothing could catch it and the learner got an empty #root and
@@ -169,7 +212,7 @@ export default function App() {
   // build time, so it never needs to be re-parsed on a later render.
   const curriculum = useMemo(() => loadCurriculum(), []);
   const [hash, setHash] = useState(() => window.location.hash || HOME_ROUTE);
-  const { progress, storageStalled, apply, replaceAll, resetModule } = useProgress();
+  const store = useProgress();
   // The celebration is transient by design (ENGINEERING.md §11 step 8): it is
   // set on the pass edge only, so a revisit or a reload never replays it.
   const [celebratingModuleId, setCelebratingModuleId] = useState<string | null>(null);
@@ -192,164 +235,130 @@ export default function App() {
 
   const route = routeFromHash(hash, curriculum);
 
-  /** The screen itself — every branch renders the same prop-less `<Shell>`,
-   *  which reads the current screen off the context provided below rather
-   *  than taking it as a tenth identical prop. */
-  function renderScreen() {
-    // Wait for the stored progress before rendering any screen, so a click can
-    // never act on (and overwrite with) unloaded default state — and so chips,
-    // the exit lock and the map's unlock states never flash their defaults.
-    // Waiting is not the same as showing nothing though: ProgressLoading says so,
-    // and says it plainly once the read has stalled, so a storage failure can
-    // never present as a permanently empty page.
-    if (!progress) {
-      return (
-        <Shell>
-          <ProgressLoading stalled={storageStalled} />
-        </Shell>
-      );
-    }
-
-    if (route.screen === 'home') {
-      return (
-        <Shell>
-          <HomeMap curriculum={curriculum} progress={progress} />
-        </Shell>
-      );
-    }
-
-    if (route.screen === 'shelf') {
-      return (
-        <Shell>
-          <PhotocardShelf curriculum={curriculum} progress={progress} />
-        </Shell>
-      );
-    }
-
-    if (route.screen === 'settings') {
-      return (
-        <Shell>
-          <Settings
-            curriculum={curriculum}
-            progress={progress}
-            onImport={replaceAll}
-            onResetModule={resetModule}
-          />
-        </Shell>
-      );
-    }
-
-    // Module 0 lives on the setup screen, not on ModuleView (design/README.md
-    // "Gating"): its exit checkpoint is rendered inline by SetupGuide, and it
-    // celebrates on the pass edge exactly like every other checkpoint.
-    if (route.screen === 'setup') {
-      const setupModule = route.module;
-      const exit = setupModule.exitExercise;
-      const alreadyPassed = moduleStateOf(curriculum, setupModule.id, progress) === 'passed';
-      return (
-        <Shell>
-          <SetupGuide
-            module={setupModule}
-            progress={progress}
-            onTransition={(transition) => {
-              apply(setupModule.id, exit.id, true, transition);
-              const before = exerciseStateOf(progress, setupModule.id, exit.id);
-              if (celebrationTriggered(true, alreadyPassed, transition(before))) {
-                setCelebratingModuleId(setupModule.id);
-              }
-            }}
-          />
-          {celebratingModuleId === setupModule.id && (
-            <CelebrationScreen
-              module={setupModule}
-              moduleNumber={setupModule.number}
-              tier5Unlocked={tier5Unlocked(curriculum, progress)}
-              onContinue={() => {
-                setCelebratingModuleId(null);
-                window.location.hash = HOME_ROUTE; // on to the map, Module 01 open
-              }}
-            />
-          )}
-        </Shell>
-      );
-    }
-
-    // Resolved by routeFromHash — an id the curriculum does not have never gets
-    // this far, it is a home route.
-    const module = route.module;
-
-    // §6 module chain (state/gating.ts): a locked module is not reachable by URL
-    // either — fall back to the map, whose row shows why it is locked.
-    if (!moduleUnlocked(curriculum, module.id, progress)) {
-      return (
-        <Shell>
-          <HomeMap curriculum={curriculum} progress={progress} />
-        </Shell>
-      );
-    }
-
-    // Resolved by routeFromHash too: an exercise id the module does not have is a
-    // home route, so an exercise here is always a real one. No exercise means the
-    // bare #/module/<id> hash — the module screen, at the bottom of this function.
-    const exercise = route.exercise;
-
-    if (exercise) {
-      // §6 exit lock (state/gating.ts): a direct URL cannot bypass the gate —
-      // fall back to the module screen, whose locked row explains the rule.
-      if (route.isExit && !exitUnlocked(module, progress)) {
-        return (
-          <Shell>
-            <ModuleView module={module} progress={progress} />
-          </Shell>
-        );
+  /** The `onTransition` a checkpoint screen gets: apply the transition, and
+   *  celebrate the pass edge only — the exit exercise reaching matched while
+   *  the module had not passed yet. */
+  function checkpointHandler(
+    module: Module,
+    exercise: Exercise,
+    isExit: boolean,
+    progress: Progress,
+  ): TransitionHandler {
+    const before = exerciseStateOf(progress, module.id, exercise.id);
+    const alreadyPassed = moduleStateOf(curriculum, module.id, progress) === 'passed';
+    return (transition) => {
+      store.apply(module.id, exercise.id, isExit, transition);
+      if (celebrationTriggered(isExit, alreadyPassed, transition(before))) {
+        setCelebratingModuleId(module.id);
       }
-      const state = exerciseStateOf(progress, module.id, exercise.id);
-      const alreadyPassed = moduleStateOf(curriculum, module.id, progress) === 'passed';
-      return (
-        <Shell>
-          <ExerciseView
-            module={module}
-            moduleNumber={module.number}
-            exercise={exercise}
-            isExit={route.isExit}
-            state={state}
-            onTransition={(transition) => {
-              apply(module.id, exercise.id, route.isExit, transition);
-              // Celebrate the pass edge only — the exit exercise reaching matched
-              // while the module had not passed yet.
-              if (celebrationTriggered(route.isExit, alreadyPassed, transition(state))) {
-                setCelebratingModuleId(module.id);
-              }
-            }}
-          />
-          {celebratingModuleId === module.id && (
-            <CelebrationScreen
-              module={module}
-              moduleNumber={module.number}
-              tier5Unlocked={tier5Unlocked(curriculum, progress)}
-              onContinue={() => {
-                setCelebratingModuleId(null);
-                window.location.hash = HOME_ROUTE; // on to the map, next checkpoint open
-              }}
-            />
-          )}
-        </Shell>
-      );
-    }
+    };
+  }
 
+  // Module 0 lives on the setup screen, not on ModuleView (design/README.md
+  // "Gating"): its exit checkpoint is rendered inline by SetupGuide, and it
+  // celebrates on the pass edge exactly like every other checkpoint.
+  function renderSetup(module: Module, progress: Progress) {
     return (
-      <Shell>
-        <ModuleView module={module} progress={progress} />
-      </Shell>
+      <>
+        <SetupGuide
+          module={module}
+          progress={progress}
+          onTransition={checkpointHandler(module, module.exitExercise, true, progress)}
+        />
+        <CelebrationOverlay
+          module={module}
+          curriculum={curriculum}
+          progress={progress}
+          celebratingModuleId={celebratingModuleId}
+          onDismiss={() => setCelebratingModuleId(null)}
+        />
+      </>
     );
   }
 
+  function renderExercise(module: Module, exercise: Exercise, isExit: boolean, progress: Progress) {
+    return (
+      <>
+        <ExerciseView
+          module={module}
+          moduleNumber={module.number}
+          exercise={exercise}
+          isExit={isExit}
+          state={exerciseStateOf(progress, module.id, exercise.id)}
+          onTransition={checkpointHandler(module, exercise, isExit, progress)}
+        />
+        <CelebrationOverlay
+          module={module}
+          curriculum={curriculum}
+          progress={progress}
+          celebratingModuleId={celebratingModuleId}
+          onDismiss={() => setCelebratingModuleId(null)}
+        />
+      </>
+    );
+  }
+
+  // The module and exercise here are resolved by routeFromHash — an id the
+  // curriculum does not have never gets this far, it is a home route. The two
+  // §6 gates (state/gating.ts) fall back to the nearest screen that explains
+  // them: a locked module is not reachable by URL either, so it is the map,
+  // whose row shows why; a locked exit checkpoint is its module screen, whose
+  // exit row explains the rule.
+  function renderModule({ module, exercise, isExit }: ModuleRoute, progress: Progress) {
+    if (!moduleUnlocked(curriculum, module.id, progress)) {
+      return <HomeMap curriculum={curriculum} progress={progress} />;
+    }
+    // No exercise is the bare #/module/<id> hash: the module screen.
+    if (!exercise || (isExit && !exitUnlocked(module, progress))) {
+      return <ModuleView module={module} progress={progress} />;
+    }
+    return renderExercise(module, exercise, isExit, progress);
+  }
+
+  /** The screen itself, as a branch table over the route. */
+  function renderScreen(progress: Progress) {
+    switch (route.screen) {
+      case 'home':
+        return <HomeMap curriculum={curriculum} progress={progress} />;
+      case 'shelf':
+        return <PhotocardShelf curriculum={curriculum} progress={progress} />;
+      case 'settings':
+        return (
+          <Settings
+            curriculum={curriculum}
+            progress={progress}
+            onImport={store.replaceAll}
+            onResetModule={store.resetModule}
+          />
+        );
+      case 'setup':
+        return renderSetup(route.module, progress);
+      case 'module':
+        return renderModule(route, progress);
+    }
+  }
+
+  // Wait for the stored progress before rendering any screen, so a click can
+  // never act on (and overwrite with) unloaded default state — and so chips,
+  // the exit lock and the map's unlock states never flash their defaults.
+  // Waiting is not the same as showing nothing though: ProgressLoading says so,
+  // and says it plainly once the read has stalled, so a storage failure can
+  // never present as a permanently empty page.
+  //
   // The route the shell needs (the nav's current item, and whatever chrome
   // joins it later) travels as context, so adding a piece of chrome never
-  // means editing nine call sites.
+  // means editing the screens.
   return (
     <ScreenContext.Provider value={route.screen}>
-      <RouteHashContext.Provider value={canonical}>{renderScreen()}</RouteHashContext.Provider>
+      <RouteHashContext.Provider value={canonical}>
+        <Shell>
+          {store.progress ? (
+            renderScreen(store.progress)
+          ) : (
+            <ProgressLoading stalled={store.storageStalled} />
+          )}
+        </Shell>
+      </RouteHashContext.Provider>
     </ScreenContext.Provider>
   );
 }

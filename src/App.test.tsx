@@ -214,8 +214,8 @@ it('renders every screen inside one shell — exactly one <main> in the source',
   expect(source.match(/<main\b/g)).toHaveLength(1);
   expect(source).toMatch(/<main className="app-screen" ref=\{\w+\}>/);
   expect(source).toContain('<div className="app-shell">');
-  // Nine branches, one wrapper: every return goes through the shell.
-  expect(source.match(/<Shell>/g)).toHaveLength(9);
+  // One wrapper around the whole branch table (#127): no screen can miss it.
+  expect(source.match(/<Shell>/g)).toHaveLength(1);
   expect(source.match(/return \(\s*<main/g)).toBeNull();
 });
 
