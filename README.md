@@ -22,7 +22,7 @@ checkpoint-based — no streaks, no XP, no guilt mechanics.
 | [`docs/QA.md`](docs/QA.md) | How to drive the app in a real headless browser (and which flags lie) |
 | [`design/PyLearn Prototype.dc.html`](design/PyLearn%20Prototype.dc.html) | Clickable visual + behavioral reference |
 | [`design/github-issues-guide.md`](design/github-issues-guide.md) | How the work is broken into issues |
-| [`design/content/curriculum.json`](design/content/curriculum.json) | The authored curriculum (13 modules) |
+| [`content/curriculum.json`](content/curriculum.json) | The authored curriculum (13 modules) — the file the app loads |
 | [`design/brand/BRAND.md`](design/brand/BRAND.md) | Brand + mark |
 
 ## Live

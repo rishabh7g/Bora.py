@@ -6,10 +6,9 @@ Everything an engineer needs to implement the app. The product spec is DESIGN.md
 
 - `PyLearn Prototype.dc.html` — the clickable reference build. Open it in a browser from this folder (it loads `_ds/` and `support.js` beside it). All 5 screens, working effort-gate state machine, localStorage persistence.
 - `DESIGN.md` / `ENGINEERING.md` — product + engineering docs (source of truth for behavior).
-- `tokens.css` — the design tokens (`:root` block). Map to Tailwind config; never hard-code values these carry.
 - `theme.json` — machine-readable record the tokens derive from.
-- `_ds/…/styles.css` — full stylesheet: tokens + component classes (`.btn`, `.tag`, `.card`, `.nav`, `.seg`, `.table`, `.input`, `.hr`). Reference for component styling and interaction states.
-- `content/curriculum.json` — the full authored curriculum (13 modules: intros, worked examples with exact outputs, exercises, hints, solutions, checklists), shaped to the ENGINEERING.md content schema.
+- `_ds/…/styles.css` — full stylesheet: design tokens (`:root` block; never hard-code values these carry) + component classes (`.btn`, `.tag`, `.card`, `.nav`, `.seg`, `.table`, `.input`, `.hr`). Reference for component styling and interaction states.
+- The authored curriculum (13 modules: intros, worked examples with exact outputs, exercises, hints, solutions, checklists) lives at the repo root as `../content/curriculum.json` — the one copy, and the file the app loads.
 - `brand/logo.svg` + `brand/BRAND.md` — brand mark, name rationale, wordmark spec, usage rules.
 - `github-issues-guide.md` — how to break this into GitHub issues.
 

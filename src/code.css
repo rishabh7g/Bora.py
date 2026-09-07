@@ -1,5 +1,5 @@
 /* Shared Python code block — dark code ground, Prism token colors drawn from
-   the tonal ramps only (design/tokens.css). Used by ExerciseView's model
+   the tonal ramps only (design/_ds/…/styles.css). Used by ExerciseView's model
    solution and ModuleView's worked examples. */
 .py-code {
   margin: 0;
