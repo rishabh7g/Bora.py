@@ -36,7 +36,7 @@ One sentence. e.g. "Build ExerciseView: prompt, expected-output block, effort-ga
 ## Design reference
 - Prototype: design/PyLearn Prototype.dc.html → Exercise screen
 - Docs: ENGINEERING.md §5 (state machine), DESIGN.md §3.5 (effort gate)
-- Tokens + component classes: design/_ds/…/styles.css; app text roles: src/tokens.css
+- Tokens + component classes: design/_ds/…/styles.css; app text roles: src/styles/tokens.css
 
 ## Acceptance criteria
 - [ ] Solution unreachable until 3 declared attempts OR "My output matches"

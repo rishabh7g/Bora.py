@@ -53,7 +53,7 @@ shelf shows the cards she has. The canonical string list went from 133 keys to 9
 The product name is **bora.py** — always lowercase, always with the dot
 (`design/brand/BRAND.md`). The cleanup is **done for app code and docs**: the
 app UI, the PWA manifest, `index.html`, `package.json` and the doc titles all
-say bora.py, and `src/Wordmark.tsx` is the one place the name is set in the UI.
+say bora.py, and `src/shell/Wordmark.tsx` is the one place the name is set in the UI.
 
 Two deliberate exceptions, both about provenance:
 

@@ -17,7 +17,7 @@ export type ApplyTransition = (
 ) => void;
 
 /** How long the stored-progress read may run before the app admits to the
- *  learner that something is wrong (src/ProgressLoading.tsx).
+ *  learner that something is wrong (src/components/ProgressLoading.tsx).
  *
  *  It is a report, NOT a cancellation: the read is still awaited afterwards.
  *  Substituting empty progress on timeout would let the next write-through

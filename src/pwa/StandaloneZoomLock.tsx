@@ -12,7 +12,7 @@
 // It AMENDS the tag's existing content string; it never replaces it. A
 // hardcoded replacement would pass a "zoom is locked" check while silently
 // dropping viewport-fit=cover — which is what turns every
-// env(safe-area-inset-*) on, including src/bottomnav.css's home-indicator
+// env(safe-area-inset-*) on, including src/shell/bottomnav.css's home-indicator
 // padding. Losing it is invisible until a real notched device is in front of
 // you, which is exactly why src/pwa/StandaloneZoomLock.test.tsx pins the
 // string surviving the lock rather than trusting a visual check.
@@ -27,7 +27,7 @@ const OWNED = /^(maximum-scale|user-scalable)\s*=/i;
 
 /** The string transform, factored out from the DOM write it feeds (below) so
  *  it is unit-testable without a document: this repo's suite has no jsdom
- *  (src/App.test.tsx), and there is no other DOM-touching decision here to
+ *  (src/app/App.test.tsx), and there is no other DOM-touching decision here to
  *  justify adding one for a two-line function.
  *
  *  Strips our directives before deciding whether to re-add them — reads the

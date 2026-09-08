@@ -1,0 +1,216 @@
+/* ModuleView — Modernist system. Every value is a design token or a
+   prototype-specified structural measure; radius is 0 everywhere by token.
+   Structure mirrors design/PyLearn Prototype.dc.html → Module screen. */
+
+.mod-screen {
+  width: min(860px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
+}
+
+.mod-kicker {
+  margin: 0 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-text-accent);
+}
+
+.mod-title {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 40px);
+  line-height: 1.05;
+}
+
+.mod-intro {
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: var(--content-max);
+  color: var(--color-neutral-800);
+}
+
+.mod-section-title {
+  margin: 40px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-top: 2px solid var(--color-divider);
+  padding-top: 16px;
+}
+/* — worked examples — */
+.mod-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 18px;
+}
+.mod-example {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+}
+.mod-num {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 16px;
+  /* #106: was 15px, raised to the body floor. Still below the large-text
+     threshold (18.66px/700), so the quiet role's 4.5:1 is the bar it has to
+     clear — --color-neutral-500 was 2.59:1 (#46). */
+  color: var(--color-text-quiet);
+}
+.mod-num--accent {
+  color: var(--color-text-accent);
+}
+.mod-example-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Code + copy button. The pre reserves right padding so code never sits
+   under the overlaid button; the button keeps a ≥44px hit target. */
+.mod-codewrap {
+  position: relative;
+}
+.mod-example-code {
+  padding: 14px 96px 14px 16px;
+  line-height: 1.6;
+}
+.mod-copy {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  color: var(--color-bg);
+  border: 1px solid color-mix(in srgb, var(--color-bg) 35%, transparent);
+  border-radius: var(--radius-sm);
+  font: 700 11px var(--font-body);
+  letter-spacing: 0.1em;
+  padding: 0 12px;
+  /* #103: a plain <button>, not a .btn, so it needs its own rule. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Copy refused (#44). Narrower type so the longer label still clears the code's
+   reserved right gutter, plus a note under the block saying what to do instead.
+   Both are transient — 1.5 s, same as COPIED. */
+.mod-copy--failed {
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  padding: 0 8px;
+}
+.mod-copy-note {
+  margin: 6px 0 0;
+  font-size: 16px;
+  color: var(--color-text-quiet);
+}
+.mod-copy:hover {
+  background: color-mix(in srgb, var(--color-bg) 12%, transparent);
+}
+.mod-copy:active {
+  background: color-mix(in srgb, var(--color-bg) 22%, transparent);
+}
+
+/* Expected output — bordered plain block, deliberately NO copy button. */
+.mod-example-output {
+  margin: 0;
+  padding: 10px 16px;
+  border: 1px solid var(--color-divider);
+  font:
+    500 13.5px/1.6 ui-monospace,
+    'Cascadia Mono',
+    Menlo,
+    Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  color: var(--color-neutral-800);
+}
+.mod-example-why {
+  margin: 0;
+  font-size: 16px;
+  color: var(--color-text-quiet);
+}
+
+/* — exercise list — */
+.mod-exercises {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.mod-exrow {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 8px 14px 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+  min-height: 44px;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+.mod-exrow:hover {
+  background: color-mix(in srgb, var(--color-text) 5%, transparent);
+}
+.mod-exrow:active {
+  background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+/* Flush rows: the ring goes inside the row, as on the map (src/screens/home.css). */
+.mod-exrow:focus-visible,
+.mod-exitrow--open:focus-visible {
+  outline-offset: -2px;
+}
+.mod-exrow-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+.mod-chip {
+  white-space: nowrap;
+}
+
+/* — exit exercise row — */
+.mod-exitrow {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 8px 16px 0;
+  border-top: 2px solid var(--color-divider);
+  min-height: 44px;
+  box-sizing: border-box;
+}
+.mod-exitrow--open {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+.mod-exitrow--open:hover {
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+.mod-exitrow--open:active {
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+/* The locked row steps back in ink, never opacity (#45): `opacity: 0.55`
+   folded it to 1.62–2.83:1. */
+.mod-exitrow--locked {
+  color: var(--color-text-locked);
+}
+.mod-exitrow--locked .mod-num {
+  color: inherit;
+}
+.mod-exitrow-title {
+  font-weight: 700;
+  font-size: 16px;
+}

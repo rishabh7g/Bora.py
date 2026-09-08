@@ -8,7 +8,7 @@ in `rishabh7g/claude-setup`. This file records only what is true here and nowher
 
 A static, offline-capable PWA that teaches a Pareto slice of Python to one learner.
 React 18 + Vite 6 + TypeScript, hand-written CSS, `idb-keyval` for progress. No backend,
-no accounts, no router — ~5 screens switched in `src/App.tsx`.
+no accounts, no router — ~5 screens switched in `src/app/App.tsx`.
 
 **The app never executes Python — the learner does, in her own terminal.** It is a content
 player and progress tracker: it shows the task, the exact expected output, hints and the
@@ -46,7 +46,7 @@ and it is why progress is checkpoint-based with no streaks, XP or decay. Spec:
 
 - **There is no CSS framework** — styling is 14 hand-written stylesheets in `src/`, over
   the vendored design system in `design/_ds/…/styles.css`, with the app's text roles in
-  `src/tokens.css`. A tier's "era" is a text label, not a per-tier palette.
+  `src/styles/tokens.css`. A tier's "era" is a text label, not a per-tier palette.
   (`docs/ENGINEERING.md` §2 named Tailwind until #132; it no longer does.)
 - **Never hardcode a user-visible string.** Shell copy is `t('home.lede')` from
   `src/strings/`, keys listed once in `src/strings/stringsKeys.ts`; `t()` throws instead of

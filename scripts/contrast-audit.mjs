@@ -184,7 +184,7 @@ const ROWS = [
   ['setup', '.setup-look-list li', 'what-you’ll-see instruction'],
   ['setup', '.setup-step-num', 'step numeral (accent, large)'],
   // #86 — the design system's segment paints its CHECKED option as accent-red
-  // ground under ground-coloured ink (3.76:1 before the fix in src/tokens.css).
+  // ground under ground-coloured ink (3.76:1 before the fix in src/styles/tokens.css).
   // Both states are measured, because they paint different ink on different
   // backdrops and the unchecked one passes comfortably enough to hide the
   // failure: an audit that measured only "the .seg-opt" would report a pass.
