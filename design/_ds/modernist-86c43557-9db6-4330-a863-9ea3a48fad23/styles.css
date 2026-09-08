@@ -108,7 +108,7 @@ h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: var(--font-headi
    ══════════════════════════════════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; }
-/* #106: floored at --text-body-min (src/styles/tokens.css) — zoom is off once the
+/* #106: floored at --text-body-min (src/tokens.css) — zoom is off once the
    app is installed (StandaloneZoomLock, #98), so nothing the app renders may
    start below the size a learner can actually read without it. */
 body { margin: 0; font-size: var(--text-body-min, 16px); line-height: 1.55; font-weight: 400; }
@@ -132,7 +132,7 @@ a {
 }
 img { display: block; max-width: 100%; }
 figure { margin: 0; }
-/* #106: this app's only figcaption (a screenshot caption, src/screens/setup.css
+/* #106: this app's only figcaption (a screenshot caption, src/setup.css
    ".setup-shot figcaption") is a caption — the rule explicitly gives those
    no exception. */
 figcaption {
