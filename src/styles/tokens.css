@@ -93,7 +93,7 @@
      deliberately a separate role: "this is gated" and "this is secondary" are
      different jobs and may not always want the same ink. Locked reads as locked
      through this ink plus its chip and its markup — never through opacity, which
-     multiplies every colour inside the element (DESIGN.md §7a). */
+     multiplies every colour inside the element (01-design.md §7a). */
   --color-text-locked: var(--color-neutral-700);
 
   /* Accent-red type below the large-text threshold — kickers, small labels.

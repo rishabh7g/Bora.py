@@ -1,4 +1,4 @@
-// Progress persistence — ENGINEERING.md §4 shapes, write-through semantics.
+// Progress persistence — 02-engineering.md §4 shapes, write-through semantics.
 // idb-keyval is mocked with an in-memory map: asserts every change is written
 // through and that a fresh load returns the full persisted state ("survives
 // reload" at the storage boundary).

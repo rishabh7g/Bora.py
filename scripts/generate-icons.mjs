@@ -9,7 +9,7 @@
 //   npm run icons -- --only public/icons/favicon-32.png   # regenerate one file
 //
 // Rasterising needs a browser because this repo has no image toolchain and adds
-// no dependency for a once-a-brand-change job (ENGINEERING.md §2 keeps the stack
+// no dependency for a once-a-brand-change job (02-engineering.md §2 keeps the stack
 // small). Any Chromium build works — including the one Playwright caches. Where
 // no Chrome/Chromium is on the machine at all (this repo's Pi host bans
 // installing one — no browser automation there), `rsvg-convert` (Debian package

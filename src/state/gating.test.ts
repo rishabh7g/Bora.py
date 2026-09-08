@@ -1,4 +1,4 @@
-// Unit tests for the module-gating owner (ENGINEERING.md §6): the exit-unlock
+// Unit tests for the module-gating owner (02-engineering.md §6): the exit-unlock
 // rule, the module N+1 unlock chain, and the Tier 5 capstone unlock.
 import { describe, expect, it } from 'vitest';
 import type { Curriculum, Exercise, Module } from '../content/types';

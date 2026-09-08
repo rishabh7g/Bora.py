@@ -2,7 +2,7 @@
 // when that read has stalled.
 //
 // Why it exists: App renders no screen until Progress is loaded (write-through
-// storage, ENGINEERING.md §4), because a click on unloaded default state would
+// storage, 02-engineering.md §4), because a click on unloaded default state would
 // overwrite real progress. A missing or throwing IndexedDB is already handled by
 // state/progress.loadProgress (it falls back to empty progress), but a read that
 // never settles at all — a blocked `versionchange`, a stalled or corrupt store —

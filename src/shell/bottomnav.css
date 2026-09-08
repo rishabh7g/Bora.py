@@ -67,7 +67,7 @@
 /* The current destination, selected off the same attribute a screen reader
    announces — what the learner sees and what is announced are one state, not
    two that can disagree. --color-text-accent is the 6.41:1 accent step
-   (DESIGN.md §7a), not the display red. */
+   (01-design.md §7a), not the display red. */
 .bottomnav-item[aria-current='page'] {
   color: var(--color-text-accent);
 }

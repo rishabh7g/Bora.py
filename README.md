@@ -17,9 +17,9 @@ checkpoint-based — no streaks, no XP, no guilt mechanics.
 | Doc | What it is |
 |---|---|
 | [`design/README.md`](design/README.md) | Design handoff index — read this first |
-| [`docs/DESIGN.md`](docs/DESIGN.md) | Product spec — source of truth for behavior |
-| [`docs/ENGINEERING.md`](docs/ENGINEERING.md) | Architecture, content schema, state machine, build order |
-| [`docs/QA.md`](docs/QA.md) | How to drive the app in a real headless browser (and which flags lie) |
+| [`docs/01-design.md`](docs/01-design.md) | Product spec — source of truth for behavior |
+| [`docs/02-engineering.md`](docs/02-engineering.md) | Architecture, content schema, state machine, build order |
+| [`docs/03-qa.md`](docs/03-qa.md) | How to drive the app in a real headless browser (and which flags lie) |
 | [`design/PyLearn Prototype.dc.html`](design/PyLearn%20Prototype.dc.html) | Clickable visual + behavioral reference |
 | [`design/github-issues-guide.md`](design/github-issues-guide.md) | How the work is broken into issues |
 | [`content/curriculum.json`](content/curriculum.json) | The authored curriculum (13 modules) — the file the app loads |
@@ -43,7 +43,7 @@ full output lands in `.verify/<stage>.log` (gitignored, wiped each run).
 
 ## Status
 
-Every screen ships. The said-once pass of 2026-09-06 (`docs/SIMPLIFY.md`) measured each
+Every screen ships. The said-once pass of 2026-09-06 (`docs/05-simplify.md`) measured each
 one at 360px and cut what it said twice: the map leads with the current checkpoint, an
 exercise is two buttons, the setup guide keeps its windows behind a door per step, the
 shelf shows the cards she has. The canonical string list went from 133 keys to 94.

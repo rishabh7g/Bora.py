@@ -70,7 +70,7 @@
   padding: 8px 14px;
 }
 
-/* — "show whitespace" toggle (ENGINEERING.md §7, §12) —
+/* — "show whitespace" toggle (02-engineering.md §7, §12) —
    Off by default. The control is the design system's segment, so hover /
    pressed / :focus-visible are the shared themed states; only the hit target is
    bumped, since the default segment is denser than 44px. */

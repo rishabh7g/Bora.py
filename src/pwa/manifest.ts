@@ -1,5 +1,5 @@
 // PWA options — the ONE owner of the web app manifest and the service-worker
-// precache rules (ENGINEERING.md §9). vite.config.ts feeds this straight to
+// precache rules (02-engineering.md §9). vite.config.ts feeds this straight to
 // vite-plugin-pwa; nothing else configures the app's offline behaviour.
 //
 // Base-path rule: every URL here is RELATIVE. The app is served from a static
@@ -53,7 +53,7 @@ export const webManifest: Partial<ManifestOptions> = {
 
 export const pwaOptions: Partial<VitePWAOptions> = {
   // Content fixes ship invisibly: the new service worker takes over on the next
-  // launch, with no "update available" prompt to dismiss (ENGINEERING.md §9).
+  // launch, with no "update available" prompt to dismiss (02-engineering.md §9).
   registerType: 'autoUpdate',
   // main.tsx registers the worker itself, so the plugin must not inject a
   // second registration script into index.html.

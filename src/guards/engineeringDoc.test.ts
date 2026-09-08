@@ -1,4 +1,4 @@
-// docs/ENGINEERING.md is a contract, not prose — and an unchecked contract rots.
+// docs/02-engineering.md is a contract, not prose — and an unchecked contract rots.
 // §2 named a CSS framework this repo has never depended on, and §8 named a
 // highlighter that was never installed (#132). Both read as instructions: a
 // newcomer goes looking for utility classes that do not exist, or adds the
@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, it } from 'vitest';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const doc = readFileSync(join(repoRoot, 'docs/ENGINEERING.md'), 'utf8');
+const doc = readFileSync(join(repoRoot, 'docs/02-engineering.md'), 'utf8');
 const manifest = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8'));
 const declaredPackages = new Set([
   ...Object.keys(manifest.dependencies ?? {}),

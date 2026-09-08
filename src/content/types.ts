@@ -1,4 +1,4 @@
-// Content model — exactly per ENGINEERING.md §3.
+// Content model — exactly per 02-engineering.md §3.
 // All curriculum is static typed data, bundled at build time.
 
 export type Curriculum = { tiers: Tier[] };
@@ -6,7 +6,7 @@ export type Curriculum = { tiers: Tier[] };
 export type Tier = {
   id: string;
   title: string;
-  era: string; // era label authored in curriculum.json ("Wings era") — DESIGN.md §6/§7
+  era: string; // era label authored in curriculum.json ("Wings era") — 01-design.md §6/§7
   modules: Module[];
 };
 

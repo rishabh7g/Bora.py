@@ -1,4 +1,4 @@
-// PWA contract (ENGINEERING.md §9): silent auto-update, a manifest that
+// PWA contract (02-engineering.md §9): silent auto-update, a manifest that
 // survives a subpath deploy, brand icons that exist on disk, and a precache
 // wide enough to hold the whole app offline.
 import { existsSync, readFileSync } from 'node:fs';

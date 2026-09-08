@@ -1,4 +1,4 @@
-// The effort gate — ENGINEERING.md §5, behavior settled by the prototype.
+// The effort gate — 02-engineering.md §5, behavior settled by the prototype.
 // This is the ONE owner of every gating rule. UI and persistence consume
 // these functions; nothing else may reimplement a rule from here.
 //
@@ -15,13 +15,13 @@
 // - Each hint unlock requires a declared attempt in between. The prototype
 //   settles the edge case: attempts banked BEFORE viewing a hint do not carry
 //   over to the next rung — viewing a hint consumes the "stuck" declaration.
-//   That is why `stuck` is persisted alongside the ENGINEERING.md §4 fields.
+//   That is why `stuck` is persisted alongside the 02-engineering.md §4 fields.
 // - Exit exercises: no ladder; only MATCHED or "come back later" (leave —
 //   state persists, never blocked forever).
 // - Each hint viewed adds one crack to the module's photocard (visual only).
 // - Trust-based: declaring a match is never verified. No friction.
 
-// ENGINEERING.md §4 ExerciseState + `stuck` (see note above).
+// 02-engineering.md §4 ExerciseState + `stuck` (see note above).
 export type ExerciseState = {
   attempts: number; // "I tried and got stuck" count
   hintsUnlocked: 0 | 1 | 2; // hints actually viewed
@@ -98,7 +98,7 @@ export function cardCracksOf(exercises: Record<string, ExerciseState>): number {
   return Object.values(exercises).reduce((total, state) => total + state.hintsUnlocked, 0);
 }
 
-/** A module is passed when its exit exercise is matched (ENGINEERING.md §4/§6). */
+/** A module is passed when its exit exercise is matched (02-engineering.md §4/§6). */
 export function modulePassed(exitState: ExerciseState): boolean {
   return exitState.matched;
 }

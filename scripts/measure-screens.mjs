@@ -1,4 +1,4 @@
-// Screen-height audit at 360px — the numbers in docs/SIMPLIFY.md. Run against npm run dev:
+// Screen-height audit at 360px — the numbers in docs/05-simplify.md. Run against npm run dev:
 //   PLAYWRIGHT_BROWSERS_PATH=... node scripts/measure-screens.mjs
 import { chromium } from 'playwright';
 const base = 'http://localhost:5173/Bora.py/';

@@ -1,4 +1,4 @@
-// Unit tests for the effort-gate owner module — every ENGINEERING.md §5
+// Unit tests for the effort-gate owner module — every 02-engineering.md §5
 // transition, plus the prototype-settled edge cases.
 import { describe, expect, it } from 'vitest';
 import {
@@ -194,7 +194,7 @@ describe('cracks: one per hint viewed, visual only', () => {
 
   // #89 — the ladder's summary sentence used to say "each reveal cracks this
   // module's photocard"; the solution is a reveal and costs nothing. The price
-  // is per HINT (DESIGN.md §4), and this pins that so the copy stays true.
+  // is per HINT (01-design.md §4), and this pins that so the copy stays true.
   it('revealing the solution adds no crack', () => {
     const twoHints = climbTo('HINT2_SEEN');
     expect(cardCracksOf({ e1: climbTo('SOLUTION_REVEALED') })).toBe(cardCracksOf({ e1: twoHints }));

@@ -9,7 +9,7 @@ import App from './App';
 import ErrorBoundary from './ErrorBoundary';
 import StandaloneZoomLock from '../pwa/StandaloneZoomLock';
 
-// Offline precache + silent auto-update (ENGINEERING.md §9). The generated
+// Offline precache + silent auto-update (02-engineering.md §9). The generated
 // registration knows the deploy base, so this works at any subpath; in dev it
 // is a no-op. `immediate` installs the worker on first paint rather than on
 // window load, so a first visit is offline-ready as early as possible.

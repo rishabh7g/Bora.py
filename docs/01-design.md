@@ -313,7 +313,7 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
   bright the red is, so a darker fill reads as selected exactly as clearly.
 - The floor is measured, not eyeballed: `node scripts/contrast-audit.mjs` reports the real
   rendered ratio for every quiet and dimmed style, with ancestor opacity folded in
-  (docs/QA.md).
+  (docs/03-qa.md).
 
 ---
 

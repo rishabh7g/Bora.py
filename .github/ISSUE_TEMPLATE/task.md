@@ -8,7 +8,7 @@ One sentence. e.g. "Build ExerciseView: prompt, expected-output block, effort-ga
 
 ## Design reference
 - Prototype: design/PyLearn Prototype.dc.html → … screen
-- Docs: docs/ENGINEERING.md §…, docs/DESIGN.md §…
+- Docs: docs/02-engineering.md §…, docs/01-design.md §…
 - Tokens + component classes: design/_ds/…/styles.css; app text roles: src/styles/tokens.css
 
 ## Acceptance criteria

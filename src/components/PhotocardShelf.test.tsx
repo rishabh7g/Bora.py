@@ -1,5 +1,5 @@
 // PhotocardShelf render contract: the earned cards in full, one crack per hint
-// used (ENGINEERING.md §4/§7, DESIGN.md §4), and one strip of numbered slots
+// used (02-engineering.md §4/§7, 01-design.md §4), and one strip of numbered slots
 // for what is still ahead. Cracks are a visible cost only: they never change
 // what is reachable.
 import { expect, it } from 'vitest';

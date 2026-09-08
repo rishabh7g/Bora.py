@@ -1,4 +1,4 @@
-// Deploy contract (ENGINEERING.md §10): GitHub Pages serves the app from the
+// Deploy contract (02-engineering.md §10): GitHub Pages serves the app from the
 // repo subpath, so the build base and the publish workflow have to agree. These
 // checks are cheap insurance against the two failures that only show up live —
 // a root-relative build (blank page, 404 assets) and a workflow that cannot

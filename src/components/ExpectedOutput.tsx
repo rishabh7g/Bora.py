@@ -1,12 +1,12 @@
 // The expected-output block — the ONE owner of how an exact terminal output is
-// presented (ENGINEERING.md §7; design/README.md: copy-safe monospace,
+// presented (02-engineering.md §7; design/README.md: copy-safe monospace,
 // deliberately NO copy button and no diff tool, because validation is
 // trust-based).
 //
 // Shared by ExerciseView and SetupGuide so the exit checkpoint looks and behaves
 // identically wherever it is shown; styles stay in exercise.css.
 //
-// Whitespace toggle (ENGINEERING.md §7, §12 "output-match false negatives" — the
+// Whitespace toggle (02-engineering.md §7, §12 "output-match false negatives" — the
 // #1 beginner frustration). Off by default. When on it *annotates*, it does not
 // rewrite: every character in the <pre> is still the authored character, and each
 // marker (· space, → tab, ⏎ line break) is a CSS pseudo-element on its own

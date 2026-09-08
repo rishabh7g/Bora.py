@@ -1,4 +1,4 @@
-# Deploy per ENGINEERING.md §10: typecheck + content lint + build, then publish
+# Deploy per 02-engineering.md §10: typecheck + content lint + build, then publish
 # the Vite output to GitHub Pages on every push to main. Pure static hosting —
 # the artifact is `dist/` exactly as Vite emits it (shell, hashed assets,
 # manifest.webmanifest, sw.js at the root of /Bora.py/ so its scope covers the

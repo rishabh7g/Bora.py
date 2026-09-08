@@ -1,5 +1,5 @@
-// PhotocardShelf — the collection screen (ENGINEERING.md §7 `PhotocardShelf`,
-// §4 `cardCracks`, §11 step 4; DESIGN.md §4; prototype:
+// PhotocardShelf — the collection screen (02-engineering.md §7 `PhotocardShelf`,
+// §4 `cardCracks`, §11 step 4; 01-design.md §4; prototype:
 // design/PyLearn Prototype.dc.html → Photocard shelf screen).
 //
 // The cards she has earned, at full size, and one compact strip of numbered
@@ -10,7 +10,7 @@
 // are a visible cost only: they never gate, hide or reverse anything.
 //
 // Art is original, abstract and named after the concept ("The Loop Era") —
-// no official imagery (DESIGN.md §4 content safety); the SVGs live in
+// no official imagery (01-design.md §4 content safety); the SVGs live in
 // src/art/photocards and are wired through content/load.
 import { flatModules } from '../content/load';
 import type { Curriculum, Module } from '../content/types';
@@ -22,7 +22,7 @@ import { t } from '../strings/t';
 import './shelf.css';
 
 // A card has four corners, so at most four cracks are drawn. The count in the
-// caption stays exact — the cap is display only (ENGINEERING.md §4).
+// caption stays exact — the cap is display only (02-engineering.md §4).
 export const MAX_DRAWN_CRACKS = 4;
 
 /** Caption under an earned card. Never scolding: hints used are stated as a

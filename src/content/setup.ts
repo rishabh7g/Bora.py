@@ -1,5 +1,5 @@
-// Module 0 setup content — the install stepper's data (DESIGN.md §6 Tier 0,
-// ENGINEERING.md §7 `SetupGuide`, §12 "motivation cliff at Module 0").
+// Module 0 setup content — the install stepper's data (01-design.md §6 Tier 0,
+// 02-engineering.md §7 `SetupGuide`, §12 "motivation cliff at Module 0").
 //
 // Data-driven on purpose: SetupGuide renders whatever is listed here, so a new
 // screenshot or a reworded step is a content edit, never a component edit.
@@ -7,7 +7,7 @@
 // Three rules this file carries:
 // 1. Screenshots are LOCAL FILES in src/art/setup — never remote URLs. The
 //    bundler owns the emitted URL (hashed, base-path aware) and the service
-//    worker precaches every png, so setup works offline (ENGINEERING.md §9).
+//    worker precaches every png, so setup works offline (02-engineering.md §9).
 // 2. A GUI screenshot ships only as a COMPLETE Windows + Mac PAIR, at the same
 //    step index on both paths (#62). A step that showed a picture on one path
 //    and a placeholder on the other told the other learner she got the lesser
