@@ -18,12 +18,31 @@ Implements DESIGN.md. Audience: single developer building for a single user.
 
 ## 2. Tech Stack
 
-- **React + Vite** (fast PWA scaffolding via `vite-plugin-pwa`)
+Every runtime dependency is listed in `package.json`; nothing below is aspirational.
+
+- **React 18 + Vite 6** — PWA scaffolding via `vite-plugin-pwa`
 - **TypeScript** — content schema benefits enormously from types
-- **Tailwind CSS** — quick playful theming (era-based color palettes per tier)
-- **IndexedDB via `idb-keyval`** (or localStorage if kept trivial) for progress state
-- **Service worker** (Workbox through vite-plugin-pwa): precache the entire app + content; the whole curriculum works offline
-- No router needed beyond something small (React Router or hash routing) — ~5 screens
+- **Hand-written CSS — no CSS framework of any kind** — the design system vendored at
+  `design/_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/styles.css` supplies the
+  ramps and the component classes (`.btn`, `.tag`, the themed focus ring); `src/main.tsx`
+  imports it, then `src/tokens.css`, then each screen brings its own stylesheet. 14 of
+  them live directly under `src/`: `src/tokens.css` for the shared roles, `src/app.css`
+  for the shell, and one per screen or component (`src/home.css`, `src/exercise.css`,
+  `src/shelf.css`, and so on). There is **one** palette, not a palette per tier: a tier's
+  "era" is a text label authored in `content/curriculum.json` ("Wings era"), rendered as
+  prose by `HomeMap`, and it recolours nothing
+- **`prismjs`** for Python syntax highlighting (§8) and **`lucide-react`** for the three
+  bottom-nav icons — the only two other runtime dependencies
+- **IndexedDB via `idb-keyval`** for progress (`src/state/progress.ts`). Two UI
+  preferences deliberately sit outside it, in `localStorage`: the setup guide's OS choice
+  (`src/state/setupOs.ts`) and the whitespace toggle (`src/state/whitespaceVisible.ts`).
+  Neither is a checkpoint, neither may travel in the progress backup file, and both must
+  be readable synchronously on first paint so the screen does not flash the wrong state
+- **Service worker** (Workbox through `vite-plugin-pwa`): precache the entire app +
+  content; the whole curriculum works offline. Configured in one place,
+  `src/pwa/manifest.ts` (§9)
+- **No router dependency** — ~5 screens switched on `window.location.hash` in
+  `src/App.tsx` (§7)
 
 ## 3. Content Model
 
@@ -127,7 +146,7 @@ Rules:
 
 ## 7. Screens → Components
 
-- `HomeMap` — tier/module path, era-themed; reads Progress
+- `HomeMap` — tier/module path, each tier headed by its title and its era label (text, not a colour scheme — §2); reads Progress
 - `ModuleView` — concept doc, worked examples (code blocks with copy button — a browser that refuses the clipboard write gets a caught rejection and a temporary `COPY FAILED` plus a note, never a silent no-op), exercise list with state chips
 - `ExerciseView` — the core screen: prompt, expected-output block (monospace, copy-safe, whitespace-visible toggle for trailing-space debugging), attempt/hint/match buttons per state machine, revealed solution with syntax highlighting + approach checklist
 - `PhotocardShelf` — grid of cards, crack overlays
@@ -140,8 +159,11 @@ Rules:
 
 ## 8. Syntax Highlighting
 
-- `shiki` at build time (content is static — pre-render highlighted HTML into the bundle, zero runtime cost) or `prism` runtime if simpler
-- Python-only grammar; keep bundle lean
+- `prismjs` at runtime, in `src/PythonCode.tsx`. Pre-rendering the highlighted HTML at
+  build time was the other option and was not taken: the code blocks are small and few,
+  so the runtime cost never justified a second toolchain
+- Python-only grammar: `prismjs/components/prism-python` is the single grammar imported,
+  so the bundle carries no other language
 
 ## 9. PWA Specifics
 
@@ -161,13 +183,19 @@ Rules:
     component's own colour is the thing that fails the legibility floor, the override lands
     here too, as one rule naming the role — `a, .btn-ghost { color: var(--color-text-accent) }`
     (#55) — never as an edit to the vendored stylesheet and never as a hex in a screen's CSS
-  - `/content` — curriculum TS/JSON files (one file per module)
-  - `/content/lint.ts` — authoring-rule checks, runs in CI
+  - `/content/curriculum.json` — the whole authored curriculum in one file: every tier,
+    every module, every exercise. One file per module was the original plan and is not
+    what shipped. `src/content/load.ts` is the app's only reader (it maps the authored
+    top-level `modules` map onto the §3 types); `src/content/pipelineKeys.ts` strips the
+    file to the keys the app actually reads before Vite bundles it
+  - `/content/lint.ts` — authoring-rule checks, run in CI by `npm run lint:content`
+    (`.github/workflows/deploy.yml`) and asserted again by `content/lint.test.ts`
 - Gates: `npm run lint` (eslint), `npm run format` (prettier), `npm run typecheck` and
   `npm test`. `eslint.config.js` takes the recommended JS set, typescript-eslint and
   react-hooks, with `eslint-config-prettier` last so no rule fights the formatter;
   `.prettierrc.json` and `.prettierignore` say what prettier owns. Both are copied from
-  rung so the sibling frontends fail the same way (claude-setup `docs/repo-standards.md`)
+  rung so the sibling frontends fail the same way ([claude-setup's
+  repo-standards](https://github.com/rishabh7g/claude-setup/blob/main/docs/repo-standards.md))
 - CI: typecheck + content lint + build → deploy to static host on push
 - No analytics, no error tracking (single known user; she can screenshot problems)
 
