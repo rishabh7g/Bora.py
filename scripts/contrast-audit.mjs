@@ -22,34 +22,8 @@
 // governs it instead: 3:1, measured from the icon's own resolved stroke. Those
 // rows print `icon(1.4.11)` where a text row prints its size and weight, so a
 // 3:1 pass is never mistaken for a 4.5:1 one.
-import { createRequire } from 'node:module';
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { homedir } from 'node:os';
 import { join } from 'node:path';
-
-function resolvePlaywrightDir() {
-  if (process.env.PLAYWRIGHT_DIR) return process.env.PLAYWRIGHT_DIR;
-  const require_ = createRequire(import.meta.url);
-  try {
-    return join(require_.resolve('playwright/package.json'), '..');
-  } catch {
-    /* not a dependency here — fall through to the npx cache */
-  }
-  const browsers =
-    process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), '.cache', 'ms-playwright');
-  const npxCache = join(homedir(), '.npm', '_npx');
-  if (!existsSync(npxCache)) return null;
-  for (const entry of readdirSync(npxCache)) {
-    const dir = join(npxCache, entry, 'node_modules', 'playwright');
-    const pinned = join(npxCache, entry, 'node_modules', 'playwright-core', 'browsers.json');
-    if (!existsSync(dir) || !existsSync(pinned)) continue;
-    const chromium = JSON.parse(readFileSync(pinned, 'utf8')).browsers.find(
-      (b) => b.name === 'chromium',
-    );
-    if (chromium && existsSync(join(browsers, `chromium-${chromium.revision}`))) return dir;
-  }
-  return null;
-}
+import { noPlaywrightMessage, resolvePlaywrightDir } from './playwright-host.mjs';
 
 const args = process.argv.slice(2);
 const width = Number(args.includes('--width') ? args[args.indexOf('--width') + 1] : 390);
@@ -217,7 +191,12 @@ const ROWS = [
   ],
 ];
 
-const { chromium } = await import(join(resolvePlaywrightDir(), 'index.mjs'));
+const playwrightDir = resolvePlaywrightDir();
+if (!playwrightDir) {
+  console.error(noPlaywrightMessage());
+  process.exit(2);
+}
+const { chromium } = await import(join(playwrightDir, 'index.mjs'));
 const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
 const problems = [];
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
