@@ -33,6 +33,14 @@ typecheck and content lint pass. Pure static hosting: no server, no API. The
 build sets Vite `base: '/Bora.py/'` so the app, its service worker and its
 manifest all work under the repo subpath.
 
+## Verify
+
+`scripts/verify.sh` is the one command that says whether the repository is
+healthy. It prints a single line — `TYPES ok | LINT ok | TEST 329/329 ok |
+STRINGS ok | BUILD ok` — and nothing else. Stages run in order and the first
+failure stops the run, printing the tail of that stage's log; every stage's
+full output lands in `.verify/<stage>.log` (gitignored, wiped each run).
+
 ## Status
 
 Every screen ships. The said-once pass of 2026-09-06 (`docs/SIMPLIFY.md`) measured each
