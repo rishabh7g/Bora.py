@@ -12,48 +12,10 @@
 //
 // Exit codes: 0 = #root ended up non-empty, 1 = still empty (or navigation
 // failed), so it can gate a QA run.
-import { createRequire } from 'node:module';
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { noPlaywrightMessage, resolvePlaywrightDir } from './playwright-host.mjs';
 
 const EMPTY_ROOT = 40; // `<div id="root">` holds only whitespace below this
-
-/** Find a usable Playwright on this host.
- *
- *  This repo deliberately keeps no Playwright dependency (02-engineering.md §2 —
- *  small stack; browsers are ~300 MB and CI never needs one). So: use the repo's
- *  own copy if someone installed it, else any `npx`-cached copy whose pinned
- *  Chromium revision is already downloaded — that is what
- *  `npx @playwright/mcp@latest install-browser chrome-for-testing` leaves behind.
- *  `PLAYWRIGHT_DIR` overrides the search. */
-function resolvePlaywrightDir() {
-  if (process.env.PLAYWRIGHT_DIR) return process.env.PLAYWRIGHT_DIR;
-
-  const require_ = createRequire(import.meta.url);
-  try {
-    return join(require_.resolve('playwright/package.json'), '..');
-  } catch {
-    // not a dependency here — fall through to the npx cache
-  }
-
-  const browsers =
-    process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), '.cache', 'ms-playwright');
-  const npxCache = join(homedir(), '.npm', '_npx');
-  if (!existsSync(npxCache)) return null;
-
-  for (const entry of readdirSync(npxCache)) {
-    const dir = join(npxCache, entry, 'node_modules', 'playwright');
-    const pinned = join(npxCache, entry, 'node_modules', 'playwright-core', 'browsers.json');
-    if (!existsSync(dir) || !existsSync(pinned)) continue;
-    const chromium = JSON.parse(readFileSync(pinned, 'utf8')).browsers.find(
-      (browser) => browser.name === 'chromium',
-    );
-    // Only useful if the matching browser build is actually on disk.
-    if (chromium && existsSync(join(browsers, `chromium-${chromium.revision}`))) return dir;
-  }
-  return null;
-}
 
 const args = process.argv.slice(2);
 const url = args.find((arg) => !arg.startsWith('--'));
@@ -71,11 +33,7 @@ if (!url) {
 
 const playwrightDir = resolvePlaywrightDir();
 if (!playwrightDir) {
-  console.error(
-    'No Playwright found. Install the browser once with:\n' +
-      '  npx -y @playwright/mcp@latest install-browser chrome-for-testing\n' +
-      'or point PLAYWRIGHT_DIR at a node_modules/playwright directory.',
-  );
+  console.error(noPlaywrightMessage());
   process.exit(2);
 }
 const { chromium } = await import(join(playwrightDir, 'index.mjs'));
