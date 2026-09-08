@@ -71,12 +71,7 @@ export type SettingsProps = {
   onResetModule: (moduleId: string) => void;
 };
 
-export default function Settings({
-  curriculum,
-  progress,
-  onImport,
-  onResetModule,
-}: SettingsProps) {
+export default function Settings({ curriculum, progress, onImport, onResetModule }: SettingsProps) {
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   // A read, validated file waiting for the explicit confirm — the import is

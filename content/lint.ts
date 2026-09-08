@@ -61,7 +61,7 @@ const NONDETERMINISTIC_MARKERS = ['random', 'datetime', 'time.'];
 const LYRIC_BLOCKLIST = [
   'smooth like butter', // Butter
   'side step, right, left', // Butter
-  "shining through the city with a little funk and soul", // Dynamite
+  'shining through the city with a little funk and soul', // Dynamite
   "i'm in the stars tonight", // Dynamite
   "you can't stop me lovin' myself", // IDOL
   "i'm the one i should love", // Epiphany
@@ -191,9 +191,7 @@ function main(): void {
     readFileSync(join(contentDir, 'curriculum.json'), 'utf8'),
   ) as RawCurriculum;
   const artDir = join(contentDir, '..', 'src', 'art', 'photocards');
-  const violations = lintCurriculum(curriculum, (fileName) =>
-    existsSync(join(artDir, fileName)),
-  );
+  const violations = lintCurriculum(curriculum, (fileName) => existsSync(join(artDir, fileName)));
 
   for (const violation of violations) {
     const where = violation.exerciseId

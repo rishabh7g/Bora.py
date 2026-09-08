@@ -37,7 +37,8 @@ function resolvePlaywrightDir() {
     // not a dependency here — fall through to the npx cache
   }
 
-  const browsers = process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), '.cache', 'ms-playwright');
+  const browsers =
+    process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), '.cache', 'ms-playwright');
   const npxCache = join(homedir(), '.npm', '_npx');
   if (!existsSync(npxCache)) return null;
 

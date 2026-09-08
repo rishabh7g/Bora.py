@@ -93,7 +93,9 @@ function StepRow({ step, number }: { step: SetupStep; number: number }) {
         )}
         {/* What it prints is the shared block (#61) in its plain form: a
             transcript to read, not an output to check her own against. */}
-        {step.output && <ExpectedOutput label={t('setup.itPrints.label')} output={step.output} plain />}
+        {step.output && (
+          <ExpectedOutput label={t('setup.itPrints.label')} output={step.output} plain />
+        )}
         {/* The window, behind one door. Closed on every step: the landmarks
             are for the learner who is looking at a screen she does not
             recognise, and the step reads whole without them. */}

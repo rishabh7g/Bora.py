@@ -207,7 +207,13 @@ describe('shell purity — no hardcoded copy in a component', () => {
 
   it('fails on a planted literal — proving the scan actually catches one', () => {
     const planted = `export default function X() { return <p>Hardcoded words here</p>; }`;
-    const source = ts.createSourceFile('planted.tsx', planted, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    const source = ts.createSourceFile(
+      'planted.tsx',
+      planted,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TSX,
+    );
     let found = false;
     function visit(node: ts.Node): void {
       if (ts.isJsxText(node) && HAS_WORDS.test(node.text.trim())) found = true;

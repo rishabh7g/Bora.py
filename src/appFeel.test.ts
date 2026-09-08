@@ -44,7 +44,9 @@ const perFile: ReadonlyArray<{ file: string; selector: string }> = [
  *  quoting the property can never be what a match passes on. */
 function ruleBodyOf(cssText: string, selector: string): string {
   const stripped = cssText.replace(/\/\*[\s\S]*?\*\//g, '');
-  const pattern = new RegExp(`(?:^|[\\s,{}])${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^{}]*)\\}`);
+  const pattern = new RegExp(
+    `(?:^|[\\s,{}])${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^{}]*)\\}`,
+  );
   const match = pattern.exec(stripped);
   return match?.[1] ?? '';
 }

@@ -163,11 +163,7 @@ export default function HomeMap({ curriculum, progress }: HomeMapProps) {
           design/brand/BRAND.md). No other screen repeats it. */}
       <Wordmark className="home-wordmark" />
 
-      <CurrentCard
-        current={current}
-        passed={passedCount}
-        total={modules.length}
-      />
+      <CurrentCard current={current} passed={passedCount} total={modules.length} />
 
       <div className="home-tiers">
         {curriculum.tiers.map((tier) => (

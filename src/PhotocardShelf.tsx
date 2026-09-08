@@ -29,16 +29,12 @@ export const MAX_DRAWN_CRACKS = 4;
  *  fact, and "mint" is the only superlative. */
 export function crackNote(cracks: number): string {
   if (cracks === 0) return t('shelf.card.captionMint');
-  return cracks === 1 ? t('shelf.card.captionOneCrack') : t('shelf.card.captionCracks', { count: cracks });
+  return cracks === 1
+    ? t('shelf.card.captionOneCrack')
+    : t('shelf.card.captionCracks', { count: cracks });
 }
 
-function ShelfCard({
-  module,
-  cracks,
-}: {
-  module: Module;
-  cracks: number;
-}) {
+function ShelfCard({ module, cracks }: { module: Module; cracks: number }) {
   const number = module.number;
   const drawnCracks = Math.min(cracks, MAX_DRAWN_CRACKS);
   return (
@@ -51,7 +47,11 @@ function ShelfCard({
         <span className="shelf-cardtitle">{module.photocard.title}</span>
         <span className="shelf-foot">{module.title}</span>
         {Array.from({ length: drawnCracks }, (_, index) => (
-          <span key={index} className={`shelf-crack shelf-crack--${index + 1}`} aria-hidden="true" />
+          <span
+            key={index}
+            className={`shelf-crack shelf-crack--${index + 1}`}
+            aria-hidden="true"
+          />
         ))}
       </a>
       <span className="shelf-note">{crackNote(cracks)}</span>

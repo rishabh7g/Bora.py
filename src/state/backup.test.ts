@@ -4,12 +4,7 @@
 import { describe, expect, it } from 'vitest';
 import { declareAttempt, declareMatch, viewHint } from './effortGate';
 import { BACKUP_FILENAME, parseBackup, serializeProgress } from './backup';
-import {
-  emptyProgress,
-  hasModuleProgress,
-  updateExerciseState,
-  type Progress,
-} from './progress';
+import { emptyProgress, hasModuleProgress, updateExerciseState, type Progress } from './progress';
 
 function workedProgress(): Progress {
   let p = emptyProgress();
@@ -77,9 +72,17 @@ describe('rejection — a bad file changes nothing', () => {
       version: 1,
       modules: { m1: { exercises: { e1: exercise }, passed: false, cardCracks: 0 } },
     });
-    expect(rejection(broken({ attempts: -1, hintsUnlocked: 0, matched: false, solutionRevealed: false }))).toContain('m1');
-    expect(rejection(broken({ attempts: 1, hintsUnlocked: 3, matched: false, solutionRevealed: false }))).toContain('m1');
-    expect(rejection(broken({ attempts: 1, hintsUnlocked: 1, matched: 'yes', solutionRevealed: false }))).toContain('m1');
+    expect(
+      rejection(
+        broken({ attempts: -1, hintsUnlocked: 0, matched: false, solutionRevealed: false }),
+      ),
+    ).toContain('m1');
+    expect(
+      rejection(broken({ attempts: 1, hintsUnlocked: 3, matched: false, solutionRevealed: false })),
+    ).toContain('m1');
+    expect(
+      rejection(broken({ attempts: 1, hintsUnlocked: 1, matched: 'yes', solutionRevealed: false })),
+    ).toContain('m1');
     expect(rejection(broken({ attempts: 1, hintsUnlocked: 1, matched: false }))).toContain('m1');
   });
 
@@ -96,7 +99,16 @@ it('keeps only the §4 fields — junk in the file is never stored', () => {
       nickname: 'not part of the shape',
       modules: {
         m1: {
-          exercises: { e1: { attempts: 2, hintsUnlocked: 1, matched: true, solutionRevealed: false, stuck: false, note: 'x' } },
+          exercises: {
+            e1: {
+              attempts: 2,
+              hintsUnlocked: 1,
+              matched: true,
+              solutionRevealed: false,
+              stuck: false,
+              note: 'x',
+            },
+          },
           passed: true,
           cardCracks: 1,
           extra: 42,
@@ -121,7 +133,9 @@ it('accepts a file without the ladder bookkeeping field, defaulting it', () => {
       version: 1,
       modules: {
         m1: {
-          exercises: { e1: { attempts: 1, hintsUnlocked: 0, matched: false, solutionRevealed: false } },
+          exercises: {
+            e1: { attempts: 1, hintsUnlocked: 0, matched: false, solutionRevealed: false },
+          },
           passed: false,
           cardCracks: 0,
         },
@@ -139,7 +153,9 @@ describe('a file exported by an earlier build', () => {
     version: 1,
     modules: {
       m1: {
-        exercises: { e1: { attempts: 3, hintsUnlocked: 2, matched: false, solutionRevealed: true } },
+        exercises: {
+          e1: { attempts: 3, hintsUnlocked: 2, matched: false, solutionRevealed: true },
+        },
         passed: false,
         cardCracks: 2,
       },
@@ -158,7 +174,10 @@ describe('a file exported by an earlier build', () => {
 
   it('takes an empty module entry without throwing, and calls it no work', () => {
     const progress = accepted(
-      JSON.stringify({ version: 1, modules: { m1: { exercises: {}, passed: false, cardCracks: 0 } } }),
+      JSON.stringify({
+        version: 1,
+        modules: { m1: { exercises: {}, passed: false, cardCracks: 0 } },
+      }),
     );
     expect(progress.modules.m1).toEqual({ exercises: {}, passed: false, cardCracks: 0 });
     expect(hasModuleProgress(progress, 'm1')).toBe(false);

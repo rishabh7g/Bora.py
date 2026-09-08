@@ -156,7 +156,9 @@ function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app-shell">
-      <main className="app-screen" ref={scroller}>{children}</main>
+      <main className="app-screen" ref={scroller}>
+        {children}
+      </main>
       <BottomNav screen={screen} />
     </div>
   );

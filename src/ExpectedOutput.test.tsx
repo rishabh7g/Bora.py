@@ -41,7 +41,9 @@ it('splits an output into whitespace runs, and never a newline after the last li
   // Authored outputs omit the program's final newline (#11/#12), so the block
   // must never draw one there.
   expect(lines[1].endsWithNewline).toBe(false);
-  expect(splitOutput('Jimin')).toEqual([{ chunks: [{ kind: 'text', value: 'Jimin' }], endsWithNewline: false }]);
+  expect(splitOutput('Jimin')).toEqual([
+    { chunks: [{ kind: 'text', value: 'Jimin' }], endsWithNewline: false },
+  ]);
 });
 
 it('marks every space and tab, and one line break per real newline', () => {
@@ -70,7 +72,9 @@ it('annotates rather than rewrites — the text stays byte-identical', () => {
   expect(textOf(html)).toBe(OUTPUT);
   expect(html).not.toContain('·');
   expect(html).not.toContain('⏎');
-  expect(textOf(renderToString(<OutputText output={OUTPUT} showWhitespace={false} />))).toBe(OUTPUT);
+  expect(textOf(renderToString(<OutputText output={OUTPUT} showWhitespace={false} />))).toBe(
+    OUTPUT,
+  );
 });
 
 it('hides every marker from assistive tech, so the output still reads aloud', () => {
@@ -118,7 +122,13 @@ it('persists the preference under its own key — never inside the progress back
   expect(parseWhitespaceVisible(null)).toBe(DEFAULT_WHITESPACE_VISIBLE);
   expect(parseWhitespaceVisible('yes')).toBe(DEFAULT_WHITESPACE_VISIBLE);
   const m1 = findModule(loadCurriculum(), 'm1')!;
-  const passed = updateExerciseState(emptyProgress(), m1.id, m1.exitExercise.id, true, declareMatch);
+  const passed = updateExerciseState(
+    emptyProgress(),
+    m1.id,
+    m1.exitExercise.id,
+    true,
+    declareMatch,
+  );
   expect(JSON.stringify(passed)).not.toContain('whitespace');
 });
 

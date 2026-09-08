@@ -111,4 +111,3 @@ it('states the audit’s real row count in docs/QA.md', () => {
   expect(count).toBeGreaterThan(0);
   expect(qa).toContain(`**${count} rows** today`);
 });
-

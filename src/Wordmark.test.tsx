@@ -25,9 +25,7 @@ it('draws the mark inline from the brand geometry, hidden from assistive tech', 
 });
 
 it('labels the map — the app root — with the lockup', () => {
-  const html = renderToString(
-    <HomeMap curriculum={loadCurriculum()} progress={emptyProgress()} />,
-  );
+  const html = renderToString(<HomeMap curriculum={loadCurriculum()} progress={emptyProgress()} />);
   expect(html).toContain('wordmark-dot');
   expect(html).toContain(`aria-label="${BRAND_NAME}"`);
 });

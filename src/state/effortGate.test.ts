@@ -16,7 +16,15 @@ import {
 
 const F = false; // formative (not exit)
 
-function climbTo(target: 'HINT1_AVAILABLE' | 'HINT1_SEEN' | 'HINT2_AVAILABLE' | 'HINT2_SEEN' | 'SOLUTION_AVAILABLE' | 'SOLUTION_REVEALED'): ExerciseState {
+function climbTo(
+  target:
+    | 'HINT1_AVAILABLE'
+    | 'HINT1_SEEN'
+    | 'HINT2_AVAILABLE'
+    | 'HINT2_SEEN'
+    | 'SOLUTION_AVAILABLE'
+    | 'SOLUTION_REVEALED',
+): ExerciseState {
   let s = initialExerciseState();
   s = declareAttempt(s, F); // HINT1_AVAILABLE
   if (target === 'HINT1_AVAILABLE') return s;
@@ -93,7 +101,12 @@ describe('the §5 ladder, transition by transition', () => {
 
 describe('rule: solution only via MATCHED or 3 declared attempts', () => {
   it('reveal is a no-op below the top of the ladder', () => {
-    for (const rung of ['HINT1_AVAILABLE', 'HINT1_SEEN', 'HINT2_AVAILABLE', 'HINT2_SEEN'] as const) {
+    for (const rung of [
+      'HINT1_AVAILABLE',
+      'HINT1_SEEN',
+      'HINT2_AVAILABLE',
+      'HINT2_SEEN',
+    ] as const) {
       const s = climbTo(rung);
       expect(revealSolution(s, F)).toBe(s); // unchanged — illegal transition
       expect(isSolutionVisible(revealSolution(s, F))).toBe(false);

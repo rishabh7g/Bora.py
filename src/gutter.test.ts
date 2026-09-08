@@ -66,7 +66,7 @@ describe('gutter tokens (#102)', () => {
     expect(contentMaxCount).toBeGreaterThanOrEqual(9);
   });
 
-  it('routes every screen\'s horizontal padding through var(--gutter), not a literal', () => {
+  it("routes every screen's horizontal padding through var(--gutter), not a literal", () => {
     const screenSelectors = [
       'home-screen',
       'mod-screen',
@@ -99,7 +99,7 @@ describe('wide content scrolls inside its own container, never the page (#102)',
     expect(exercise).toMatch(/\.ex-expected pre\s*\{[^}]*overflow-x:\s*auto;/s);
   });
 
-  it('the setup guide\'s terminal command scrolls itself', () => {
+  it("the setup guide's terminal command scrolls itself", () => {
     expect(setup).toMatch(/\.setup-term-command\s*\{[^}]*overflow-x:\s*auto;/s);
   });
 });

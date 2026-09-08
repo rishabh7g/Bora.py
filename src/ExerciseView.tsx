@@ -47,10 +47,7 @@ type RevealedFocus = 'hint1' | 'hint2' | 'solution' | 'matched' | null;
 /** The one secondary action the gate allows from here, or none at the top of
  *  the ladder (§5: an attempt declared past the solution unlocks nothing). */
 export type NextAction =
-  | { kind: 'attempt' }
-  | { kind: 'hint'; hint: 1 | 2 }
-  | { kind: 'solution' }
-  | null;
+  { kind: 'attempt' } | { kind: 'hint'; hint: 1 | 2 } | { kind: 'solution' } | null;
 
 export function nextActionOf(gate: GateState): NextAction {
   switch (gate) {
@@ -172,7 +169,9 @@ export default function ExerciseView({
             .filter((hintNumber) => state.hintsUnlocked >= hintNumber)
             .map((hintNumber) => (
               <div key={hintNumber} className="ex-hint">
-                <span className="ex-hint-label">{t('exercise.hint.label', { number: hintNumber })}</span>
+                <span className="ex-hint-label">
+                  {t('exercise.hint.label', { number: hintNumber })}
+                </span>
                 {/* Focusable programmatically only (-1): revealing it moves
                     focus here, but it never becomes a stop on the way down. */}
                 <p

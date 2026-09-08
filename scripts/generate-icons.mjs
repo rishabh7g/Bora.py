@@ -51,7 +51,9 @@ function findChrome() {
       ? execFileSync('ls', [cache], { encoding: 'utf8' })
           .split('\n')
           .filter((d) => d.startsWith('chromium'))
-          .map((d) => join(cache, d, 'chrome-linux', d.includes('headless') ? 'headless_shell' : 'chrome'))
+          .map((d) =>
+            join(cache, d, 'chrome-linux', d.includes('headless') ? 'headless_shell' : 'chrome'),
+          )
       : []),
   ];
   return candidates.find((p) => p && existsSync(p)) ?? null;

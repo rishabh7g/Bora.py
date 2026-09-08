@@ -62,10 +62,7 @@ it('opts the viewport into the safe area, so an inset is real on a notched phone
 it('keeps every manifest URL relative so a subpath deploy still works', () => {
   expect(manifest.start_url).toBe('.');
   expect(manifest.scope).toBe('./');
-  const urls = [
-    ...manifest.icons!.map((icon) => icon.src),
-    ...includedAssets,
-  ];
+  const urls = [...manifest.icons!.map((icon) => icon.src), ...includedAssets];
   for (const url of urls) expect(url.startsWith('/')).toBe(false);
 });
 

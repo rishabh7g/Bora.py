@@ -20,7 +20,11 @@ export function emptyProgress(): Progress {
   return { version: 1, modules: {} };
 }
 
-export function exerciseStateOf(progress: Progress, moduleId: string, exerciseId: string): ExerciseState {
+export function exerciseStateOf(
+  progress: Progress,
+  moduleId: string,
+  exerciseId: string,
+): ExerciseState {
   return progress.modules[moduleId]?.exercises[exerciseId] ?? initialExerciseState();
 }
 

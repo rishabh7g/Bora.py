@@ -30,7 +30,8 @@ export function stripPipelineKeys(raw: Dict): Dict {
     Object.entries((raw.modules as Record<string, Dict>) ?? {}).map(([id, module]) => {
       const stripped = without(module, PIPELINE_ONLY_MODULE_KEYS);
       const strip = (exercise: Dict) => without(exercise, PIPELINE_ONLY_EXERCISE_KEYS);
-      if (Array.isArray(stripped.exercises)) stripped.exercises = (stripped.exercises as Dict[]).map(strip);
+      if (Array.isArray(stripped.exercises))
+        stripped.exercises = (stripped.exercises as Dict[]).map(strip);
       if (stripped.exitExercise) stripped.exitExercise = strip(stripped.exitExercise as Dict);
       return [id, stripped];
     }),

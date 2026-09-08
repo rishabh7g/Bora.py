@@ -19,9 +19,7 @@ export const BACKUP_FILENAME = 'bora-py-progress.json';
 /** The only version this build reads and writes (ENGINEERING.md §4). */
 export const BACKUP_VERSION = 1;
 
-export type ImportResult =
-  | { ok: true; progress: Progress }
-  | { ok: false; error: string };
+export type ImportResult = { ok: true; progress: Progress } | { ok: false; error: string };
 
 /** The exported document is the stored Progress object verbatim — no wrapper,
  *  no metadata — so an export re-imports into the same shape it came from. */
