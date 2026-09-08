@@ -163,7 +163,7 @@ restore a placeholder or a one-sided screenshot as a "fix".
   selected and copied, read aloud by a screen reader, and machine-verified by
   `scripts/verify-outputs.py`; a picture of a terminal can do none of those and goes stale the
   moment a prompt or a version number changes. There is exactly one component that renders an
-  output block, `src/ExpectedOutput.tsx`, so the stepper's `IT PRINTS` and the checkpoint's
+  output block, `src/components/ExpectedOutput.tsx`, so the stepper's `IT PRINTS` and the checkpoint's
   `EXPECTED OUTPUT` are the same thing with a different heading — whitespace toggle included.
 - **A GUI screenshot ships only as a complete Windows + Mac pair, at the same step index on
   both paths** (#62). A picture on one path and a placeholder on the other tells the other
@@ -227,7 +227,7 @@ being overwritten here.
   visible text there is no accessible name unless one is written down: an icon-only link
   without a label is announced as "link" and nothing more, and the icon itself is `aria-hidden`
   so the name is announced once rather than twice. The current item also carries
-  `aria-current="page"`, and `src/bottomnav.css` selects the active ink off that same attribute
+  `aria-current="page"`, and `src/shell/bottomnav.css` selects the active ink off that same attribute
   — so what a screen reader announces and what the learner sees are one state, not two that can
   drift apart. On `#/setup`, `#/module/…` and the exercise routes none of the three is showing,
   so nothing is current; that is the honest answer, not a gap to paper over by highlighting Map.
@@ -279,7 +279,7 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
 - **The locked copy is the app explaining its own rules** ("Unlocks when every practice
   exercise is matched or its solution seen"), so it is held to the same floor as any other
   sentence, whatever the letter of the spec allows for disabled controls.
-- **Quiet text is a role, not a colour.** `src/tokens.css` names the roles the app uses —
+- **Quiet text is a role, not a colour.** `src/styles/tokens.css` names the roles the app uses —
   `--color-text-quiet`, `--color-text-locked`, `--color-text-accent` — each pinned to a step
   of the design system's ramps that clears AA at the sizes it is used at. Screens use the
   role, so the decision is made once instead of drifting across fifteen stylesheets (#46).
@@ -290,7 +290,7 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
 - **Links and ghost buttons are text, so they take the text step.** The design system paints
   `a` and `.btn-ghost` in `--color-accent`, and this app renders every one of them at
   13px/800 — the `← Map` back links, `Photocard shelf →`, `Settings →` — where 3.76:1 fails
-  (#55). `src/tokens.css` routes both to `--color-text-accent` (6.41:1). The line to hold is
+  (#55). `src/styles/tokens.css` routes both to `--color-text-accent` (6.41:1). The line to hold is
   the one above: small interactive text moves, display red does not. `.home-num--current`
   (24px/900), `.setup-step-num` (22px/900), the filled `.btn-primary` and the
   `:focus-visible` ring all keep `--color-accent` — and a bright ring around darker-red ink
@@ -299,7 +299,7 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
   itself fails.** The map's `UP NEXT` chip (`.tag-outline`) paints both its
   label and its 1px border in `--color-accent`, and only the label — 11px/400
   — is held to the 4.5:1 text floor and fails it at 3.76:1 (#59).
-  `src/tokens.css` moves the label to `--color-text-accent`. The border is a
+  `src/styles/tokens.css` moves the label to `--color-text-accent`. The border is a
   non-text UI boundary, held to 3:1, and `--color-accent` already clears that,
   so it stays: darkening only the label pairs a brighter border with darker
   ink, the same two-step shape `.tag-accent` and `.tag-neutral` already use
@@ -307,7 +307,7 @@ large (≥ 24px, or ≥ 18.66px at weight ≥ 700).
 - **Red behind text is the same rule as red as text.** The design system's checked segment
   (`.seg-opt:has(input:checked)`) paints `--color-accent` as the *background* under
   ground-coloured ink — 3.76:1 again, at 13px/700 on the setup guide's OS picker and 12px/700
-  on the `Show whitespace` toggle (#86). `src/tokens.css` moves only the background, to
+  on the `Show whitespace` toggle (#86). `src/styles/tokens.css` moves only the background, to
   `--color-accent-700`, so the pair is the same 6.41:1 as the accent text step. Selection is
   carried by *whether* the cell is filled and by the ink flipping to the ground, never by how
   bright the red is, so a darker fill reads as selected exactly as clearly.

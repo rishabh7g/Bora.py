@@ -1,0 +1,90 @@
+/* The app shell — the one frame every screen renders inside (#73).
+ *
+ * A full-height flex column in which only <main> scrolls. Everything the app
+ * ever has to show on more than one screen becomes another flex child of this
+ * column, so it sits *beside* the content rather than on top of it: no
+ * position: fixed, no z-index argument with CelebrationScreen, and no
+ * per-screen padding to compensate for an overlap that never happens.
+ *
+ * From 768px up (house UI standard §3, §4, #97) the column becomes a two-
+ * column grid — rail, then the scroll area — instead of a column with the
+ * nav as its last row. There is still exactly one scroll area at every band:
+ * .app-screen keeps owning it, in the grid's second column rather than the
+ * flex column's last-but-one row. src/shell/bottomnav.css owns what the nav looks
+ * like at each band; this file only owns where the shell places it.
+ *
+ * Layout only — no colour, no type. Those stay with the design system and
+ * src/styles/tokens.css.
+ */
+
+/* The chain the shell's height: 100% fallback is measured against. Without it
+   a percentage height has no containing block to resolve to and collapses. */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.app-shell {
+  /* Fallback first, for engines with no dvh. */
+  height: 100%;
+  /* Never 100vh: a mobile URL bar shrinks the visual viewport and 100vh does
+     not notice, so the last row of the column would sit under the bar. */
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  /* The column itself never scrolls; the screen inside it does. */
+  overflow: hidden;
+}
+
+/* Tablet and laptop (house UI standard §3, §4): rail beside the scroll area,
+   not a bar under it. Grid, not flex-row — src/shell/bottomnav.css's rail sets its
+   own grid-column: 1, so it paints first regardless of DOM order (it is
+   still the shell's LAST child; only where it is placed changes, not the
+   markup). --rail-width is declared once, in src/shell/bottomnav.css, and read
+   here so the column and the rail's own width can never drift apart. */
+@media (min-width: 768px) {
+  .app-shell {
+    display: grid;
+    grid-template-columns: var(--rail-width) 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
+  }
+}
+
+/* The one scroll area in the app: the <main> the shell wraps every screen in. */
+.app-screen {
+  flex: 1;
+  /* Without this a long screen refuses to shrink below its content and the
+     column grows past the viewport — the double-scrollbar bug. */
+  min-height: 0;
+  overflow-y: auto;
+  /* No pull-to-refresh, no scroll chaining out of the screen. */
+  overscroll-behavior: contain;
+  /* No `scroll-behavior: smooth` here, ever. App.tsx resets this element's
+     scrollTop on every route change (#85), and smooth would turn that reset
+     into an animation the learner never asked for — one that would then owe
+     prefers-reduced-motion an answer. Arriving on a screen is not a scroll. */
+}
+
+/* #102 (UI baseline §11): a flex/grid item's default min-width is auto, which
+   lets its content refuse to shrink below its intrinsic width and push the
+   page into horizontal scroll — a long unbroken code line inside a screen
+   that never asked to be that wide. Every screen is a direct child of
+   .app-screen, so this one rule lets all of them shrink to the viewport;
+   the genuinely wide children (code blocks, expected-output panes) scroll
+   inside their own container instead (src/components/code.css, src/screens/exercise.css). */
+.app-screen > * {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .app-screen {
+    grid-column: 2;
+    grid-row: 1;
+    /* Grid items default to stretch, but the min-height: 0 above is what lets
+       this cell shrink below its content instead of growing the grid row past
+       the viewport — the same double-scrollbar guard the flex column needed. */
+    min-height: 0;
+  }
+}

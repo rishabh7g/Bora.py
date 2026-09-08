@@ -24,11 +24,14 @@ Every runtime dependency is listed in `package.json`; nothing below is aspiratio
 - **TypeScript** — content schema benefits enormously from types
 - **Hand-written CSS — no CSS framework of any kind** — the design system vendored at
   `design/_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/styles.css` supplies the
-  ramps and the component classes (`.btn`, `.tag`, the themed focus ring); `src/main.tsx`
-  imports it, then `src/tokens.css`, then each screen brings its own stylesheet. 14 of
-  them live directly under `src/`: `src/tokens.css` for the shared roles, `src/app.css`
-  for the shell, and one per screen or component (`src/home.css`, `src/exercise.css`,
-  `src/shelf.css`, and so on). There is **one** palette, not a palette per tier: a tier's
+  ramps and the component classes (`.btn`, `.tag`, the themed focus ring); `src/app/main.tsx`
+  imports it, then `src/styles/tokens.css`, then each screen brings its own stylesheet. There
+  are 14 of them, each in the folder of the component that imports it (§10):
+  `src/styles/tokens.css` for the shared roles, `src/app/app.css` for the shell, and one per
+  screen or component (`src/screens/home.css`, `src/screens/exercise.css`,
+  `src/components/shelf.css`, and so on). `src/screens/exercise.css` is the one with two
+  importers: `ExerciseView` owns it, and `src/components/ExpectedOutput.tsx` renders inside
+  that screen's block. There is **one** palette, not a palette per tier: a tier's
   "era" is a text label authored in `content/curriculum.json` ("Wings era"), rendered as
   prose by `HomeMap`, and it recolours nothing
 - **`prismjs`** for Python syntax highlighting (§8) and **`lucide-react`** for the three
@@ -42,7 +45,7 @@ Every runtime dependency is listed in `package.json`; nothing below is aspiratio
   content; the whole curriculum works offline. Configured in one place,
   `src/pwa/manifest.ts` (§9)
 - **No router dependency** — ~5 screens switched on `window.location.hash` in
-  `src/App.tsx` (§7)
+  `src/app/App.tsx` (§7)
 
 ## 3. Content Model
 
@@ -153,13 +156,13 @@ Rules:
 - `SetupGuide` — OS picker (Windows/Mac), stepper with screenshots (bundled images). Module 0 is the setup guide and nothing else: it has no concept doc and no formative exercises, so it has **no `ModuleView` route** — its exit checkpoint is rendered inline at the end of the guide, and every `#/module/m0…` hash is canonicalised to `#/setup`
 - `Settings` — export/import progress, reset module
 
-**Route fallbacks (`src/App.tsx`):** there is exactly one fallback for a hash the app cannot honour — the Home map, the app's root, which always offers a way on. A hash the router does not recognise, a module id the curriculum does not have and an exercise id the module does not have all land there; a `Route` therefore carries the resolved `Module`/`Exercise`, not their ids, so no screen can be reached without real content behind it and no screen renders an "Unknown …" dead end. Gated-but-real routes are different, and fall back to the nearest screen that explains the gate: a locked module → the map (its row says why), a locked exit checkpoint → its module screen (its exit row says why).
+**Route fallbacks (`src/app/App.tsx`):** there is exactly one fallback for a hash the app cannot honour — the Home map, the app's root, which always offers a way on. A hash the router does not recognise, a module id the curriculum does not have and an exercise id the module does not have all land there; a `Route` therefore carries the resolved `Module`/`Exercise`, not their ids, so no screen can be reached without real content behind it and no screen renders an "Unknown …" dead end. Gated-but-real routes are different, and fall back to the nearest screen that explains the gate: a locked module → the map (its row says why), a locked exit checkpoint → its module screen (its exit row says why).
 
 **Expected-output block detail:** render with a "show whitespace" toggle (·  for spaces, ⏎ for newlines). The #1 beginner frustration with output matching is invisible trailing spaces/newlines — surface it. The concept doc for Module 1 teaches "outputs must match exactly"; how to check is the block's own legend, shown when the toggle is on — said once, where the control is.
 
 ## 8. Syntax Highlighting
 
-- `prismjs` at runtime, in `src/PythonCode.tsx`. Pre-rendering the highlighted HTML at
+- `prismjs` at runtime, in `src/components/PythonCode.tsx`. Pre-rendering the highlighted HTML at
   build time was the other option and was not taken: the code blocks are small and few,
   so the runtime cost never justified a second toolchain
 - Python-only grammar: `prismjs/components/prism-python` is the single grammar imported,
@@ -175,8 +178,14 @@ Rules:
 ## 10. Build & Delivery
 
 - Repo layout:
-  - `/src` — app
-  - `/src/tokens.css` — app text roles on top of the design system's ramps (`--color-text-quiet`,
+  - `/src` — app, in feature folders (#133): `src/app/` (entry, shell composition, error
+    boundary, `Notice`), `src/shell/` (bottom nav, wordmark), `src/screens/` (one per route),
+    `src/components/` (shared presentational pieces), `src/styles/` (the shared
+    `src/styles/tokens.css` and the guards that read every stylesheet), `src/state/`,
+    `src/content/`, `src/strings/`, `src/pwa/`, `src/art/`, and `src/guards/` for the
+    repo-wide tests that police no single module. Every test and stylesheet sits beside the
+    module it belongs to; only `src/vite-env.d.ts` sits at the top of `src/`
+  - `/src/styles/tokens.css` — app text roles on top of the design system's ramps (`--color-text-quiet`,
     `--color-text-locked`, `--color-text-accent`). `design/_ds/…/styles.css` stays the system's
     source of truth and is never edited here; this file only decides which step each job uses,
     once, so screens do not each pick a ramp step and drift (DESIGN.md §7a). When a *system*

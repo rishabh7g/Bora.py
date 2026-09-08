@@ -1,0 +1,164 @@
+/* App-level text roles, layered on the design system's ramps.
+ *
+ * design/_ds/…/styles.css stays the source of truth for the *system* (its ramps
+ * are generated in OKLCH on one shared lightness scale, so a step is never
+ * retuned here). What lives here is one step up: which step of a ramp each job
+ * in this app uses. A role is named after the job, so the decision is made once
+ * and every screen inherits it — the alternative is fifteen screens each
+ * spelling out a ramp step and drifting apart (#46).
+ *
+ * Every role below is chosen against the page ground (--color-bg, #f3f2f2) and
+ * has to clear WCAG 2.2 AA at the sizes the app actually uses it at: 4.5:1 for
+ * normal text, 3:1 only where the type is large (>= 24px, or >= 18.66px at
+ * weight >= 700). `node scripts/contrast-audit.mjs` measures it.
+ */
+/* Gutters and the reading measure (#102, UI baseline §11 "Gutters, spacing
+ * and content width"). Three bands, matched to the breakpoints #97 already
+ * introduced (src/styles/layout.test.ts) — a phone gutter, a tablet/laptop gutter,
+ * and a desktop gutter, so the same screen never has one fixed padding at
+ * every width.
+ *
+ * --content-max is the reading measure: 720px, roughly 75 characters at
+ * 16px. It caps prose — ledes, prompts, settings copy — never a table,
+ * chart or dashboard, none of which this app has today. Anything genuinely
+ * wide (a code block, an expected-output pane) stays inside its own
+ * scrolling container instead of widening the page (src/components/code.css,
+ * src/screens/exercise.css).
+ */
+:root {
+  --gutter-sm: 16px;
+  --gutter-md: 24px;
+  --gutter-lg: 32px;
+  --gutter: var(--gutter-sm);
+  --content-max: 720px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: var(--gutter-md);
+  }
+}
+
+/* The body-text floor (#106, UI baseline §7 "Touch, zoom and app-feel" —
+ * the compensating obligations for turning zoom off once the app is
+ * installed, StandaloneZoomLock #98): "Body text may not go below 16px. No
+ * exceptions, including captions inside cards." Every stylesheet under
+ * src/ (and the design system's shared components the app actually
+ * renders — body, .btn, .input, .seg-opt, figcaption, .tag) is floored at
+ * this token or higher.
+ *
+ * Two categories are kept below it, each on purpose, never silently (§1).
+ * src/styles/textFloor.test.ts is the mechanical proof: an explicit allow-list
+ * rather than a per-line comment scan (the "simpler" option the issue
+ * names):
+ *
+ *   1. Kickers — the uppercase, letter-spacing >= 0.08em micro-labels and
+ *      section eyebrows (home-kicker, ex-section-title, setup-look-label,
+ *      the "HINT 1" rung badge, the model-solution COPY button, …). These
+ *      are wayfinding furniture, not supporting prose — the one exception
+ *      §7 itself names.
+
+ *   2. Verbatim monospace content shown as reference rather than checked
+ *      against — a worked-example's code and output, the setup guide's
+ *      terminal command, and the backup filename. This is exact program
+ *      text, not English the app writes; enlarging it to 16px would widen
+ *      every code line, a redesign of its own and not this issue's job.
+ *      The expected-output pane is NOT in this category and IS floored:
+ *      it is the text a learner reads character-by-character to check her
+ *      own work against, which makes it the most load-bearing text on the
+ *      screen, not the least.
+ *
+ * Nothing else may sit below this token. src/styles/textFloor.test.ts fails on
+ * any src/*.css or design system rule under 16px that is not on its
+ * allow-list, naming the file and selector.
+ */
+:root {
+  --text-body-min: 16px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gutter: var(--gutter-lg);
+  }
+}
+
+:root {
+  /* Quiet supporting text — era labels, anchor lines, captions, notes, ledes.
+     Used at 10.5–13px all over the app, so the "large text only" steps are not
+     available to it: --color-neutral-600 is 3.85:1 and fails, --color-neutral-700
+     is 5.83:1 and clears it with room to spare. */
+  --color-text-quiet: var(--color-neutral-700);
+
+  /* Locked and unearned states (#45). The same step as quiet text today, and
+     deliberately a separate role: "this is gated" and "this is secondary" are
+     different jobs and may not always want the same ink. Locked reads as locked
+     through this ink plus its chip and its markup — never through opacity, which
+     multiplies every colour inside the element (DESIGN.md §7a). */
+  --color-text-locked: var(--color-neutral-700);
+
+  /* Accent-red type below the large-text threshold — kickers, small labels.
+     Brand red itself (--color-accent, #ec3013) is 3.76:1 on the ground, which is
+     enough for a big numeral and not for an 11px kicker. --color-accent-700 is
+     6.41:1 and is the step brand/BRAND.md already sets type in (the wordmark's
+     ".py"), so the mark and the chrome stay in one family. Large accent numerals
+     keep --color-accent: they clear the 3:1 that applies to them, and that is
+     where the poster red belongs. */
+  --color-text-accent: var(--color-accent-700);
+}
+
+/* Interactive text — every link and ghost button (#55).
+ *
+ * The design system paints `a` and `.btn-ghost` in --color-accent, and this app
+ * renders all of them at 13px/800 (the "← Map" back links, "Photocard shelf →",
+ * "Settings →"), where 3.76:1 is short of the 4.5:1 AA asks of normal text. They
+ * join --color-text-accent, the same 6.41:1 step the kickers and the wordmark's
+ * ".py" already use, so the chrome reads as one family and the type is legible
+ * at the size it is actually set at.
+ *
+ * Scope is deliberate: only small interactive text moves. --color-accent stays
+ * the display red for large accent numerals (.home-num--current at 24px/900,
+ * .setup-step-num at 22px/900, which clear the 3:1 that applies to them), for
+ * the filled .btn-primary, and for the :focus-visible ring — a bright ring
+ * around darker-red ink stays plainly distinguishable from the label itself.
+ * Hover and active keep the system's accent tints, untouched.
+ *
+ * A rule, not a token, because the decision being made is "which role does this
+ * component take", and the components are the design system's own. Rows for
+ * these selectors live in scripts/contrast-audit.mjs.
+ */
+a,
+.btn-ghost {
+  color: var(--color-text-accent);
+}
+
+/* The checked segment (#86) — the OS picker on the setup guide and the "Show
+ * whitespace" toggle on every expected-output block, the two places the design
+ * system's .seg is used.
+ *
+ * The system paints the checked option `background: var(--color-accent); color:
+ * var(--color-bg)`, which is the same brand red the links took (#55) with the
+ * roles swapped: red behind ground-coloured ink instead of red as ink. The
+ * ratio is the same either way — 3.76:1 — and the labels are 13px/700 (setup)
+ * and 12px/700 (whitespace toggle), both under the 18.66px that would buy them
+ * the 3:1 large-text floor, so both fail the 4.5:1 normal text needs.
+ *
+ * Only the background moves, to --color-accent-700: the ground-on-accent-700
+ * pair is the same 6.41:1 as the accent-700-on-ground of --color-text-accent,
+ * so the checked segment lands in the family the kickers, the links and the
+ * wordmark's ".py" are already in. The ink stays --color-bg, the system's.
+ *
+ * Selection stays unmistakable: a solid dark-red cell against an unfilled one,
+ * 6.41:1 between the two backdrops, and the ink flips from --color-text to the
+ * ground. The state was never carried by the *brightness* of the red. Hover on
+ * the unchecked option and the inset :focus-visible ring keep the system's
+ * accent, untouched — and the ring, which used to sit at 1:1 inside an
+ * identically-red fill, now reads against the fill it is drawn on.
+ *
+ * A rule rather than a token, alongside the links and .tag-outline above: the
+ * decision is which step of the ramp this system component paints in, and it is
+ * made once here so a third .seg cannot reintroduce 3.76:1. Rows for both
+ * states live in scripts/contrast-audit.mjs.
+ */
+.seg-opt:has(input:checked) {
+  background: var(--color-accent-700);
+}

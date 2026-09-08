@@ -1,0 +1,287 @@
+/* SetupGuide — Modernist system. Every value is a design token or a
+   prototype-specified structural measure; radius is 0 everywhere by token.
+   Structure mirrors design/PyLearn Prototype.dc.html → Setup guide screen.
+   Interactive chrome (.btn, .seg, .tag) comes from the design system, so the
+   themed hover / pressed / :focus-visible states are the shared ones. */
+
+.setup-screen {
+  width: min(780px, 100%);
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) var(--gutter) 0;
+}
+
+.setup-kicker {
+  margin: 0 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-text-accent);
+}
+
+.setup-title {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 40px);
+  line-height: 1.05;
+}
+
+.setup-intro {
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: var(--content-max);
+  color: var(--color-neutral-800);
+}
+
+/* — OS picker — */
+.setup-os {
+  margin: 26px 0 0;
+  padding: 0;
+  border: 0;
+}
+.setup-os-legend {
+  padding: 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.setup-os .seg {
+  margin-top: 10px;
+}
+/* ≥44px hit targets — the design system's default segment is denser. */
+.setup-os .seg-opt {
+  min-height: 44px;
+  padding-inline: 20px;
+  font-weight: 700;
+}
+/* Section heading over the stepper (#88) — the H2 the five step H3s hang off,
+   so the screen's outline descends without a gap. Same treatment as the other
+   two content screens' section headings (.mod-section-title, .ex-section-title):
+   small uppercase heading over a 2px rule. Full-strength heading ink from the
+   design system, so it needs no contrast-audit row of its own — the audited
+   rows are the quiet, dimmed and interactive styles. */
+.setup-section-title {
+  margin: 36px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-top: 2px solid var(--color-divider);
+  padding-top: 16px;
+}
+
+/* Checked-against line (#69) — the prose's provenance date, beside the
+   screenshot it dates, inside that step's disclosure. Quiet supporting text:
+   --color-text-quiet is a §7a role token that clears AA at this size. */
+.setup-checked {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: var(--content-max);
+  color: var(--color-text-quiet);
+}
+
+/* — stepper — */
+.setup-steps {
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.setup-step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+.setup-step-num {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--color-accent);
+}
+.setup-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.setup-step-title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.25;
+}
+.setup-step-text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-neutral-800);
+}
+
+/* The exact thing to type. Text, not an image — selectable and copyable (#61).
+   What the command *prints* is not styled here at all: it is the shared
+   expected-output block (src/components/ExpectedOutput.tsx, styles in exercise.css), so the
+   stepper and the checkpoint below it cannot drift apart. */
+.setup-term {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--color-divider);
+  padding: 12px 14px;
+}
+.setup-term-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--color-text-quiet);
+}
+.setup-term-command {
+  margin: 0;
+  font:
+    600 14px/1.7 ui-monospace,
+    'Cascadia Mono',
+    Menlo,
+    Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  /* #102: belt-and-braces alongside the wrap above — see src/components/code.css. */
+  overflow-x: auto;
+}
+
+/* Screenshots — local files only, full width of the step column, and only ever
+   as a complete Windows + Mac pair (#62; src/content/setup.ts rule 2). */
+.setup-shot {
+  margin: 2px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.setup-shot-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--color-divider);
+}
+.setup-shot-scroll:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.setup-shot img {
+  display: block;
+  /* Never narrower than this: below it the text in a screenshot stops being
+     readable, so the box scrolls instead of shrinking the image. */
+  min-width: 520px;
+  width: 100%;
+  height: auto;
+}
+.setup-shot figcaption {
+  font-size: 16px;
+  color: var(--color-text-quiet);
+}
+/* "What you'll see" — one closed door per step, holding the window in words
+   (#62) and the screenshot where a pair exists. The summary wears the
+   secondary button's shape from the same screen, plus the one thing a
+   disclosure needs that a button does not: a chevron, down when closed and up
+   when open. */
+.setup-more {
+  margin: 0;
+}
+.setup-more-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--color-text);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.setup-more-summary::-webkit-details-marker {
+  display: none;
+}
+.setup-more-summary::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  flex: none;
+}
+.setup-more[open] .setup-more-summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+.setup-more-summary:hover {
+  background: color-mix(in srgb, var(--color-text) 5%, transparent);
+}
+.setup-more-summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.setup-more > :not(summary) {
+  margin-top: 12px;
+}
+/* Markers are the browser's own `square` — no pseudo-element content, which
+   would reach the accessibility tree (see the #14 note in ExpectedOutput.tsx). */
+.setup-look-list {
+  margin: 0;
+  padding-left: 18px;
+  list-style: square;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-neutral-800);
+}
+.setup-look-list::marker,
+.setup-look-list li::marker {
+  color: var(--color-text-accent);
+}
+
+/* — exit checkpoint — */
+.setup-exit {
+  margin-top: 20px;
+  border: 2px solid var(--color-text);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.setup-exit-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.setup-exit-prompt {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: var(--content-max);
+}
+/* The shared block brings its own top margin for the exercise screen's flow; in
+   both of this screen's stacks the gap comes from the flex container instead. */
+.setup-exit .ex-expected,
+.setup-step .ex-expected {
+  margin-top: 0;
+}
+.setup-exit-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.setup-exit-passed {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 16px;
+  font-weight: 700;
+}
