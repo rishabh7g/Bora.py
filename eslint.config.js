@@ -24,6 +24,13 @@ export default tseslint.config(
       ecmaVersion: 2023,
       globals: globals.browser,
     },
+    rules: {
+      // tsconfig.json sets noUnusedParameters, and tsc already exempts the
+      // leading underscore; eslint is told the same convention so a parameter
+      // kept only to document a signature (ErrorBoundary.componentDidCatch) is
+      // not reported by one gate and accepted by the other.
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
   },
   {
     // content/lint.ts and tools/ hold the build-time CLIs the npm scripts run, and
@@ -35,11 +42,14 @@ export default tseslint.config(
   },
   {
     // scripts/ holds the .mjs harnesses (icon generation, contrast audit, headless probes).
+    // They run in Node, but the callbacks they hand to Playwright's page.evaluate() are
+    // serialised and run inside the page, so `document` and `getComputedStyle` are real
+    // there and both global sets apply.
     files: ['scripts/**/*.mjs'],
     extends: [js.configs.recommended, prettier],
     languageOptions: {
       ecmaVersion: 2023,
-      globals: globals.node,
+      globals: { ...globals.node, ...globals.browser },
     },
   },
 );

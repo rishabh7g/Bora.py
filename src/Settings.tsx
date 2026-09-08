@@ -97,6 +97,10 @@ export default function Settings({ curriculum, progress, onImport, onResetModule
             ? noticeRef.current
             : resetButtons.current.get(focusAfter.moduleId);
     target?.focus();
+    // Same one-shot focus request as ExerciseView's `revealed`: clearing it is what
+    // lets the same target be asked for twice, and the extra render it causes is the
+    // last one — the effect returns early on it. See the note there.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFocusAfter(null); // one move per swap
   }, [focusAfter]);
 

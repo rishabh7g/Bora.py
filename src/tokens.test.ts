@@ -61,11 +61,21 @@ it('measures the icon-only nav items at the non-text threshold (#76)', () => {
   // held to the 3:1 of SC 1.4.11, sourced from the icon's own stroke — the same
   // text/non-text line DESIGN.md §7a already draws for .tag-outline's border.
   expect(audit).toContain("const NON_TEXT = 'non-text'");
-  const navRows = (audit.match(/^\s*\[.*\.bottomnav-item.*$/gm) ?? []).map((row) => row.trim());
-  expect(navRows).toHaveLength(2);
-  expect(navRows.every((row) => row.endsWith('NON_TEXT],'))).toBe(true);
-  expect(navRows[0]).toContain('[aria-current="page"]');
-  expect(navRows[1]).toContain(':not([aria-current="page"])');
+  // A row is read from its selector to the end of its entry, not as a line:
+  // prettier wraps an entry that passes the print width over five lines, and
+  // whether it did is not what this test is about.
+  const rowFor = (selector: string) => {
+    const start = audit.indexOf(`'${selector}'`);
+    expect(start, `no audit row for ${selector}`).toBeGreaterThan(-1);
+    return audit.slice(start, audit.indexOf('],', start));
+  };
+  const current = '.bottomnav-item[aria-current="page"] .bottomnav-icon';
+  const inactive = '.bottomnav-item:not([aria-current="page"]) .bottomnav-icon';
+  expect(rowFor(current)).toContain('NON_TEXT');
+  expect(rowFor(inactive)).toContain('NON_TEXT');
+  // Both ink states, and only those two: a third nav row would be one nobody
+  // decided the threshold for.
+  expect(audit.match(/\.bottomnav-item/g)).toHaveLength(2);
   // The ink measured is SVG paint (lucide's stroke="currentColor"), and the row
   // says which threshold it applied.
   expect(audit).toContain('nonText ? [style.stroke, style.fill, style.color] : [style.color]');

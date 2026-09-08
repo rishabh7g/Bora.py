@@ -163,6 +163,11 @@ Rules:
     (#55) — never as an edit to the vendored stylesheet and never as a hex in a screen's CSS
   - `/content` — curriculum TS/JSON files (one file per module)
   - `/content/lint.ts` — authoring-rule checks, runs in CI
+- Gates: `npm run lint` (eslint), `npm run format` (prettier), `npm run typecheck` and
+  `npm test`. `eslint.config.js` takes the recommended JS set, typescript-eslint and
+  react-hooks, with `eslint-config-prettier` last so no rule fights the formatter;
+  `.prettierrc.json` and `.prettierignore` say what prettier owns. Both are copied from
+  rung so the sibling frontends fail the same way (claude-setup `docs/repo-standards.md`)
 - CI: typecheck + content lint + build → deploy to static host on push
 - No analytics, no error tracking (single known user; she can screenshot problems)
 

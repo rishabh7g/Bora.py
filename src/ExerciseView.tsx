@@ -97,6 +97,11 @@ export default function ExerciseView({
           ? solutionRef.current
           : hintRefs.current[revealed];
     target?.focus();
+    // `revealed` is a one-shot request to move focus, not state the UI paints, and
+    // clearing it here is what makes revealing the same hint twice move focus twice.
+    // The cascade the rule warns about terminates at once: this render sets it to
+    // null, and the effect then returns early. Nothing else re-renders.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRevealed(null); // one move per reveal — never on a re-render after it
   }, [revealed]);
 
