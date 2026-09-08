@@ -112,6 +112,31 @@ it('measures both segment states, as text, in the audit (#86)', () => {
   expect(segRows.every((row) => !row.includes('NON_TEXT'))).toBe(true);
 });
 
+it('measures every screen-prefixed row on that screen’s fixture (#138)', () => {
+  // A row naming a fixture whose page cannot contain its selector matches
+  // nothing and reports MISSING on every run, which is how the audit spent
+  // months exiting FAIL: `.home-row--open .home-rowanchor` was measured on
+  // `module-m1`, a page with no `.home-row` on it at all. The class prefixes
+  // below belong to exactly one screen's stylesheet, so the fixture that opens
+  // that screen is the only one that can paint them.
+  const screenOf: Record<string, string> = {
+    home: 'home',
+    shelf: 'shelf',
+    mod: 'module',
+    set: 'settings',
+    setup: 'setup',
+  };
+  const rows = audit.match(/^\s*\['[^']+',\s*'[^']+'/gm) ?? [];
+  expect(rows.length).toBeGreaterThan(0);
+  for (const row of rows) {
+    const [fixture, selector] = row.match(/'([^']+)'/g)!.map((q) => q.slice(1, -1));
+    const prefix = selector.match(/^\.([a-z]+)-/)?.[1];
+    const screen = prefix === undefined ? undefined : screenOf[prefix];
+    if (screen === undefined) continue;
+    expect(fixture.startsWith(screen), `${selector} cannot be painted by ${fixture}`).toBe(true);
+  }
+});
+
 it('states the audit’s real row count in docs/03-qa.md', () => {
   // The prose is the only place the count lives, so it goes stale silently:
   // #86 found ".seg-opt is not one of the 54 rows" by reading ROWS, not the doc.
