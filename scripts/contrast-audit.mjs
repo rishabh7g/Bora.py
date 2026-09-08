@@ -124,7 +124,10 @@ const ROWS = [
   ['home-fresh', '.home-row--open .home-rowtitle', 'open module title (control)'],
   // #46 — quiet supporting text and small accent labels
   ['home-fresh', '.home-current-kicker', 'checkpoints-passed kicker'],
-  ['module-m1', '.home-row--open .home-rowanchor', 'passed row anchor'],
+  // A passed row's anchor is painted by HomeMap, so it is measured on the home
+  // screen with a module behind her — never on `module-m1`, whose page has no
+  // `.home-row` on it at all and so reported this row MISSING every run (#138).
+  ['home-m0', '.home-row--open .home-rowanchor', 'passed row anchor'],
   ['home-fresh', '.home-tier .home-tierera', 'era label'],
   ['home-fresh', '.home-lede', 'current card anchor'],
   ['home-fresh', '.home-num--current', 'current module numeral (accent, large)'],
@@ -222,6 +225,8 @@ async function passModule0(hash) {
 
 const FIXTURES = {
   'home-fresh': () => open('#/'),
+  // The map with one module behind her: only a passed row keeps its anchor.
+  'home-m0': () => passModule0('#/'),
   'shelf-fresh': () => open('#/shelf'),
   // An earned card, for its caption.
   'shelf-m0': () => passModule0('#/shelf'),
