@@ -44,8 +44,10 @@ and it is why progress is checkpoint-based with no streaks, XP or decay. Spec:
 
 ## What a newcomer gets wrong
 
-- **`docs/ENGINEERING.md` §2 says Tailwind. There is no Tailwind** — styling is 14
-  hand-written stylesheets in `src/`, with the palette in `src/tokens.css`.
+- **There is no CSS framework** — styling is 14 hand-written stylesheets in `src/`, over
+  the vendored design system in `design/_ds/…/styles.css`, with the app's text roles in
+  `src/tokens.css`. A tier's "era" is a text label, not a per-tier palette.
+  (`docs/ENGINEERING.md` §2 named Tailwind until #132; it no longer does.)
 - **Never hardcode a user-visible string.** Shell copy is `t('home.lede')` from
   `src/strings/`, keys listed once in `src/strings/stringsKeys.ts`; `t()` throws instead of
   falling back, and `tools/strings-check.ts` fails the build on a missing, empty, extra or
