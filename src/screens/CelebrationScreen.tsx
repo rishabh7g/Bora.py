@@ -1,6 +1,6 @@
 // CelebrationScreen — the one red field in the system (design/README.md;
-// DESIGN.md §4 "celebration screens on checkpoint pass — confetti, one playful
-// line, nothing more"; ENGINEERING.md §11 step 8; prototype:
+// 01-design.md §4 "celebration screens on checkpoint pass — confetti, one playful
+// line, nothing more"; 02-engineering.md §11 step 8; prototype:
 // design/PyLearn Prototype.dc.html → Celebration screen).
 //
 // Shown once, on the edge where a module's exit exercise transitions to matched

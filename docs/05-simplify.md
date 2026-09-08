@@ -148,9 +148,9 @@ Target: ≤ 1.2 screens with two earned. Strings: 3 retired.
   `brand` and `inputsToType` (no reader anywhere in `src/`) come off the emitted JSON;
   the authored file keeps them for the lint.
 - **Docs and captures.** `README.md` still says "Implementation in progress";
-  `docs/qa/screenshots` holds 54 files, 30 of them `fix-NN-before/after` pairs of UI these
+  `docs/screenshots` holds 54 files, 30 of them `fix-NN-before/after` pairs of UI these
   passes retire — keep the nine current 390px captures, recapture them at 360px after each
-  pass, delete the rest (rung 425c23f). DESIGN.md §7c's four rules stay; the paragraphs of
+  pass, delete the rest (rung 425c23f). 01-design.md §7c's four rules stay; the paragraphs of
   rationale under each move to the commit that made them.
 - **Tests.** 2,825 lines of screen render tests against 1,441 lines of state, content and
   PWA tests. Each pass rewrites the render tests it touches down to the contract (route,
@@ -164,7 +164,7 @@ Target: ≤ 1.2 screens with two earned. Strings: 3 retired.
 - Every rule in `state/effortGate.ts`, `state/gating.ts`, `state/progress.ts`. No new
   progress version is needed: nothing persisted moves.
 - The content schema and the authored curriculum, except the intro cap in pass 4.
-- The nav's three destinations and its four rules (DESIGN.md §7c).
+- The nav's three destinations and its four rules (01-design.md §7c).
 - The design package under `design/`, kept as delivered.
 
 ## Order and verification
@@ -173,7 +173,7 @@ Target: ≤ 1.2 screens with two earned. Strings: 3 retired.
 
 Each pass is one commit on `claude/bora-simplification-plan-uxk3qa`; its body leads with the
 before/after measurement at 360px and lists the retired string keys. The measure script is
-`scripts/measure-screens.mjs`; the recaptured screens are `docs/qa/screenshots/360-*.png`.
+`scripts/measure-screens.mjs`; the recaptured screens are `docs/screenshots/360-*.png`.
 
 ## Done — measured 2026-09-06, after all six passes
 

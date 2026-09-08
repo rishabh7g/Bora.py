@@ -21,7 +21,7 @@ export type ApplyTransition = (
  *
  *  It is a report, NOT a cancellation: the read is still awaited afterwards.
  *  Substituting empty progress on timeout would let the next write-through
- *  overwrite weeks of real progress, which is exactly what ENGINEERING.md §4
+ *  overwrite weeks of real progress, which is exactly what 02-engineering.md §4
  *  forbids — losing browser storage must not lose progress. */
 export const PROGRESS_LOAD_TIMEOUT_MS = 5000;
 
@@ -33,7 +33,7 @@ export type UseProgress = {
   storageStalled: boolean;
   apply: ApplyTransition;
   /** Replace the whole stored state — the import half of the backup story
-   *  (ENGINEERING.md §4). The caller validates the file first
+   *  (02-engineering.md §4). The caller validates the file first
    *  (state/backup.parseBackup); this only writes. */
   replaceAll: (next: Progress) => void;
   /** Forget one module (Settings' per-module reset), written through like

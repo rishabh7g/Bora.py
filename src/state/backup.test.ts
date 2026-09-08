@@ -1,4 +1,4 @@
-// Backup file contract — ENGINEERING.md §4: the export/import file is the
+// Backup file contract — 02-engineering.md §4: the export/import file is the
 // only backup ("losing browser storage must not lose weeks of progress"), so
 // the pair must round-trip exactly and a bad file must change nothing.
 import { describe, expect, it } from 'vitest';

@@ -1,5 +1,5 @@
 // ExpectedOutput contract — the one owner of the expected-output block, and of
-// the "show whitespace" toggle it carries (ENGINEERING.md §7, §12).
+// the "show whitespace" toggle it carries (02-engineering.md §7, §12).
 //
 // The block is server-rendered here, so the toggle cannot be clicked; the two
 // rendering modes are asserted through the exported `OutputText`, and the
@@ -133,7 +133,7 @@ it('persists the preference under its own key — never inside the progress back
 });
 
 it('Module 1 says outputs match exactly; the block, not the prose, explains the toggle', () => {
-  // ENGINEERING.md §7 — the rule is taught once, in the concept doc; how to
+  // 02-engineering.md §7 — the rule is taught once, in the concept doc; how to
   // check it is the block's own legend, one tap away on every expected output.
   const intro = findModule(loadCurriculum(), 'm1')!.concept.intro;
   expect(intro).toContain('match exactly');

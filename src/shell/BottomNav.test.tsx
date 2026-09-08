@@ -102,7 +102,7 @@ it('sits in the shell as a flex child, never as a bar floating over the screen',
   expect(css).toMatch(/flex:\s*none/);
   expect(css).not.toMatch(/position:\s*fixed/);
   expect(css).not.toMatch(/z-index/);
-  // Modernist system: radius 0 (design/README.md, DESIGN.md §7a).
+  // Modernist system: radius 0 (design/README.md, 01-design.md §7a).
   expect(css).not.toMatch(/border-radius/);
 });
 
@@ -168,7 +168,7 @@ it('takes its ink from the text roles, and accents exactly the current item', ()
   const item = /\.bottomnav-item\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
   const current = /\.bottomnav-item\[aria-current='page'\]\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
   expect(item).toContain('color: var(--color-text-quiet)');
-  // The accessible accent step (6.41:1), not the display red (DESIGN.md §7a).
+  // The accessible accent step (6.41:1), not the display red (01-design.md §7a).
   expect(current).toContain('color: var(--color-text-accent)');
   expect(css).not.toMatch(/#[0-9a-f]{3,8}\b/i);
 });

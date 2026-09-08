@@ -1,4 +1,4 @@
-// HomeMap — the Home / Map screen (ENGINEERING.md §7, §11 step 4; DESIGN.md
+// HomeMap — the Home / Map screen (02-engineering.md §7, §11 step 4; 01-design.md
 // §3.1, §6, §7; prototype: design/PyLearn Prototype.dc.html → Home map).
 //
 // The checkpoint she is on leads: one card at the top of the body — number,
@@ -8,7 +8,7 @@
 // IS that module), and a locked row is one title line.
 //
 // Progress is shown as checkpoints passed only — never days, streaks, XP or a
-// completion percentage (DESIGN.md §3.1). Tiers and modules come from
+// completion percentage (01-design.md §3.1). Tiers and modules come from
 // curriculum.json via content/load; every state decision is read from the §6
 // owner src/state/gating.ts. This component only renders.
 import { flatModules } from '../content/load';

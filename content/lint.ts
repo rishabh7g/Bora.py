@@ -1,7 +1,7 @@
-// Content lint — enforces the ENGINEERING.md §3 authoring rules against
+// Content lint — enforces the 02-engineering.md §3 authoring rules against
 // content/curriculum.json. Runs standalone (`npm run lint:content`) and in CI.
 //
-// Rules (ENGINEERING.md §3, DESIGN.md §3.4 + §4):
+// Rules (02-engineering.md §3, 01-design.md §3.4 + §4):
 // 1. `expectedOutput` present and deterministic — no `random`, `datetime`,
 //    or `time.` in solutions.
 // 2. Any exercise whose solution uses `input()` defines `inputsToType`, and

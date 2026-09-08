@@ -1,5 +1,5 @@
-// SetupGuide — the Module 0 screen (ENGINEERING.md §7 `SetupGuide`, §12
-// "motivation cliff at Module 0"; DESIGN.md §6 Tier 0, §7 "Setup guide (Module
+// SetupGuide — the Module 0 screen (02-engineering.md §7 `SetupGuide`, §12
+// "motivation cliff at Module 0"; 01-design.md §6 Tier 0, §7 "Setup guide (Module
 // 0): OS picker → step-by-step with screenshots"; prototype:
 // design/PyLearn Prototype.dc.html → Setup guide).
 //

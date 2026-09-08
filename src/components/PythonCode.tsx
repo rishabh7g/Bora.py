@@ -1,4 +1,4 @@
-// Python-only syntax highlighting (ENGINEERING.md §8) — Prism runtime with
+// Python-only syntax highlighting (02-engineering.md §8) — Prism runtime with
 // just the python grammar to keep the bundle lean. Shared by ExerciseView
 // (model solution) and ModuleView (worked examples).
 import Prism from 'prismjs';

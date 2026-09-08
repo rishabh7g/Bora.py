@@ -1,4 +1,4 @@
-// The app's one failure surface (UI baseline §10, ENGINEERING.md §7): a
+// The app's one failure surface (UI baseline §10, 02-engineering.md §7): a
 // designed panel that names what went wrong, instead of a blank #root and a
 // console line the learner never sees. Every subsystem raises this same
 // component — the ErrorBoundary (src/app/ErrorBoundary.tsx), the stalled

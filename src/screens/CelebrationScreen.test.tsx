@@ -1,6 +1,6 @@
 // CelebrationScreen render contract + the pass edge that shows it: one playful
 // line, the photocard just earned, the capstone's Tier 5 note — and nothing
-// that smells of XP, streaks, scores or time (DESIGN.md §4).
+// that smells of XP, streaks, scores or time (01-design.md §4).
 import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import CelebrationScreen, {

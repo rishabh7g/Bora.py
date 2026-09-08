@@ -5,7 +5,7 @@
 // the fallback: it runs in the render phase, so it also catches during
 // server rendering (renderToString), which this repo's own test suite uses
 // throughout (see src/components/ProgressLoading.test.tsx for the pattern). No
-// analytics, no error tracking (ENGINEERING.md §10) — there is nothing to
+// analytics, no error tracking (02-engineering.md §10) — there is nothing to
 // send `componentDidCatch` for.
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { describeError } from './describeError';
@@ -23,7 +23,7 @@ export default class ErrorBoundary extends Component<{ children: ReactNode }, Er
 
   // Present for engines/tools that expect it; deliberately a no-op body —
   // there is no analytics or error-tracking sink in this app to report to
-  // (ENGINEERING.md §10), and getDerivedStateFromError already renders the
+  // (02-engineering.md §10), and getDerivedStateFromError already renders the
   // fallback.
   componentDidCatch(_error: unknown, _info: ErrorInfo): void {}
 

@@ -1,4 +1,4 @@
-// Module gating — ENGINEERING.md §6. This is the ONE owner of every
+// Module gating — 02-engineering.md §6. This is the ONE owner of every
 // module-level gating rule. Screens (ModuleView now, HomeMap later) consume
 // these functions; nothing else may reimplement a rule from here.
 //

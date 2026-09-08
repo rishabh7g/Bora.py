@@ -231,7 +231,7 @@ async function open(hash) {
   return { ctx, page };
 }
 // Module 01 is locked from a fresh profile, so state is built the real way:
-// pass Module 00 through the setup guide's own button (docs/QA.md).
+// pass Module 00 through the setup guide's own button (docs/03-qa.md).
 async function passModule0(hash) {
   const { ctx, page } = await open('#/setup');
   await page.getByRole('button', { name: 'My output matches' }).click();
@@ -251,7 +251,7 @@ const FIXTURES = {
   'exercise-e1-ws': async () => {
     const { ctx, page } = await passModule0('#/module/m1/exercise/e1');
     // The legend only renders with whitespace on. Click the label, never the
-    // input (docs/QA.md — the design system's segment input is 0x0).
+    // input (docs/03-qa.md — the design system's segment input is 0x0).
     await page.locator('.ex-ws-toggle .seg-opt').click();
     await wait(300);
     return { ctx, page };

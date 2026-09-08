@@ -215,7 +215,7 @@ export default function App() {
   const curriculum = useMemo(() => loadCurriculum(), []);
   const [hash, setHash] = useState(() => window.location.hash || HOME_ROUTE);
   const store = useProgress();
-  // The celebration is transient by design (ENGINEERING.md §11 step 8): it is
+  // The celebration is transient by design (02-engineering.md §11 step 8): it is
   // set on the pass edge only, so a revisit or a reload never replays it.
   const [celebratingModuleId, setCelebratingModuleId] = useState<string | null>(null);
 

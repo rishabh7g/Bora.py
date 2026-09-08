@@ -3,7 +3,7 @@
 //
 //   node scripts/headless-probe.mjs <url> [--poll 8000] [--shot out.png]
 //
-// Why this exists (docs/QA.md): driving Chrome by hand with
+// Why this exists (docs/03-qa.md): driving Chrome by hand with
 // `--headless=new --virtual-time-budget=… --dump-dom` reports this app as a
 // blank page and, against a local server, hangs the browser outright. That is
 // an artefact of those flags — virtual time is spent before the async progress
@@ -21,7 +21,7 @@ const EMPTY_ROOT = 40; // `<div id="root">` holds only whitespace below this
 
 /** Find a usable Playwright on this host.
  *
- *  This repo deliberately keeps no Playwright dependency (ENGINEERING.md §2 —
+ *  This repo deliberately keeps no Playwright dependency (02-engineering.md §2 —
  *  small stack; browsers are ~300 MB and CI never needs one). So: use the repo's
  *  own copy if someone installed it, else any `npx`-cached copy whose pinned
  *  Chromium revision is already downloaded — that is what

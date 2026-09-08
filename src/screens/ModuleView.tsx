@@ -1,4 +1,4 @@
-// ModuleView — the Module screen (ENGINEERING.md §7, §11 step 3; DESIGN.md
+// ModuleView — the Module screen (02-engineering.md §7, §11 step 3; 01-design.md
 // §3.2, §3.6, §7; prototype: design/PyLearn Prototype.dc.html → Module).
 // Concept doc → worked examples (highlighted code + copy button) → exercise
 // list → exit exercise row. A row says the one thing that matters about it:

@@ -1,5 +1,5 @@
 // "Show whitespace" on the expected-output block — a view preference, not a
-// checkpoint (ENGINEERING.md §7, §12 "output-match false negatives").
+// checkpoint (02-engineering.md §7, §12 "output-match false negatives").
 //
 // Deliberately NOT part of Progress (state/progress.ts), for the same reasons as
 // the OS choice in setupOs.ts: it must never travel in the progress backup file,

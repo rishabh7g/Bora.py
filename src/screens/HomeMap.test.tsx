@@ -1,7 +1,7 @@
 // HomeMap render contract: the current checkpoint leads as one card, the
 // whole path follows in curriculum order driven by the §6 gating owner
 // (locked rows are not navigable), and progress is spoken in checkpoints only
-// (DESIGN.md §3.1 — never days, streaks, XP or percentages).
+// (01-design.md §3.1 — never days, streaks, XP or percentages).
 import { expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import HomeMap, { SETTINGS_ROUTE, SHELF_ROUTE } from './HomeMap';

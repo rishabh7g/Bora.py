@@ -1,4 +1,4 @@
-// Settings render contract — ENGINEERING.md §7 (`Settings`: export/import
+// Settings render contract — 02-engineering.md §7 (`Settings`: export/import
 // progress, reset module), §4 (the file is the backup story), design/README.md
 // (filename, Modernist rules, no guilt copy).
 import { expect, it } from 'vitest';

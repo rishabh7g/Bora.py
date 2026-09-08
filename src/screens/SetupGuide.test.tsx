@@ -1,7 +1,7 @@
 // SetupGuide render contract — the prototype Setup guide screen: OS picker
 // (persisted), an install stepper whose screenshots are local files, and the
 // Module 0 exit checkpoint inline, in its no-ladder exit variant
-// (DESIGN.md §6 Tier 0, §7; ENGINEERING.md §7, §12).
+// (01-design.md §6 Tier 0, §7; 02-engineering.md §7, §12).
 import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -97,7 +97,7 @@ it('persists the choice under its own key — never inside the progress backup',
   expect(JSON.stringify(passed)).not.toContain('setup-os');
 });
 
-it('covers the DESIGN.md §6 Tier 0 steps on both paths, in order', () => {
+it('covers the 01-design.md §6 Tier 0 steps on both paths, in order', () => {
   for (const os of ['windows', 'mac'] as SetupOs[]) {
     const steps = setupStepsFor(os);
     const script = steps

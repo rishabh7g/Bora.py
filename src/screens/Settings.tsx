@@ -1,8 +1,8 @@
 // Settings — export / import the progress file and reset a single module
-// (ENGINEERING.md §7 `Settings`, §4 persistence, §11 step 5; design/README.md
+// (02-engineering.md §7 `Settings`, §4 persistence, §11 step 5; design/README.md
 // "Persistence": the file is `bora-py-progress.json`).
 //
-// There is no server and no account (ENGINEERING.md §1), so the exported file
+// There is no server and no account (02-engineering.md §1), so the exported file
 // IS the backup: it is written by the browser and read back by the browser,
 // offline, with no network in the path.
 //
@@ -10,7 +10,7 @@
 // stored shape and the reset live in state/progress.ts, and what counts as a
 // passed checkpoint is read from the §6 owner state/gating.ts.
 //
-// Tone (DESIGN.md §2: no guilt mechanics): reset is a safety net, so it is
+// Tone (01-design.md §2: no guilt mechanics): reset is a safety net, so it is
 // described plainly — what it clears, what it leaves — and never dramatised.
 import { useEffect, useRef, useState } from 'react';
 import { flatModules } from '../content/load';

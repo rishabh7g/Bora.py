@@ -1,5 +1,5 @@
 // Loader: maps the shipped curriculum.json shape (top-level `modules` map
-// keyed by id, `tiers` referencing module ids) into the ENGINEERING.md §3 types.
+// keyed by id, `tiers` referencing module ids) into the 02-engineering.md §3 types.
 import raw from '../../content/curriculum.json';
 import type { Curriculum, Exercise, Module, Tier } from './types';
 
@@ -19,7 +19,7 @@ export class CurriculumError extends Error {
   }
 }
 
-// Photocard art: original SVGs authored in this repo (DESIGN.md §4 — no
+// Photocard art: original SVGs authored in this repo (01-design.md §4 — no
 // official imagery). curriculum.json names the file ("card-m7.svg"); the
 // bundler owns the real URL, so the art survives hashing and any deploy base
 // path. An unknown name resolves to "" — content lint is what blocks that.

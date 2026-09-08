@@ -15,7 +15,7 @@ player and progress tracker: it shows the task, the exact expected output, hints
 solution, and she declares "my output matches". That is a product rule, not an
 implementation detail: it rules out a runner, a grader, and any verification friction,
 and it is why progress is checkpoint-based with no streaks, XP or decay. Spec:
-`docs/DESIGN.md`; architecture and content schema: `docs/ENGINEERING.md`.
+`docs/01-design.md`; architecture and content schema: `docs/02-engineering.md`.
 
 ## How to run it
 
@@ -39,15 +39,13 @@ and it is why progress is checkpoint-based with no streaks, XP or decay. Spec:
 - **FORMAT is not its own stage.** `prettier --check .` is the second command inside LINT
   and shares exit 20 — eslint owns correctness, prettier owns formatting, either one red
   is a lint failure.
-- **`docs/` keeps `DESIGN.md`, `ENGINEERING.md`, `QA.md`, `SIMPLIFY.md`**, not the
-  `NN-lowercase-kebab.md` scheme; the standard defers that renaming until it settles.
 
 ## What a newcomer gets wrong
 
 - **There is no CSS framework** — styling is 14 hand-written stylesheets in `src/`, over
   the vendored design system in `design/_ds/…/styles.css`, with the app's text roles in
   `src/styles/tokens.css`. A tier's "era" is a text label, not a per-tier palette.
-  (`docs/ENGINEERING.md` §2 named Tailwind until #132; it no longer does.)
+  (`docs/02-engineering.md` §2 named Tailwind until #132; it no longer does.)
 - **Never hardcode a user-visible string.** Shell copy is `t('home.lede')` from
   `src/strings/`, keys listed once in `src/strings/stringsKeys.ts`; `t()` throws instead of
   falling back, and `tools/strings-check.ts` fails the build on a missing, empty, extra or
@@ -55,6 +53,8 @@ and it is why progress is checkpoint-based with no streaks, XP or decay. Spec:
 - **Curriculum copy is not in that pack.** It lives in `content/curriculum.json` under its
   own rules (`content/lint.ts`, `npm run lint:content`, also asserted by the test suite).
 - **`design/` is the delivered handoff, kept verbatim** — including the original name
-  `design/PyLearn Prototype.dc.html`. `docs/` is the current truth; `design/` is history.
+  `design/PyLearn Prototype.dc.html`, and the docs names it was written against,
+  `DESIGN.md` and `ENGINEERING.md` (renamed under `docs/` by #136). `docs/` is the current
+  truth; `design/` is history, so a grep for an old docs name must exclude `design/`.
 - **Browser QA has traps** (which flags lie, no Playwright dependency on purpose):
-  `docs/QA.md` before `scripts/headless-probe.mjs`.
+  `docs/03-qa.md` before `scripts/headless-probe.mjs`.

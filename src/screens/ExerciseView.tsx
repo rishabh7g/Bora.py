@@ -1,4 +1,4 @@
-// ExerciseView — the core product screen (ENGINEERING.md §7, §11 step 2).
+// ExerciseView — the core product screen (02-engineering.md §7, §11 step 2).
 // Prompt, expected-output block (no copy button — validation is trust-based),
 // the hints she has revealed, two buttons, and the solution with its approach
 // checklist once it is visible.

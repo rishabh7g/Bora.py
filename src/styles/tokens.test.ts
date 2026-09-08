@@ -1,4 +1,4 @@
-// Contract for the app's text roles (src/styles/tokens.css, DESIGN.md §7a).
+// Contract for the app's text roles (src/styles/tokens.css, 01-design.md §7a).
 //
 // These are file-level guards rather than render tests on purpose: the values
 // under test are CSS custom properties and one component override, which jsdom
@@ -59,7 +59,7 @@ it('measures the icon-only nav items at the non-text threshold (#76)', () => {
   // be the thing that picks its threshold: an inherited font-size it never
   // paints would silently buy it 4.5:1. Both ink states are marked NON_TEXT and
   // held to the 3:1 of SC 1.4.11, sourced from the icon's own stroke — the same
-  // text/non-text line DESIGN.md §7a already draws for .tag-outline's border.
+  // text/non-text line 01-design.md §7a already draws for .tag-outline's border.
   expect(audit).toContain("const NON_TEXT = 'non-text'");
   // A row is read from its selector to the end of its entry, not as a line:
   // prettier wraps an entry that passes the print width over five lines, and
@@ -112,12 +112,12 @@ it('measures both segment states, as text, in the audit (#86)', () => {
   expect(segRows.every((row) => !row.includes('NON_TEXT'))).toBe(true);
 });
 
-it('states the audit’s real row count in docs/QA.md', () => {
+it('states the audit’s real row count in docs/03-qa.md', () => {
   // The prose is the only place the count lives, so it goes stale silently:
   // #86 found ".seg-opt is not one of the 54 rows" by reading ROWS, not the doc.
   const rows = audit.match(/const ROWS = \[([\s\S]*?)\n\];/)?.[1] ?? '';
   const count = rows.split('\n').filter((line) => line.trim().startsWith('[')).length;
-  const qa = readFileSync(join(repoRoot, 'docs/QA.md'), 'utf8');
+  const qa = readFileSync(join(repoRoot, 'docs/03-qa.md'), 'utf8');
   expect(count).toBeGreaterThan(0);
   expect(qa).toContain(`**${count} rows** today`);
 });

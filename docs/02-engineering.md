@@ -3,7 +3,7 @@
 > The product name is **bora.py** — always lowercase, always with the dot
 > (design/brand/BRAND.md). Everything below describes that app.
 
-Implements DESIGN.md. Audience: single developer building for a single user.
+Implements 01-design.md. Audience: single developer building for a single user.
 
 ---
 
@@ -188,7 +188,7 @@ Rules:
   - `/src/styles/tokens.css` — app text roles on top of the design system's ramps (`--color-text-quiet`,
     `--color-text-locked`, `--color-text-accent`). `design/_ds/…/styles.css` stays the system's
     source of truth and is never edited here; this file only decides which step each job uses,
-    once, so screens do not each pick a ramp step and drift (DESIGN.md §7a). When a *system*
+    once, so screens do not each pick a ramp step and drift (01-design.md §7a). When a *system*
     component's own colour is the thing that fails the legibility floor, the override lands
     here too, as one rule naming the role — `a, .btn-ghost { color: var(--color-text-accent) }`
     (#55) — never as an edit to the vendored stylesheet and never as a hex in a screen's CSS

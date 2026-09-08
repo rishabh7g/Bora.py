@@ -1,4 +1,4 @@
-// Backup file format — ENGINEERING.md §4 ("export/import as a JSON file …
+// Backup file format — 02-engineering.md §4 ("export/import as a JSON file …
 // this is the backup story; losing browser storage must not lose weeks of
 // progress"), §1 (no server: the file IS the backup), design/README.md
 // (exact filename `bora-py-progress.json`).
@@ -16,7 +16,7 @@ import { emptyProgress, type ModuleProgress, type Progress } from './progress';
 /** The one filename in the product (design/README.md "Persistence"). */
 export const BACKUP_FILENAME = 'bora-py-progress.json';
 
-/** The only version this build reads and writes (ENGINEERING.md §4). */
+/** The only version this build reads and writes (02-engineering.md §4). */
 export const BACKUP_VERSION = 1;
 
 export type ImportResult = { ok: true; progress: Progress } | { ok: false; error: string };

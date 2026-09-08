@@ -1,4 +1,4 @@
-// Progress state + persistence — ENGINEERING.md §4.
+// Progress state + persistence — 02-engineering.md §4.
 // Write-through to IndexedDB (idb-keyval) on every state change.
 import { get, set } from 'idb-keyval';
 import { cardCracksOf, initialExerciseState, modulePassed, type ExerciseState } from './effortGate';
