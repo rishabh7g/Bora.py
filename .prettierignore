@@ -1,0 +1,15 @@
+# Prettier owns the source tree only.
+# design/ is the design handoff, kept exactly as delivered (README.md § Naming);
+# dist/ and public/ are build output and static assets; the markdown (README,
+# docs/, issue templates) is hand-formatted prose — leave it be.
+design/
+docs/
+.github/
+*.md
+dist/
+public/
+node_modules/
+package-lock.json
+# The authored curriculum the app loads. content/lint.ts owns its shape; a
+# reformat here is a content change, not a formatting one.
+content/curriculum.json

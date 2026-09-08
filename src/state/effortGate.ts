@@ -69,7 +69,8 @@ export function declareAttempt(state: ExerciseState, isExit: boolean): ExerciseS
 /** View hint 1 or 2. Legal only when that exact rung is available. */
 export function viewHint(state: ExerciseState, hint: 1 | 2, isExit: boolean): ExerciseState {
   const gate = gateStateOf(state, isExit);
-  const legal = (hint === 1 && gate === 'HINT1_AVAILABLE') || (hint === 2 && gate === 'HINT2_AVAILABLE');
+  const legal =
+    (hint === 1 && gate === 'HINT1_AVAILABLE') || (hint === 2 && gate === 'HINT2_AVAILABLE');
   if (!legal) return state;
   return { ...state, hintsUnlocked: hint, stuck: false };
 }

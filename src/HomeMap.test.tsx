@@ -102,7 +102,9 @@ it('a passed row keeps its anchor and link — the reading path back', () => {
 
 it('the current row drops the anchor its card already printed', () => {
   const html = render(passModule(emptyProgress(), 'm0'));
-  const currentRow = /<a class="home-row home-row--open home-row--current"[^>]*>[\s\S]*?<\/a>/.exec(html);
+  const currentRow = /<a class="home-row home-row--open home-row--current"[^>]*>[\s\S]*?<\/a>/.exec(
+    html,
+  );
   expect(currentRow).not.toBeNull();
   expect(currentRow![0]).not.toContain('home-rowanchor');
   expect((html.match(/home-row--current/g) ?? []).length).toBe(1);

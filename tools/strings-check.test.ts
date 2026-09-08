@@ -27,9 +27,9 @@ describe('checkStrings', () => {
     flat.set('home.card.open', '   ');
     const pack = unflatten(flat);
     const issues = checkStrings(pack, 'en');
-    expect(issues.some((issue) => issue.includes('"home.card.open" must be a non-empty string'))).toBe(
-      true,
-    );
+    expect(
+      issues.some((issue) => issue.includes('"home.card.open" must be a non-empty string')),
+    ).toBe(true);
   });
 
   it('reports an unknown key', () => {

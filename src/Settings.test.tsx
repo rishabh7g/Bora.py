@@ -9,12 +9,7 @@ import HomeMap, { moduleHref, SETTINGS_ROUTE } from './HomeMap';
 import { flatModules, loadCurriculum } from './content/load';
 import { declareAttempt, declareMatch } from './state/effortGate';
 import { BACKUP_FILENAME } from './state/backup';
-import {
-  emptyProgress,
-  resetModule,
-  updateExerciseState,
-  type Progress,
-} from './state/progress';
+import { emptyProgress, resetModule, updateExerciseState, type Progress } from './state/progress';
 
 const curriculum = loadCurriculum();
 const modules = flatModules(curriculum);

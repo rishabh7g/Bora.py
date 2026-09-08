@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildCurriculum, CurriculumError, findModule, loadCurriculum, photocardArtUrl } from './load';
+import {
+  buildCurriculum,
+  CurriculumError,
+  findModule,
+  loadCurriculum,
+  photocardArtUrl,
+} from './load';
 
 describe('loadCurriculum', () => {
   const curriculum = loadCurriculum();
@@ -68,7 +74,21 @@ describe('photocard art', () => {
 
   it('numbers every module by its position in curriculum order, two digits, m0 as 00 (#128)', () => {
     const numbers = curriculum.tiers.flatMap((tier) => tier.modules.map((module) => module.number));
-    expect(numbers).toEqual(['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']);
+    expect(numbers).toEqual([
+      '00',
+      '01',
+      '02',
+      '03',
+      '04',
+      '05',
+      '06',
+      '07',
+      '08',
+      '09',
+      '10',
+      '11',
+      '12',
+    ]);
   });
 });
 

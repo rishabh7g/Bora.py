@@ -35,14 +35,17 @@ function resolvePlaywrightDir() {
   } catch {
     /* not a dependency here — fall through to the npx cache */
   }
-  const browsers = process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), '.cache', 'ms-playwright');
+  const browsers =
+    process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), '.cache', 'ms-playwright');
   const npxCache = join(homedir(), '.npm', '_npx');
   if (!existsSync(npxCache)) return null;
   for (const entry of readdirSync(npxCache)) {
     const dir = join(npxCache, entry, 'node_modules', 'playwright');
     const pinned = join(npxCache, entry, 'node_modules', 'playwright-core', 'browsers.json');
     if (!existsSync(dir) || !existsSync(pinned)) continue;
-    const chromium = JSON.parse(readFileSync(pinned, 'utf8')).browsers.find((b) => b.name === 'chromium');
+    const chromium = JSON.parse(readFileSync(pinned, 'utf8')).browsers.find(
+      (b) => b.name === 'chromium',
+    );
     if (chromium && existsSync(join(browsers, `chromium-${chromium.revision}`))) return dir;
   }
   return null;
@@ -200,8 +203,18 @@ const ROWS = [
   // inactive ones in the same shot. Each item is an icon and an aria-label with
   // no text of its own, so both rows are NON_TEXT: the ink measured is the
   // glyph's stroke, against the bar's own background, at 3:1.
-  ['home-fresh', '.bottomnav-item[aria-current="page"] .bottomnav-icon', 'current nav item icon', NON_TEXT],
-  ['home-fresh', '.bottomnav-item:not([aria-current="page"]) .bottomnav-icon', 'inactive nav item icon', NON_TEXT],
+  [
+    'home-fresh',
+    '.bottomnav-item[aria-current="page"] .bottomnav-icon',
+    'current nav item icon',
+    NON_TEXT,
+  ],
+  [
+    'home-fresh',
+    '.bottomnav-item:not([aria-current="page"]) .bottomnav-icon',
+    'inactive nav item icon',
+    NON_TEXT,
+  ],
 ];
 
 const { chromium } = await import(join(resolvePlaywrightDir(), 'index.mjs'));
@@ -304,5 +317,7 @@ for (const fixture of Object.keys(FIXTURES)) {
 }
 await browser.close();
 console.log(`problems (${problems.length}): ${problems.join(' | ') || 'none'}`);
-console.log(failed === 0 ? 'RESULT ok — every measured style clears AA' : `RESULT FAIL — ${failed} below AA`);
+console.log(
+  failed === 0 ? 'RESULT ok — every measured style clears AA' : `RESULT FAIL — ${failed} below AA`,
+);
 process.exit(failed === 0 ? 0 : 1);

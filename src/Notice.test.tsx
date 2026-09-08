@@ -31,6 +31,8 @@ it('renders an optional detail line and an optional action, and omits both when 
   expect(withBoth).toContain('TypeError: Failed to fetch');
   expect(withBoth).toContain('Reload');
 
-  const withNeither = renderToString(<Notice title="Something went wrong." body="No detail here." />);
+  const withNeither = renderToString(
+    <Notice title="Something went wrong." body="No detail here." />,
+  );
   expect(withNeither).not.toContain('<button');
 });

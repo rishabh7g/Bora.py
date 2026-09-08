@@ -44,13 +44,7 @@ function escaped(text: string): string {
 }
 
 function render(progress: Progress = emptyProgress()) {
-  return renderToString(
-    <SetupGuide
-      module={m0}
-      progress={progress}
-      onTransition={() => {}}
-    />,
-  );
+  return renderToString(<SetupGuide module={m0} progress={progress} onTransition={() => {}} />);
 }
 
 const passed = updateExerciseState(emptyProgress(), m0.id, m0.exitExercise.id, true, declareMatch);
@@ -106,12 +100,16 @@ it('persists the choice under its own key — never inside the progress backup',
 it('covers the DESIGN.md §6 Tier 0 steps on both paths, in order', () => {
   for (const os of ['windows', 'mac'] as SetupOs[]) {
     const steps = setupStepsFor(os);
-    const script = steps.map((step) => `${step.title} ${step.body} ${step.command ?? ''}`).join('\n');
+    const script = steps
+      .map((step) => `${step.title} ${step.body} ${step.command ?? ''}`)
+      .join('\n');
     expect(script).toContain('python.org/downloads'); // install Python
     expect(script).toMatch(os === 'mac' ? /Terminal/ : /powershell/i); // open a terminal
     expect(script).toContain('hello.py'); // create the file
     // …and run it, with the OS's own command, as the last step.
-    expect(steps[steps.length - 1].command).toBe(os === 'mac' ? 'python3 hello.py' : 'python hello.py');
+    expect(steps[steps.length - 1].command).toBe(
+      os === 'mac' ? 'python3 hello.py' : 'python hello.py',
+    );
     expect(steps[steps.length - 1].output).toBe(m0.exitExercise.expectedOutput);
   }
 });
@@ -122,7 +120,8 @@ it('renders each step numbered, with its terminal command and printed output', (
   for (const step of steps) {
     expect(html).toContain(escaped(step.title));
     // Every command is real text in a <pre>, so it can be selected and copied.
-    if (step.command) expect(html).toContain(`<pre class="setup-term-command">${step.command}</pre>`);
+    if (step.command)
+      expect(html).toContain(`<pre class="setup-term-command">${step.command}</pre>`);
   }
   expect(html).toContain('python hello.py'); // Windows is the default path
   expect(html).toContain('IT PRINTS');
@@ -176,7 +175,10 @@ it('never points at a screenshot of a terminal, a command or its output (#61)', 
   // image at all. (A step may still have both a command and a GUI shot — "Create
   // hello.py" shows a save dialog and then a `cd`; the dialog is a window.)
   for (const step of allSteps.filter((step) => step.output)) {
-    expect(step.shot, `step "${step.title}" prints output, so it takes no screenshot`).toBeUndefined();
+    expect(
+      step.shot,
+      `step "${step.title}" prints output, so it takes no screenshot`,
+    ).toBeUndefined();
   }
 });
 
@@ -227,7 +229,10 @@ it('never renders a placeholder — an unpaired step gets instructions instead (
   // the installer, the terminal window (#67) and the save dialog, per OS
   expect(withLook.length).toBe(6);
   for (const step of withLook) {
-    expect(step.look!.length, `"${step.title}" needs the landmarks, not a sentence`).toBeGreaterThanOrEqual(4);
+    expect(
+      step.look!.length,
+      `"${step.title}" needs the landmarks, not a sentence`,
+    ).toBeGreaterThanOrEqual(4);
     for (const line of step.look!) expect(line.length).toBeGreaterThan(30);
   }
   // And no step is left with nothing but prose: no picture and nothing to type

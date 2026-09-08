@@ -63,7 +63,12 @@
 }
 
 .set-file {
-  font: 500 13px/1.6 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+  font:
+    500 13px/1.6 ui-monospace,
+    'Cascadia Mono',
+    Menlo,
+    Consolas,
+    monospace;
 }
 
 /* Every control clears the 44px target the DS button alone does not. */

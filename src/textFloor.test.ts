@@ -97,9 +97,7 @@ describe('body-text floor (#106)', () => {
   });
 
   it('has every sub-16px rule in src/*.css on the allow-list, or fails naming it', () => {
-    const unlisted = offenders.filter(
-      (rule) => !ALLOWED.has(`${rule.file}::${rule.selector}`),
-    );
+    const unlisted = offenders.filter((rule) => !ALLOWED.has(`${rule.file}::${rule.selector}`));
     if (unlisted.length > 0) {
       const report = unlisted
         .map((rule) => `  - ${rule.file} :: ${rule.selector} (${rule.px}px)`)
@@ -110,12 +108,13 @@ describe('body-text floor (#106)', () => {
     }
   });
 
-  it("does not let the allow-list itself go stale — every entry still exists and is still under 16px", () => {
+  it('does not let the allow-list itself go stale — every entry still exists and is still under 16px', () => {
     const seen = new Set(offenders.map((rule) => `${rule.file}::${rule.selector}`));
     for (const [file, selector] of [...KICKERS, ...CODE]) {
-      expect(seen.has(`${file}::${selector}`), `${file} :: ${selector} is no longer under 16px`).toBe(
-        true,
-      );
+      expect(
+        seen.has(`${file}::${selector}`),
+        `${file} :: ${selector} is no longer under 16px`,
+      ).toBe(true);
     }
   });
 
@@ -127,10 +126,7 @@ describe('body-text floor (#106)', () => {
     // whole file (which also ships components — .card, .table, .nav, h6,
     // .radio, .field — this app never renders).
     const ds = readFileSync(
-      join(
-        repoRoot,
-        'design/_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/styles.css',
-      ),
+      join(repoRoot, 'design/_ds/modernist-86c43557-9db6-4330-a863-9ea3a48fad23/styles.css'),
       'utf8',
     );
     expect(ds).toMatch(/body\s*\{[^}]*font-size:\s*var\(--text-body-min/);

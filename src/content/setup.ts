@@ -125,8 +125,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Run the installer — tick "Add python.exe to PATH"',
-      body:
-        'Open the downloaded .exe. On the very first screen, tick "Add python.exe to PATH" at the bottom, then click "Install Now". That one checkbox is what lets the terminal find Python later.',
+      body: 'Open the downloaded .exe. On the very first screen, tick "Add python.exe to PATH" at the bottom, then click "Install Now". That one checkbox is what lets the terminal find Python later.',
       look: [
         `A small window whose title starts "Install Python ${PYTHON_MINOR}" — it opens with everything you need on one screen.`,
         'In the middle, two wide buttons stacked: "Install Now" on top, "Customize installation" below it. You want the top one, but not yet.',
@@ -138,8 +137,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Open PowerShell and check it worked',
-      body:
-        'Open the Start menu, type "powershell", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python.',
+      body: 'Open the Start menu, type "powershell", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python.',
       look: [
         'Start typing "powershell" and "Windows PowerShell" comes up at the top of the Start menu. That is the one — press Enter on it.',
         'The window that opens is almost empty: a dark rectangle with a line or two of small text at the top, no buttons and no menus. That bareness is correct. A terminal is meant to look like this.',
@@ -151,8 +149,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Create hello.py',
-      body:
-        'Open Notepad, type one line: print("Jimin") — your chosen member, your choice. Save it as hello.py (not hello.py.txt: pick "All Files" in the Save-as-type box) somewhere you can find again, like your Desktop. Then, in PowerShell, move to that folder.',
+      body: 'Open Notepad, type one line: print("Jimin") — your chosen member, your choice. Save it as hello.py (not hello.py.txt: pick "All Files" in the Save-as-type box) somewhere you can find again, like your Desktop. Then, in PowerShell, move to that folder.',
       look: [
         'Notepad opens blank. Type the one line and nothing else — no heading, no quotes around the whole thing.',
         'Then File → Save as… The save window has a "File name" box near the bottom, and right under it a dropdown labelled "Save as type".',
@@ -164,8 +161,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Run it',
-      body:
-        'Still in PowerShell, in the folder that holds hello.py, run the file. Your terminal prints the name you chose. That is you running Python.',
+      body: 'Still in PowerShell, in the folder that holds hello.py, run the file. Your terminal prints the name you chose. That is you running Python.',
       command: 'python hello.py',
       output: 'Jimin',
     },
@@ -182,8 +178,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Run the .pkg installer',
-      body:
-        'Open the downloaded .pkg file and click through with every default — Continue, Continue, Agree, Install. Enter your Mac password when it asks. On a Mac nothing has to be ticked; the installer wires up the terminal for you.',
+      body: 'Open the downloaded .pkg file and click through with every default — Continue, Continue, Agree, Install. Enter your Mac password when it asks. On a Mac nothing has to be ticked; the installer wires up the terminal for you.',
       look: [
         'A window titled "Install Python", with the steps listed down the left side: Introduction, Read Me, License, and so on. The one you are on is highlighted.',
         'You never have to change a single setting. Continue → Continue → Continue → Agree → Install, in the bottom-right corner each time.',
@@ -193,8 +188,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Open Terminal and check it worked',
-      body:
-        'Press ⌘ Space, type "Terminal", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python. On a Mac the command is python3, with the 3.',
+      body: 'Press ⌘ Space, type "Terminal", press Enter. In the window that opens, type the line below. It should print "Python 3." and a version number — that means the terminal can find Python. On a Mac the command is python3, with the 3.',
       look: [
         '⌘ Space drops a search box into the middle of the screen. Type "Terminal" and the app comes up as the top hit — press Enter on it.',
         'The window that opens is almost empty: a plain white or black rectangle with one line of small text about when you last logged in, no buttons and no menus. That bareness is correct. A terminal is meant to look like this.',
@@ -206,8 +200,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Create hello.py',
-      body:
-        'Open TextEdit, and first do Format → Make Plain Text (rich text saves invisible junk). Type one line: print("Jimin") — your chosen member, your choice. Save it as hello.py on your Desktop. Then, in Terminal, move to that folder.',
+      body: 'Open TextEdit, and first do Format → Make Plain Text (rich text saves invisible junk). Type one line: print("Jimin") — your chosen member, your choice. Save it as hello.py on your Desktop. Then, in Terminal, move to that folder.',
       look: [
         'If TextEdit opens a chooser first, start a new document.',
         'Format → Make Plain Text, in the menu bar at the top. You will see the ruler and the font controls disappear — that is how you know it worked. (⇧⌘T does the same.)',
@@ -219,8 +212,7 @@ const SETUP_STEPS: Record<SetupOs, SetupStep[]> = {
     },
     {
       title: 'Run it',
-      body:
-        'Still in Terminal, in the folder that holds hello.py, run the file. Your terminal prints the name you chose. That is you running Python.',
+      body: 'Still in Terminal, in the folder that holds hello.py, run the file. Your terminal prints the name you chose. That is you running Python.',
       command: 'python3 hello.py',
       output: 'Jimin',
     },

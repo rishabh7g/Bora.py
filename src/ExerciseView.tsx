@@ -47,10 +47,7 @@ type RevealedFocus = 'hint1' | 'hint2' | 'solution' | 'matched' | null;
 /** The one secondary action the gate allows from here, or none at the top of
  *  the ladder (§5: an attempt declared past the solution unlocks nothing). */
 export type NextAction =
-  | { kind: 'attempt' }
-  | { kind: 'hint'; hint: 1 | 2 }
-  | { kind: 'solution' }
-  | null;
+  { kind: 'attempt' } | { kind: 'hint'; hint: 1 | 2 } | { kind: 'solution' } | null;
 
 export function nextActionOf(gate: GateState): NextAction {
   switch (gate) {
@@ -100,6 +97,11 @@ export default function ExerciseView({
           ? solutionRef.current
           : hintRefs.current[revealed];
     target?.focus();
+    // `revealed` is a one-shot request to move focus, not state the UI paints, and
+    // clearing it here is what makes revealing the same hint twice move focus twice.
+    // The cascade the rule warns about terminates at once: this render sets it to
+    // null, and the effect then returns early. Nothing else re-renders.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRevealed(null); // one move per reveal — never on a re-render after it
   }, [revealed]);
 
@@ -172,7 +174,9 @@ export default function ExerciseView({
             .filter((hintNumber) => state.hintsUnlocked >= hintNumber)
             .map((hintNumber) => (
               <div key={hintNumber} className="ex-hint">
-                <span className="ex-hint-label">{t('exercise.hint.label', { number: hintNumber })}</span>
+                <span className="ex-hint-label">
+                  {t('exercise.hint.label', { number: hintNumber })}
+                </span>
                 {/* Focusable programmatically only (-1): revealing it moves
                     focus here, but it never becomes a stop on the way down. */}
                 <p

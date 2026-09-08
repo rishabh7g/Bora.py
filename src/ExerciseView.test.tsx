@@ -33,8 +33,10 @@ function render(state = initialExerciseState(), isExit = false) {
   );
 }
 
-const esc = (text: string) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
-const buttons = (html: string) => [...html.matchAll(/<button[^>]*>([^<]*)<\/button>/g)].map((m) => m[1]);
+const esc = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+const buttons = (html: string) =>
+  [...html.matchAll(/<button[^>]*>([^<]*)<\/button>/g)].map((m) => m[1]);
 
 // SOLUTION_REVEALED — hint 1, hint 2 and the solution all spent.
 function ladderSpent() {

@@ -61,7 +61,8 @@ it('worked examples: highlighted code with a copy button each; output blocks get
 // leave the button silently saying COPY as if the code had been copied.
 it('a refused clipboard write resolves to failed — it never rejects', async () => {
   const refused = {
-    writeText: () => Promise.reject(new Error("Failed to execute 'writeText': Write permission denied.")),
+    writeText: () =>
+      Promise.reject(new Error("Failed to execute 'writeText': Write permission denied.")),
   };
   await expect(copyStatusOf('bias = "Jungkook"', refused)).resolves.toBe('failed');
   const throwing = {
@@ -110,7 +111,12 @@ it('a row is MATCHED or nothing — attempts, hints and a seen solution stay off
   expect(exerciseChipOf({ ...initialExerciseState(), matched: true })?.label).toBe('MATCHED');
 
   let p = apply(emptyProgress(), 'e1', (s) => declareAttempt(s, false));
-  p = apply(p, 'e2', (s) => declareAttempt(s, false), (s) => viewHint(s, 1, false));
+  p = apply(
+    p,
+    'e2',
+    (s) => declareAttempt(s, false),
+    (s) => viewHint(s, 1, false),
+  );
   p = apply(p, 'e3', declareMatch);
   const html = render(p);
   expect(html).not.toMatch(/TRIED|HINT 1 USED|SOLUTION SEEN/);
@@ -125,8 +131,9 @@ it('exit is LOCKED (no link, no explanation) until every formative is matched or
   expect(html).not.toContain('#/module/m1/exit');
 
   const oneShort = apply(apply(emptyProgress(), 'e1', declareMatch), 'e2', declareMatch);
-  expect(renderToString(<ModuleView module={m1} progress={oneShort} />))
-    .not.toContain('#/module/m1/exit');
+  expect(renderToString(<ModuleView module={m1} progress={oneShort} />)).not.toContain(
+    '#/module/m1/exit',
+  );
 });
 
 it('exit unlocks as a plain link when all formatives are matched — no READY chip', () => {

@@ -102,7 +102,9 @@ export function checkStrings(pack: unknown, packName: string): string[] {
 
   for (const key of flat.keys()) {
     if (canonical.includes(key)) continue;
-    issues.push(`${label}: unknown key "${key}" — not in the canonical list (src/strings/stringsKeys.ts)`);
+    issues.push(
+      `${label}: unknown key "${key}" — not in the canonical list (src/strings/stringsKeys.ts)`,
+    );
   }
 
   return issues;

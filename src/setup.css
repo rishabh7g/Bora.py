@@ -139,7 +139,12 @@
 }
 .setup-term-command {
   margin: 0;
-  font: 600 14px/1.7 ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+  font:
+    600 14px/1.7 ui-monospace,
+    'Cascadia Mono',
+    Menlo,
+    Consolas,
+    monospace;
   white-space: pre-wrap;
   overflow-wrap: break-word;
   /* #102: belt-and-braces alongside the wrap above — see src/code.css. */

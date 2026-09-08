@@ -9,7 +9,13 @@ import {
   viewHint,
   type ExerciseState,
 } from './effortGate';
-import { currentModule, exitUnlocked, moduleStateOf, moduleUnlocked, tier5Unlocked } from './gating';
+import {
+  currentModule,
+  exitUnlocked,
+  moduleStateOf,
+  moduleUnlocked,
+  tier5Unlocked,
+} from './gating';
 import {
   emptyProgress,
   hasModuleProgress,

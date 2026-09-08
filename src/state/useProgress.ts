@@ -1,7 +1,13 @@
 // React binding for Progress: load once on mount, write-through on every change.
 import { useCallback, useEffect, useState } from 'react';
 import type { ExerciseState } from './effortGate';
-import { loadProgress, resetModule, saveProgress, updateExerciseState, type Progress } from './progress';
+import {
+  loadProgress,
+  resetModule,
+  saveProgress,
+  updateExerciseState,
+  type Progress,
+} from './progress';
 
 export type ApplyTransition = (
   moduleId: string,

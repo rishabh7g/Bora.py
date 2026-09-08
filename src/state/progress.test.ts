@@ -31,7 +31,9 @@ beforeEach(() => memory.clear());
 
 describe('updateExerciseState (pure)', () => {
   it('applies a gate transition and stores the §4 shape', () => {
-    const p = updateExerciseState(emptyProgress(), 'm1', 'e1', false, (s) => declareAttempt(s, false));
+    const p = updateExerciseState(emptyProgress(), 'm1', 'e1', false, (s) =>
+      declareAttempt(s, false),
+    );
     const s = exerciseStateOf(p, 'm1', 'e1');
     expect(s.attempts).toBe(1);
     expect(p.modules.m1.passed).toBe(false);
@@ -85,7 +87,7 @@ describe('write-through persistence', () => {
   });
 });
 
-describe('resetModule (pure) — Settings\' per-module reset', () => {
+describe("resetModule (pure) — Settings' per-module reset", () => {
   it('forgets only the named module and leaves the others whole', () => {
     let p = emptyProgress();
     p = updateExerciseState(p, 'm1', 'e1', false, (s) => declareAttempt(s, false));
@@ -134,7 +136,9 @@ describe('hasModuleProgress — saved work, not a key', () => {
   });
 
   it('is true from the first declared attempt', () => {
-    const p = updateExerciseState(emptyProgress(), 'm1', 'e1', false, (s) => declareAttempt(s, false));
+    const p = updateExerciseState(emptyProgress(), 'm1', 'e1', false, (s) =>
+      declareAttempt(s, false),
+    );
     expect(hasModuleProgress(p, 'm1')).toBe(true);
   });
 
